@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Command, Search } from 'lucide-react';
+import { Command, Search, PlusSquare } from 'lucide-react';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import Link from 'next/link';
 
 export default function List() {
   const [date, setDate] = React.useState<Date>();
@@ -167,7 +168,14 @@ export default function List() {
         </div>
       </div>
 
-      <div className="w- rounded-xl border-2 border-graySecondary/50 mt-2 px3 py-3"></div>
+      <div className="rounded-xl border-2 border-graySecondary/50 mt-2 px-3 pt-3 h-max">
+        <Link href="/quotation/create">
+          <Button className="mb-5 bg-green-600 text-white w-max px-2 py-4 h-5 gap-2">
+            <PlusSquare className="h-5" />
+            <h3>Create Quotation</h3>
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }
