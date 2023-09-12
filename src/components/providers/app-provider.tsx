@@ -42,7 +42,6 @@ const AppProvider = ({ children }: AppProviderProps) => {
 
   return (
     <>
-      {/* {isLoading && <Loader />} */}
       {children}
       <ToastContainer
         position="top-right"

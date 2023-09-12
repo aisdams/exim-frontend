@@ -4,8 +4,7 @@ import Content from '@/components/app/dashboard/content';
 
 export default function Home() {
   return (
-    <div className="flex">
-      <Sidebar />
+    <div>
       <Content />
     </div>
   );

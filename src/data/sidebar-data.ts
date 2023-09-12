@@ -8,12 +8,12 @@ const sidebarData = [
   },
   {
     title: 'Quotation',
-    link: '/quotation',
+    link: '/quotation/list',
     icon: ClipboardEdit,
   },
   {
     title: 'Job Order',
-    link: 'job-order',
+    link: '#',
     icon: Boxes,
   },
 ];
