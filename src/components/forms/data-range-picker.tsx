@@ -1,15 +1,18 @@
 'use client';
 
-import React, { type FC, useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, type FC } from 'react';
+import { Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { startCase } from 'lodash';
+
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { DateInput } from './date-input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -18,12 +21,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { ChevronUp, ChevronDown, Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { DateInput } from './date-input';
 
 export interface DateRangePickerProps {
   /** Click handler for applying the updates from DateRangePicker. */
   onUpdate?: (values: { range: DateRange; rangeCompare?: DateRange }) => void;
+  onCancel?: () => void;
   /** Initial value for start date */
   initialDateFrom?: Date | string;
   /** Initial value for end date */
@@ -38,6 +41,16 @@ export interface DateRangePickerProps {
   locale?: string;
   /** Option for showing compare feature */
   showCompare?: boolean;
+  /** Custom */
+  label?: string;
+  name?: string;
+  id?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  labelCN?: string;
+  withLabel?: boolean;
+  mandatory?: boolean;
+  buttonSize?: 'xs' | 'default' | 'sm' | 'lg' | 'icon';
 }
 
 const formatDate = (date: Date, locale: string = 'en-us'): string => {
@@ -80,9 +93,17 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
   initialCompareFrom,
   initialCompareTo,
   onUpdate,
+  onCancel,
   align = 'end',
   locale = 'en-US',
   showCompare = true,
+  label,
+  name,
+  id,
+  withLabel = true,
+  labelCN,
+  mandatory,
+  buttonSize,
 }): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -135,6 +156,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
     const to = new Date();
     const first = from.getDate() - from.getDay();
 
+    // eslint-disable-next-line default-case
     switch (preset.name) {
       case 'today':
         from.setHours(0, 0, 0, 0);
@@ -212,6 +234,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
   };
 
   const checkPreset = (): void => {
+    // eslint-disable-next-line no-restricted-syntax
     for (const preset of PRESETS) {
       const presetRange = getPresetRange(preset.name);
 
@@ -284,6 +307,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
     isSelected: boolean;
   }): JSX.Element => (
     <Button
+      type="button"
       className={cn(isSelected && 'pointer-events-none')}
       variant="ghost"
       onClick={() => {
@@ -317,7 +341,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
 
   return (
     <Popover
-      modal={true}
+      modal
       open={isOpen}
       onOpenChange={(open: boolean) => {
         if (!open) {
@@ -327,75 +351,86 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
       }}
     >
       <PopoverTrigger asChild>
-        <Button
-          size={'lg'}
-          className="bg-lightWhite border-none text-black rounded-md"
-        >
-          <div className="text-right">
+        <div>
+          {withLabel && (
+            <label
+              htmlFor={id || name}
+              className={cn('mb-1 inline-block', labelCN)}
+            >
+              {label || startCase(name)}
+              {mandatory && <span className="text-[#f00]">*</span>}
+            </label>
+          )}
+          <Button
+            type="button"
+            size={buttonSize || 'lg'}
+            variant="outline"
+            className="w-full justify-start px-2.5"
+          >
             <div className="py-1">
-              <div>{`${formatDate(range.from, locale)}${
-                range.to != null ? ' - ' + formatDate(range.to, locale) : ''
-              }`}</div>
+              {`${formatDate(range.from, locale)}${
+                range.to != null ? ` - ${formatDate(range.to, locale)}` : ''
+              }`}
             </div>
             {rangeCompare != null && (
-              <div className="opacity-60 text-xs -mt-1">
-                <>
-                  vs. {formatDate(rangeCompare.from, locale)}
-                  {rangeCompare.to != null
-                    ? ` - ${formatDate(rangeCompare.to, locale)}`
-                    : ''}
-                </>
+              <div className="-mt-1 text-xs opacity-60">
+                vs. {formatDate(rangeCompare.from, locale)}
+                {rangeCompare.to != null
+                  ? ` - ${formatDate(rangeCompare.to, locale)}`
+                  : ''}
               </div>
             )}
-          </div>
-          <div className="pl-1 opacity-60 -mr-2 scale-125">
-            {isOpen ? <ChevronUp width={16} /> : <ChevronDown width={16} />}
-          </div>
-        </Button>
+            <div className="ml-auto scale-125 pl-1 opacity-60">
+              {isOpen ? <ChevronUp width={24} /> : <ChevronDown width={24} />}
+            </div>
+          </Button>
+        </div>
       </PopoverTrigger>
       <PopoverContent align={align} className="w-auto">
         <div className="flex py-2">
           <div className="flex">
             <div className="flex flex-col">
-              <div className="flex flex-col lg:flex-row gap-2 px-3 justify-end items-center lg:items-start pb-4 lg:pb-0">
-                <div className="flex items-center space-x-2 pr-4 py-1">
+              <div className="flex flex-col items-center justify-end gap-2 px-3 pb-4 lg:flex-row lg:items-start lg:pb-0">
+                <div className="flex items-center space-x-2 py-1 pr-4">
                   {showCompare && (
-                    <Switch
-                      defaultChecked={Boolean(rangeCompare)}
-                      onCheckedChange={(checked: boolean) => {
-                        if (checked) {
-                          if (!range.to) {
-                            setRange({
-                              from: range.from,
-                              to: range.from,
+                    <>
+                      <Switch
+                        defaultChecked={Boolean(rangeCompare)}
+                        onCheckedChange={(checked: boolean) => {
+                          if (checked) {
+                            if (!range.to) {
+                              setRange({
+                                from: range.from,
+                                to: range.from,
+                              });
+                            }
+                            setRangeCompare({
+                              from: new Date(
+                                range.from.getFullYear(),
+                                range.from.getMonth(),
+                                range.from.getDate() - 365
+                              ),
+                              to: range.to
+                                ? new Date(
+                                    range.to.getFullYear() - 1,
+                                    range.to.getMonth(),
+                                    range.to.getDate()
+                                  )
+                                : new Date(
+                                    range.from.getFullYear() - 1,
+                                    range.from.getMonth(),
+                                    range.from.getDate()
+                                  ),
                             });
+                          } else {
+                            setRangeCompare(undefined);
                           }
-                          setRangeCompare({
-                            from: new Date(
-                              range.from.getFullYear(),
-                              range.from.getMonth(),
-                              range.from.getDate() - 365
-                            ),
-                            to: range.to
-                              ? new Date(
-                                  range.to.getFullYear() - 1,
-                                  range.to.getMonth(),
-                                  range.to.getDate()
-                                )
-                              : new Date(
-                                  range.from.getFullYear() - 1,
-                                  range.from.getMonth(),
-                                  range.from.getDate()
-                                ),
-                          });
-                        } else {
-                          setRangeCompare(undefined);
-                        }
-                      }}
-                      id="compare-mode"
-                    />
+                        }}
+                        id="compare-mode"
+                      />
+                      <Label htmlFor="compare-mode">Compare</Label>
+                    </>
                   )}
-                  <Label htmlFor="compare-mode">Compare</Label>
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="flex gap-2">
@@ -475,7 +510,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
                     setPreset(value);
                   }}
                 >
-                  <SelectTrigger className="w-[180px] mx-auto mb-2">
+                  <SelectTrigger className="mx-auto mb-2 w-[180px]">
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -509,8 +544,8 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
             </div>
           </div>
           {!isSmallScreen && (
-            <div className="flex flex-col items-end gap-1 pr-2 pl-6 pb-6">
-              <div className="flex w-full flex-col items-end gap-1 pr-2 pl-6 pb-6">
+            <div className="flex flex-col items-end gap-1 pb-6 pl-6 pr-2">
+              <div className="flex w-full flex-col items-end gap-1 pb-6 pl-6 pr-2">
                 {PRESETS.map((preset) => (
                   <PresetButton
                     key={preset.name}
@@ -525,15 +560,18 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
         </div>
         <div className="flex justify-end gap-2 py-2 pr-4">
           <Button
+            type="button"
             onClick={() => {
               setIsOpen(false);
               resetValues();
+              onCancel?.();
             }}
             variant="ghost"
           >
             Cancel
           </Button>
           <Button
+            type="button"
             onClick={() => {
               setIsOpen(false);
               if (

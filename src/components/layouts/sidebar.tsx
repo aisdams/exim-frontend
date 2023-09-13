@@ -30,9 +30,9 @@ export default function Sidebar() {
 
   return (
     <div>
-      <div className="w-[18rem] bg-blueNav rounded-r-[2rem] text-white">
-        <div className="flex relative">
-          <div className="bg-blueLight h-screen px-7 rounded-e-[1.5rem] rounded-s-[1.5rem]">
+      <div className="w-[18rem] bg-blueNav rounded-r-[2rem] text-white h-screen">
+        <div className="flex relative h-screen">
+          <div className="bg-blueLight px-7 rounded-e-[1.5rem] rounded-s-[1.5rem]">
             <div className="grid absolute top-[6.2rem] gap-[25px] left-2">
               {sidebarData.map((sidebar, idx) => (
                 <button

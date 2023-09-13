@@ -13,19 +13,19 @@ import Image from 'next/image';
 
 export default function Topbar() {
   return (
-    <div className="bg-white sticky shadow-md p-4 flex justify-between items-center">
-      <div className="flex items-center">
+    <div className="bg-white shadow-md p-4 flex justify-between items-center">
+      <div className="flex items-center relative">
         <input
           type="search"
           placeholder="Search....."
           className="border border-gray-400 rounded-full px-4 py-2 mr-4"
         />
-        <div className="text-gray-600">
+        <div className="text-gray-600 absolute right-8">
           <Search className="w-5 h-5" />
         </div>
       </div>
 
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 items-center text-graySecondary">
         <ToggleLeft />
         <Bell />
         <div className="relative">

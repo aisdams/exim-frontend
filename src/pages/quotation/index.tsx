@@ -31,7 +31,7 @@ import {
 import Link from 'next/link';
 import { DateRangePicker } from '@/components/forms/data-range-picker';
 
-export default function List() {
+export default function Index() {
   const [date, setDate] = React.useState<Date>();
   const [orderBy, setOrderBy] = useState('All');
   const [orderByTwo, setOrderByTwo] = useState('Quo No');
@@ -144,16 +144,13 @@ export default function List() {
         </div>
       </div>
 
-      <div className="rounded-xl border-2 border-graySecondary/50 mt-2 px-3 pt-3 h-max w-full">
+      <div className="mt-3 py-4 border-graySecondary/50 border-2 rounded-xl px-5">
         <Link href="/quotation/create">
-          <Button className="mb-5 bg-green-600 text-white w-max px-2 py-4 h-5 gap-2">
+          <Button className="mb-5 bg-green-600 text-white w-max px-2 py-4 gap-2">
             <PlusSquare className="h-5" />
             <h3>Create Quotation</h3>
           </Button>
         </Link>
-      </div>
-
-      <div className="">
         <table className="min-w-full border-collapse border border-gray-300 text-[#555555] text-sm">
           <thead>
             <tr>
@@ -169,6 +166,62 @@ export default function List() {
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td className="p-3">QUO-2300039 12-09-2023</td>
+              <td className="p-3">Import FCL</td>
+              <td className="p-3">OCEAN LINK FREIGHT SERVICES SDN BHD</td>
+              <td className="p-3">ANHUI, CHINA ASUNCION, PARAGUAY </td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex items-center gap-2">
+                    <h1>Detail Admin</h1>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="shadow-lg rounded-lg">
+                    <DropdownMenuLabel className="text-xs flex">
+                      COPY QUO <Copy />{' '}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem>Billing</DropdownMenuItem>
+                    <DropdownMenuItem>Team</DropdownMenuItem>
+                    <DropdownMenuItem>Subscription</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </td>
+            </tr>
+
+            <tr>
+              <td className="p-3">QUO-2300039 12-09-2023</td>
+              <td className="p-3">Import FCL</td>
+              <td className="p-3">OCEAN LINK FREIGHT SERVICES SDN BHD</td>
+              <td className="p-3">ANHUI, CHINA ASUNCION, PARAGUAY </td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex items-center gap-2">
+                    <h1>Detail Admin</h1>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="shadow-lg rounded-lg">
+                    <DropdownMenuLabel className="text-xs flex">
+                      COPY QUO <Copy />{' '}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem>Billing</DropdownMenuItem>
+                    <DropdownMenuItem>Team</DropdownMenuItem>
+                    <DropdownMenuItem>Subscription</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </td>
+            </tr>
+
             <tr>
               <td className="p-3">QUO-2300039 12-09-2023</td>
               <td className="p-3">Import FCL</td>
