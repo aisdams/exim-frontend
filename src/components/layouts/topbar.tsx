@@ -13,44 +13,42 @@ import Image from 'next/image';
 
 export default function Topbar() {
   return (
-    <div className="block max-w-full">
-      <div className="flex justify-between gap-5 !w-full mt-5">
-        <div className="flex h-max relative">
-          <input
-            type="search"
-            placeholder="Search....."
-            className="border border-gray-400 rounded-full px-10 py-1"
-          />
-          <div className="absolute right-8 top-[5px] text-gray-600">
-            <Search className="w-5 h-5" />
-          </div>
+    <div className="bg-white sticky shadow-md p-4 flex justify-between items-center">
+      <div className="flex items-center">
+        <input
+          type="search"
+          placeholder="Search....."
+          className="border border-gray-400 rounded-full px-4 py-2 mr-4"
+        />
+        <div className="text-gray-600">
+          <Search className="w-5 h-5" />
         </div>
+      </div>
 
-        <div className="">
-          <div className="flex gap-5 items-center">
-            <ToggleLeft />
-            <Bell />
-            <div className="">
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-3">
-                  <Image
-                    src={Avatar}
-                    alt=""
-                    className="rounded-full w-9 relative"
-                  />
-                  Admin
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="shadow-[2px_10px_31px_0px_rgba(0,0,0,0.5)] rounded-lg">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Billing</DropdownMenuItem>
-                  <DropdownMenuItem>Team</DropdownMenuItem>
-                  <DropdownMenuItem>Subscription</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
+      <div className="flex gap-4 items-center">
+        <ToggleLeft />
+        <Bell />
+        <div className="relative">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-2">
+              <Image
+                src={Avatar}
+                alt=""
+                className="rounded-full w-9"
+                width={36}
+                height={36}
+              />
+              Admin
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="shadow-lg rounded-lg">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Billing</DropdownMenuItem>
+              <DropdownMenuItem>Team</DropdownMenuItem>
+              <DropdownMenuItem>Subscription</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

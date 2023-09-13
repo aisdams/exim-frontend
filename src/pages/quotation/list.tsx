@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Command, Search, PlusSquare } from 'lucide-react';
+import { Command, Search, PlusSquare, Copy } from 'lucide-react';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
@@ -12,6 +12,14 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -21,6 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import Link from 'next/link';
+import { DateRangePicker } from '@/components/forms/data-range-picker';
 
 export default function List() {
   const [date, setDate] = React.useState<Date>();
@@ -29,62 +38,29 @@ export default function List() {
   const [orderByThree, setOrderByThree] = useState('Quo No');
 
   return (
-    <div className="w-full mt-10 text-sm">
+    <div className="mt-10 text-sm">
       <div className="flex gap-3">
         <Command />
         <h1> Quotation</h1>
       </div>
-      <div className="w-[1000px] rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3">
+      <div className="w-full rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3">
         <div className="flex gap-3 items-center mb-5">
           <Search className="w-4 h-4" />
           <h3> Filter Data</h3>
         </div>
 
         <div className="">
-          <div className="flex items-center">
-            <h3>Date : </h3>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  className={cn(
-                    'w-max justify-start text-left font-normal bg-lightWhite',
-                    !date && 'text-muted-foreground'
-                  )}
-                >
-                  {date ? format(date, 'PPP') : <span>01-01-2023</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+          <div className="flex items-center gap-3">
+            <h3>Date & To: </h3>
 
-            <h3 className="font-semibold">To : </h3>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  className={cn(
-                    'w-max justify-start text-left font-normal bg-lightWhite',
-                    !date && 'text-muted-foreground'
-                  )}
-                >
-                  {date ? format(date, 'PPP') : <span>12-09-2023</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <DateRangePicker
+              onUpdate={(values) => console.log(values)}
+              initialDateFrom="2023-01-01"
+              initialDateTo="2023-12-31"
+              align="start"
+              locale="en-GB"
+              showCompare={false}
+            />
           </div>
 
           <div className="flex items-center gap-3 mt-3">
@@ -168,13 +144,60 @@ export default function List() {
         </div>
       </div>
 
-      <div className="rounded-xl border-2 border-graySecondary/50 mt-2 px-3 pt-3 h-max">
+      <div className="rounded-xl border-2 border-graySecondary/50 mt-2 px-3 pt-3 h-max w-full">
         <Link href="/quotation/create">
           <Button className="mb-5 bg-green-600 text-white w-max px-2 py-4 h-5 gap-2">
             <PlusSquare className="h-5" />
             <h3>Create Quotation</h3>
           </Button>
         </Link>
+      </div>
+
+      <div className="">
+        <table className="min-w-full border-collapse border border-gray-300 text-[#555555] text-sm">
+          <thead>
+            <tr>
+              <th className="p-3 text-left bg-lightWhite">NO</th>
+              <th className="p-3 text-left bg-lightWhite">QUO NO QUO DATE</th>
+              <th className="p-3 text-left bg-lightWhite">TYPE</th>
+              <th className="p-3 text-left bg-lightWhite">CUSTOMER</th>
+              <th className="p-3 text-left bg-lightWhite">LOADING DISCHARGE</th>
+              <th className="p-3 text-left bg-lightWhite">SUBJECT</th>
+              <th className="p-3 text-left bg-lightWhite">SALES</th>
+              <th className="p-3 text-left bg-lightWhite">Status</th>
+              <th className="p-3 text-left bg-lightWhite">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="p-3">QUO-2300039 12-09-2023</td>
+              <td className="p-3">Import FCL</td>
+              <td className="p-3">OCEAN LINK FREIGHT SERVICES SDN BHD</td>
+              <td className="p-3">ANHUI, CHINA ASUNCION, PARAGUAY </td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">TEST</td>
+              <td className="p-3">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex items-center gap-2">
+                    <h1>Detail Admin</h1>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="shadow-lg rounded-lg">
+                    <DropdownMenuLabel className="text-xs flex">
+                      COPY QUO <Copy />{' '}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem>Billing</DropdownMenuItem>
+                    <DropdownMenuItem>Team</DropdownMenuItem>
+                    <DropdownMenuItem>Subscription</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -11,11 +11,13 @@ import Image from 'next/image';
 import Script from 'next/script';
 import Footer from '@/components/layouts/footer';
 import Topbar from '@/components/layouts/topbar';
+import Progress from '@/components/progress/progress';
 
 export type NextPageCustomLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
   theme?: string;
 };
+
 function App({
   Component,
   pageProps,
@@ -51,12 +53,14 @@ function App({
         />
       </Head>
       <AppProvider>
-        <div className="grid relative">
-          <div className="flex gap-8">
-            <Sidebar />
-            <div className="!block">
-              <Topbar />
-              {getLayout(<Component {...pageProps} />)}
+        <div className="flex">
+          <Sidebar />
+          <div className="flex-1 flex flex-col">
+            <Topbar />
+            <div className="flex-1 overflow-y-hidden">
+              <div className="overflow-y-auto mx-6">
+                {getLayout(<Component {...pageProps} />)}
+              </div>
             </div>
           </div>
         </div>
