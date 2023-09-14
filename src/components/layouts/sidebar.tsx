@@ -16,10 +16,6 @@ import Topbar from './topbar';
 export default function Sidebar() {
   const [isActive, setIsActive] = useState(0);
 
-  // const handleSetActive = (title: string) => {
-  //   setIsActive(title);
-  // };
-
   const handleSetActive = (index: number) => {
     setIsActive(index);
   };
@@ -30,7 +26,7 @@ export default function Sidebar() {
 
   return (
     <div>
-      <div className="w-[18rem] bg-blueNav rounded-r-[2rem] text-white h-screen">
+      <div className="w-[18rem] bg-blueNav dark:bg-black rounded-r-[2rem] text-white h-screen">
         <div className="flex relative h-screen">
           <div className="bg-blueLight px-7 rounded-e-[1.5rem] rounded-s-[1.5rem]">
             <div className="grid absolute top-[6.2rem] gap-[25px] left-2">

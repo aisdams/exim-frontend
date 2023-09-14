@@ -5,6 +5,7 @@ import { setAutoWidthMode } from '@/redux/slices/appSlice';
 import React, { useEffect } from 'react';
 import Sidebar from './sidebar';
 import Topbar from './topbar';
+import { ThemeProvider } from '@/components/theme-provider';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -25,22 +26,23 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       return;
     }
 
-    //! onBelowMediumScreen logic
     if (autoWidthMode) {
       dispatch(setAutoWidthMode(false));
     }
   }, [isMediumScreen]);
 
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Topbar />
-        <div className="flex-1 overflow-y-auto">
-          <div className="overflow-y-auto mx-6 mt-8 mb-20">{children}</div>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <div className="flex h-screen">
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <Topbar />
+          <div className="flex-1 overflow-y-auto">
+            <div className="overflow-y-auto mx-6 mt-8 mb-20">{children}</div>
+          </div>
         </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 };
 

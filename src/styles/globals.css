@@ -14,7 +14,7 @@ body {
   height: 100%;
   box-sizing: border-box;
 }
-/* 
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -60,4 +60,4 @@ body {
     --input: 240 3.7% 15.9%;
     --ring: 346.8 77.2% 49.8%;
   }
-} */
+}
