@@ -6,31 +6,20 @@ import { NProgress } from '@tanem/react-nprogress';
 
 type AppProviderProps = {
   children: React.ReactNode;
+  initialLoading: boolean;
 };
 
-const AppProvider = ({ children }: AppProviderProps) => {
+const AppProvider = ({ children, initialLoading }: AppProviderProps) => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const [slowLoadingTimeout, setSlowLoadingTimeout] =
-    useState<NodeJS.Timeout | null>(null);
+  const [isLoading, setIsLoading] = useState(initialLoading);
 
   useEffect(() => {
     const handleRouteChangeStart = () => {
       setIsLoading(true);
-
-      const timeout = setTimeout(() => {
-        setIsLoading(false);
-      }, 10000);
-
-      setSlowLoadingTimeout(timeout);
     };
 
     const handleRouteChangeComplete = () => {
       setIsLoading(false);
-
-      if (slowLoadingTimeout) {
-        clearTimeout(slowLoadingTimeout);
-      }
     };
 
     router.events.on('routeChangeStart', handleRouteChangeStart);
@@ -39,19 +28,15 @@ const AppProvider = ({ children }: AppProviderProps) => {
     return () => {
       router.events.off('routeChangeStart', handleRouteChangeStart);
       router.events.off('routeChangeComplete', handleRouteChangeComplete);
-
-      if (slowLoadingTimeout) {
-        clearTimeout(slowLoadingTimeout);
-      }
     };
-  }, [router, slowLoadingTimeout]);
+  }, [router]);
 
   return (
     <>
       <NProgress isAnimating={isLoading}>
         {({ isFinished }) => (
           <div
-            className={`fixed top-0 left-0 w-full h-[6px] bg-blueLight rounded-full transition-opacity ${
+            className={`fixed top-0 left-0 w-full h-[6px] bg-purple-500 rounded-full z-50 transition-opacity ${
               isFinished ? 'opacity-0' : 'opacity-100'
             }`}
           />

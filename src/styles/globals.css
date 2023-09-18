@@ -4,6 +4,23 @@
 
 :root {
   --secondary-gray: #4b4b4b;
+  --blue: #2a2185;
+  --gray: #f5f5f5;
+  --black1: #222;
+  --black2: #999;
+  --background-light: #c5c8ff;
+  --background-dark: red;
+  --blueNavi: #3e53a0;
+}
+
+.light {
+  background: #fff;
+  color: var(--blueNavi);
+}
+
+.dark {
+  background: #000;
+  color: white;
 }
 
 html,
@@ -60,4 +77,35 @@ body {
     --input: 240 3.7% 15.9%;
     --ring: 346.8 77.2% 49.8%;
   }
+}
+
+/* --------- curve outside ---------- */
+.childOne .childTwo .childThree .childFour.hovered .Link::before,
+.childOne .childTwo .childThree .childFour.hovered .Link::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -50px;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  border-radius: 50%;
+  box-shadow: 35px 35px 0 10px white;
+  pointer-events: none;
+  z-index: 1 !important;
+}
+
+.childOne .childTwo .childThree .childFour.hovered .Link::after,
+.childOne .childTwo .childThree .childFour.hovered .Link::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -50px;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  border-radius: 50%;
+  box-shadow: 35px -35px 0 10px white;
+  pointer-events: none;
+  z-index: 1 !important;
 }

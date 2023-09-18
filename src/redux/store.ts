@@ -14,43 +14,28 @@ import { WebStorage } from 'redux-persist/lib/types';
 
 import appReducer from '@/redux/slices/appSlice';
 
-export function createPersistStorage(): WebStorage {
+// Fungsi untuk membuat penyimpanan web untuk Redux Persist
+const createPersistStorage = (key: string): WebStorage => {
   const isServer = typeof window === 'undefined';
-
-  // returns noop (dummy) storage.
-  if (isServer) {
-    return {
-      getItem() {
-        return Promise.resolve(null);
-      },
-      setItem() {
-        return Promise.resolve();
-      },
-      removeItem() {
-        return Promise.resolve();
-      },
-    };
-  }
-
-  return createWebStorage('local');
-}
-
-const storage = createPersistStorage();
-
-const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['app'],
+  return createWebStorage(isServer ? 'local' : key);
 };
 
+// Konfigurasi Redux Persist
+const persistConfig = {
+  key: 'root', // Nama kunci untuk penyimpanan
+  storage: createPersistStorage('root'), // Menggunakan penyimpanan web
+  whitelist: ['app'], // Nama slice yang ingin Anda simpan
+};
+
+// Membuat store Redux
 const rootReducer = combineReducers({
-  app: appReducer,
+  app: persistReducer(persistConfig, appReducer),
+  // Tambahkan reducer lain jika diperlukan
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
+// Membuat store Redux
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -59,11 +44,15 @@ const store = configureStore({
     }),
 });
 
+// Membuat persistor untuk Redux Persist
 const persistor = persistStore(store);
 
 const reduxStore = () => ({ store, persistor });
 
-export type RootState = ReturnType<typeof store.getState>;
+// Ekspor AppDispatch dan RootState
 export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof rootReducer>;
+
+export { store, persistor };
 
 export default reduxStore;

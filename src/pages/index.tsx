@@ -7,7 +7,6 @@ export default function Home() {
   return (
     <div>
       <Content />
-      <Image src={Logo} alt="" />
     </div>
   );
 }

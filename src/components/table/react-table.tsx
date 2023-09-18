@@ -157,26 +157,22 @@ const ReactTable: React.FC<ReactTableProps> = ({
 
         {/* Next & Prev Buttons */}
         <div className="flex flex-wrap items-center gap-2">
-          <ButtonNavigation
-            icon={ChevronsLeft}
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          />
-          <ButtonNavigation
-            icon={ChevronLeft}
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          />
-          <ButtonNavigation
-            icon={ChevronRight}
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          />
-          <ButtonNavigation
-            icon={ChevronsRight}
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          />
+          {[...Array(table.getPageCount() > 0 ? table.getPageCount() : 3)].map(
+            (_, pageIndex) => (
+              <button
+                key={pageIndex}
+                className={cn(
+                  'p-2',
+                  table.getState().pagination.pageIndex === pageIndex
+                    ? 'bg-green-500'
+                    : 'bg-transparent'
+                )}
+                onClick={() => table.setPageIndex(pageIndex)}
+              >
+                {pageIndex + 1}
+              </button>
+            )
+          )}
         </div>
       </div>
     </div>

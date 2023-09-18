@@ -14,22 +14,28 @@ export default function Create() {
   return (
     <div className="w-full">
       <div className="grid grid-cols-2 mt-5 gap-3">
-        <div className="border-2 border-graySecondary/50 px-3 py-3">
+        <div className="border-2 border-graySecondary/50 px-3 py-3 rounded-md">
           <div className="flex gap-5">
-            <h3>Data :</h3>
+            <h3>
+              Data <span>:</span>
+            </h3>
             <Input name="data" type="email" className="w-1/2" />
           </div>
           <div className="flex gap-5">
-            <h3>Subject :</h3>
+            <h3>
+              Subject <span>:</span>
+            </h3>
             <Input name="data" type="email" className="w-1/2" />
           </div>
           <div className="flex gap-5">
-            <h3>Shipper :</h3>
+            <h3>
+              Shipper <span>:</span>
+            </h3>
             <Input name="data" type="email" className="w-1/2" />
           </div>
         </div>
 
-        <div className="border-2 border-graySecondary/50 px-3 py-3">
+        <div className="border-2 border-graySecondary/50 px-3 py-3 rounded-md">
           <div className="flex gap-5">
             <h3>Data :</h3>
             <Input name="data" type="email" className="w-1/2" />
