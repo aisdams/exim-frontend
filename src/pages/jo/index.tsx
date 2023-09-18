@@ -207,7 +207,7 @@ export default function Index() {
 
   return (
     <div className="w-full ">
-      <div className="rounded-xl border-graySecondary/50">
+      <div className="rounded-xl border border-graySecondary/50 dark:bg-secondDarkBlue mb-5 px-3 py-2">
         <div className="flex gap-5 font-semibold items-center mb-5">
           <Box className="text-blueLight" />
           <h1>Job Order</h1>
@@ -234,7 +234,7 @@ export default function Index() {
             </div>
           </div>
 
-          <Button className="bg-green-500 mt-3 w-max">Save</Button>
+          <Button className="bg-green-500 mt-3 w-max mb-3">Save</Button>
         </div>
         <hr />
       </div>

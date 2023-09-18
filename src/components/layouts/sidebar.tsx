@@ -53,13 +53,13 @@ export default function Sidebar() {
   return (
     <div>
       <div
-        className={`w-auto h-screen text-white ${
-          sidebarVisible ? 'bg-blueNav rounded-r-[2rem]' : ''
+        className={`w-auto h-screen bg-blueNav ${
+          sidebarVisible ? 'bg-blueNav rounded-r-[2rem] ' : ''
         }`}
       >
         <div className="flex relative h-screen">
           <div
-            className={`bg-blueLight px-7 transition-all ease-in-out duration-500 ${
+            className={`bg-blueLight text-white px-7 transition-all ease-in-out duration-500 ${
               sidebarVisible
                 ? 'rounded-e-[1.5rem] rounded-s-[1.5rem] '
                 : 'rounded-none'
@@ -67,13 +67,13 @@ export default function Sidebar() {
           >
             {menuIcon === 'Menu' ? (
               <Menu
-                className="absolute top-10 left-4"
+                className="absolute top-10 left-4 cursor-pointer"
                 size={30}
                 onClick={handleToggleSidebar}
               />
             ) : (
               <X
-                className="absolute top-10 left-4"
+                className="absolute top-10 left-4 cursor-pointer"
                 size={30}
                 onClick={handleToggleSidebar}
               />
@@ -99,7 +99,7 @@ export default function Sidebar() {
           </div>
 
           <div
-            className={`bg-blueNav rounded-r-[2rem] rounded-bl-[2rem] text-white transition-all ease-in-out duration-500 ${
+            className={`bg-blueNav dark:bg-[#] rounded-r-[2rem] text-white transition-all ease-in-out duration-500 ${
               sidebarVisible ? '' : 'hidden'
             }`}
           >
@@ -111,9 +111,9 @@ export default function Sidebar() {
                     <NavigationMenuItem className="childThree">
                       <Link href={sidebar.link} className="childFour">
                         <NavigationMenuTrigger
-                          className={`text-lg !text-left !justify-normal h-12 hover:bg-white text-white hover:text-[#4a5ea6] Link rounded-l-full w-[17rem] ${
+                          className={`text-lg !text-left !justify-normal h-12 dark:hover:bg-darkBlue dark:text-white hover:!bg-white text-white hover:text-[#4a5ea6] Link rounded-l-full w-[17rem] ${
                             isActive === idx
-                              ? 'transition-all ease-linear duration-300 bg-white text-[#4a5ea6]'
+                              ? 'transition-all ease-linear duration-300 dark:bg-darkBlue !bg-white !text-[#4a5ea6]'
                               : ''
                           }`}
                           onClick={() => setIsActive(idx)}

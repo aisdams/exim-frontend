@@ -4,13 +4,6 @@
 
 :root {
   --secondary-gray: #4b4b4b;
-  --blue: #2a2185;
-  --gray: #f5f5f5;
-  --black1: #222;
-  --black2: #999;
-  --background-light: #c5c8ff;
-  --background-dark: red;
-  --blueNavi: #3e53a0;
 }
 
 .light {
@@ -19,7 +12,7 @@
 }
 
 .dark {
-  background: #000;
+  background: #262e4b;
   color: white;
 }
 
@@ -90,7 +83,7 @@ body {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px 35px 0 10px white;
+  box-shadow: 35px 35px 0 10px /*#262e4b*/ white;
   pointer-events: none;
   z-index: 1 !important;
 }
@@ -105,7 +98,7 @@ body {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px -35px 0 10px white;
+  box-shadow: 35px -35px 0 10px /*#262e4b*/ white;
   pointer-events: none;
   z-index: 1 !important;
 }

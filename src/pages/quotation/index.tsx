@@ -206,7 +206,7 @@ export default function Index() {
           <Command className="text-blueLight" />
           <h1> Quotation</h1>
         </div>
-        <div className="w-full rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3">
+        <div className="w-full rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3 dark:bg-secondDarkBlue">
           <div className="flex gap-3 items-center mb-5">
             <Search className="w-4 h-4" />
             <h3> Filter Data</h3>
@@ -231,7 +231,7 @@ export default function Index() {
             <div className="flex items-center gap-3 mt-3">
               <h1>Status : </h1>
               <Select value={orderBy} onValueChange={setOrderBy}>
-                <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite">
+                <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
                   <SelectValue placeholder="Order by" className="" />
                 </SelectTrigger>
                 <SelectContent align="end">
@@ -251,10 +251,10 @@ export default function Index() {
               <div className="grid">
                 <div className="flex gap-1">
                   <Select value={orderByTwo} onValueChange={setOrderByTwo}>
-                    <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite">
+                    <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>
-                    <SelectContent align="end">
+                    <SelectContent align="end" className="dark:text-black">
                       <SelectGroup>
                         <SelectLabel>Order By</SelectLabel>
                         <SelectItem value="Quo No">Quo No</SelectItem>
@@ -271,16 +271,16 @@ export default function Index() {
                     name=""
                     id=""
                     placeholder=""
-                    className="border border-graySecondary rounded-md"
+                    className="border border-graySecondary dark:border-white rounded-md"
                   />
                 </div>
 
                 <div className="flex gap-1 mt-2">
-                  <Select value={orderByThree} onValueChange={setOrderByThree}>
-                    <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite">
+                  <Select value={orderByTwo} onValueChange={setOrderByTwo}>
+                    <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>
-                    <SelectContent align="end">
+                    <SelectContent align="end" className="dark:text-black">
                       <SelectGroup>
                         <SelectLabel>Order By</SelectLabel>
                         <SelectItem value="Quo No">Quo No</SelectItem>
@@ -297,7 +297,7 @@ export default function Index() {
                     name=""
                     id=""
                     placeholder=""
-                    className="border border-graySecondary rounded-md"
+                    className="border border-graySecondary dark:border-white rounded-md"
                   />
 
                   <Button

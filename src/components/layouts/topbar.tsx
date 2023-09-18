@@ -17,28 +17,28 @@ import { Input } from '@/components/ui/input';
 export default function Topbar() {
   const { setTheme } = useTheme();
   return (
-    <div className="bg-white shadow-md p-4 flex justify-between items-center">
+    <div className="p-4 flex justify-between items-center shadow-2xl">
       <div className="flex items-center relative">
         <Input
           type="search"
           placeholder="Search....."
-          className="border border-gray-400 rounded-full px-10 py-2 mr-4 w-full"
+          className="border border-gray-400 rounded-full px-10 py-2 mr-4 w-full dark:bg-secondDarkBlue"
         />
-        <div className="text-gray-600 absolute right-8">
+        <div className="text-gray-600 absolute right-8 dark:text-white">
           <Search className="w-5 h-5" />
         </div>
       </div>
 
-      <div className="flex gap-4 items-center text-graySecondary">
+      <div className="flex gap-4 items-center text-graySecondary dark:text-white">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="dark:bg-darkBlue">
               <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               <span className="sr-only">Toggle theme</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="dark:text-black">
             <DropdownMenuItem onClick={() => setTheme('light')}>
               Light
             </DropdownMenuItem>
@@ -56,7 +56,7 @@ export default function Topbar() {
             <DropdownMenuTrigger className="flex items-center gap-2">
               <Bell />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="shadow-lg rounded-lg w-40 mr-5">
+            <DropdownMenuContent className="shadow-lg rounded-lg w-40 mr-5 dark:text-black">
               <DropdownMenuLabel>News</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -70,7 +70,7 @@ export default function Topbar() {
         </div>
         <div className="relative">
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2">
+            <DropdownMenuTrigger className="flex items-center gap-2 dark:text-white">
               <Image
                 src={Avatar}
                 alt=""
@@ -80,7 +80,7 @@ export default function Topbar() {
               />
               Admin
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="shadow-lg rounded-lg w-40 mr-5">
+            <DropdownMenuContent className="shadow-lg rounded-lg w-40 mr-5 dark:text-black">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>

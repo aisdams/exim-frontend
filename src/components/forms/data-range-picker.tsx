@@ -365,7 +365,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
             type="button"
             size={buttonSize || 'lg'}
             variant="outline"
-            className="w-full justify-start px-2.5"
+            className="w-full justify-start px-2.5 dark:bg-secondDarkBlue dark:border-white"
           >
             <div className="py-1">
               {`${formatDate(range.from, locale)}${

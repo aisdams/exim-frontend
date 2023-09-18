@@ -60,7 +60,7 @@ export default function Content() {
         <h1>Dashboard</h1>
       </div>
       <div className="grid grid-cols-[1fr_2fr_1fr] gap-5 mb-5">
-        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-white font-bold">
+        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-white font-bold dark:bg-secondDarkBlue">
           <div className="bg-black text-xl flex items-center gap-3">
             <Menu />
             <h1>Ar</h1>
@@ -74,7 +74,7 @@ export default function Content() {
           </div>
         </div>
 
-        <div className="w-full px-5 py-1 border-graySecondary/50 rounded-md border-2">
+        <div className="w-full px-5 py-1 border-graySecondary/50 rounded-md border-2 dark:bg-secondDarkBlue">
           <ReactApexChart
             options={options}
             series={series}
@@ -83,7 +83,7 @@ export default function Content() {
           />
         </div>
 
-        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-white font-bold">
+        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-white font-bold dark:bg-secondDarkBlue">
           <div className="bg-black text-xl flex items-center gap-3">
             <Menu />
             <h1>AP</h1>
@@ -98,7 +98,7 @@ export default function Content() {
         </div>
       </div>
 
-      <div className="mt-5 border-graySecondary/50 rounded-md border-2 w-[90%]">
+      <div className="mt-5 border-graySecondary/50 rounded-md border-2 w-[90%] dark:bg-secondDarkBlue">
         <ReactApexChart
           options={optionsTwo}
           series={seriesTwo}

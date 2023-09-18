@@ -26,6 +26,8 @@ module.exports = {
         blueNav: '#3e53a0',
         lightWhite: '#ebebe4',
         graySecondary: '#6f6b66',
+        darkBlue: '#262e4b',
+        secondDarkBlue: '#323954',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {

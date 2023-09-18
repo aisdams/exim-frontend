@@ -30,7 +30,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
   containerCN,
 }) => {
   return (
-    <div className="border-2 border-graySecondary/50 rounded-lg p-3">
+    <div className="border-2 border-graySecondary/50 rounded-lg p-3 dark:bg-secondDarkBlue">
       <div className="grid place-content-end mb-5">
         <Select
           defaultValue="15"
@@ -38,7 +38,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
             table.setPageSize(Number(newValue));
           }}
         >
-          <SelectTrigger className="w-max font-sans">
+          <SelectTrigger className="w-max font-sans dark:bg-darkBlue">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -56,7 +56,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
           </SelectContent>
         </Select>
       </div>
-      <div className="react-table-wrapper mb-2 overflow-x-auto rounded-md border">
+      <div className="react-table-wrapper mb-2 overflow-x-auto rounded-md border dark:bg-secondDarkBlue">
         <table className="w-full">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -162,9 +162,9 @@ const ReactTable: React.FC<ReactTableProps> = ({
               <button
                 key={pageIndex}
                 className={cn(
-                  'p-2',
+                  'px-2 py-1 rounded-md',
                   table.getState().pagination.pageIndex === pageIndex
-                    ? 'bg-green-500'
+                    ? 'bg-green-500 dark:bg-black'
                     : 'bg-transparent'
                 )}
                 onClick={() => table.setPageIndex(pageIndex)}
