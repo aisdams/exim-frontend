@@ -1,10 +1,9 @@
 'use client';
 import React from 'react';
-import { Home, Menu } from 'lucide-react';
-import ApexCharts from 'apexcharts';
-
 import dynamic from 'next/dynamic';
+import ApexCharts from 'apexcharts';
 import { ApexOptions } from 'apexcharts';
+import { Home, Menu } from 'lucide-react';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -55,7 +54,7 @@ export default function Content() {
 
   return (
     <div className="grid">
-      <div className="flex gap-3 items-center font-semibold mb-20">
+      <div className="flex gap-3 items-center font-semibold mb-10 mt-5">
         <Home className="text-blueLight" />
         <h1>Dashboard</h1>
       </div>

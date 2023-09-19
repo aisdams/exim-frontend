@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Topbar from './topbar';
+import Image from 'next/image';
+import Logo from 'public/img/logo.png';
+import { Menu, X } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -6,12 +10,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import Logo from 'public/img/logo.png';
-import { Menu, X } from 'lucide-react';
-import Link from 'next/link';
 import sidebarData from '@/data/sidebar-data';
-import Image from 'next/image';
-import Topbar from './topbar';
+import React, { useEffect, useState } from 'react';
 
 export default function Sidebar() {
   const [isActive, setIsActive] = useState(0);
@@ -111,9 +111,9 @@ export default function Sidebar() {
                     <NavigationMenuItem className="childThree">
                       <Link href={sidebar.link} className="childFour">
                         <NavigationMenuTrigger
-                          className={`text-lg !text-left !justify-normal h-12 dark:hover:bg-darkBlue dark:text-white hover:!bg-white text-white hover:text-[#4a5ea6] Link rounded-l-full w-[17rem] ${
+                          className={`text-lg !text-left !justify-normal h-12 dark:hover:!bg-darkBlue dark:text-white hover:!bg-white text-white hover:text-[#4a5ea6] Link rounded-l-full w-[17rem] ${
                             isActive === idx
-                              ? 'transition-all ease-linear duration-300 dark:bg-darkBlue !bg-white !text-[#4a5ea6]'
+                              ? 'transition-all ease-linear duration-300 dark:!bg-darkBlue dark:!text-white !bg-white !text-[#4a5ea6]'
                               : ''
                           }`}
                           onClick={() => setIsActive(idx)}

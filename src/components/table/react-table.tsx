@@ -1,4 +1,4 @@
-import { flexRender, Table } from '@tanstack/react-table';
+import { cn } from '@/lib/utils';
 import {
   ChevronLeft,
   ChevronRight,
@@ -6,7 +6,6 @@ import {
   ChevronsRight,
 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
 import {
   Select,
   SelectContent,
@@ -17,6 +16,7 @@ import {
 } from '@/components/ui/select';
 import Loader from '../table/loading';
 import ButtonNavigation from './button-navigation';
+import { flexRender, Table } from '@tanstack/react-table';
 
 type ReactTableProps = {
   tableInstance: Table<any>;
@@ -42,7 +42,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectGroup>
+            <SelectGroup className="dark:text-black">
               {[15, 25, 50, 100, 200].map((pageSize) => (
                 <SelectItem
                   key={pageSize}
@@ -64,11 +64,11 @@ const ReactTable: React.FC<ReactTableProps> = ({
                 key={headerGroup.id}
                 className="transition-colors border-graySecondary/50 border-y-2"
               >
-                <th className="w-[1px] border-b p-2" />
+                <th className="p-0" />
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="border-b p-2 text-start text-sm font-medium tracking-wide"
+                    className="border-2 p-2 text-start text-sm font-medium tracking-wide border-white/30"
                   >
                     <div className="">
                       {header.isPlaceholder
@@ -164,7 +164,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
                 className={cn(
                   'px-2 py-1 rounded-md',
                   table.getState().pagination.pageIndex === pageIndex
-                    ? 'bg-green-500 dark:bg-black'
+                    ? 'bg-black text-white'
                     : 'bg-transparent'
                 )}
                 onClick={() => table.setPageIndex(pageIndex)}

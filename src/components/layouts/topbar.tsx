@@ -1,5 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
+import { useTheme } from 'next-themes';
+import Avatar from 'public/img/avatar.png';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import {
+  Search,
+  ToggleLeft,
+  ToggleRight,
+  Bell,
+  Moon,
+  Sun,
+  Maximize,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,14 +21,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useTheme } from 'next-themes';
-import Avatar from 'public/img/avatar.png';
-import { Button } from '@/components/ui/button';
-import { Search, ToggleLeft, ToggleRight, Bell, Moon, Sun } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 
 export default function Topbar() {
   const { setTheme } = useTheme();
+
+  function toggleFullScreen() {
+    const elem = document.documentElement as HTMLElement;
+    if (elem.requestFullscreen) {
+      elem
+        .requestFullscreen()
+        .then(() => {
+          console.log('Success');
+        })
+        .catch((error) => {
+          console.error('Error entering fullscreen mode:', error);
+        });
+    }
+  }
+
+  useEffect(() => {
+    const maximizeButton = document.querySelector('.fullscreen-button');
+    maximizeButton?.addEventListener('click', toggleFullScreen);
+
+    return () => {
+      maximizeButton?.removeEventListener('click', toggleFullScreen);
+    };
+  });
   return (
     <div className="p-4 flex justify-between items-center shadow-2xl">
       <div className="flex items-center relative">
@@ -51,6 +82,13 @@ export default function Topbar() {
           </DropdownMenuContent>
         </DropdownMenu>
 
+        <div
+          className="dark:text-white cursor-pointer fullscreen-button"
+          onClick={toggleFullScreen}
+        >
+          <Maximize />
+        </div>
+
         <div className="flex relative">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2">
@@ -68,6 +106,7 @@ export default function Topbar() {
 
           <div className="absolute right-1 bullet rounded-full w-2 h-2 bg-red-600"></div>
         </div>
+
         <div className="relative">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 dark:text-white">

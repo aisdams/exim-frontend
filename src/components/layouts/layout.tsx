@@ -1,12 +1,12 @@
-import { useIsMediumScreen } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { setAutoWidthMode } from '@/redux/slices/appSlice';
 import React, { useEffect } from 'react';
-import Sidebar from '@/components/layouts/sidebar';
+import { useIsMediumScreen } from '@/hooks';
 import Topbar from '@/components/layouts/topbar';
-import { ThemeProvider } from '@/components/theme-provider';
 import Footer from '@/components/layouts/footer';
+import Sidebar from '@/components/layouts/sidebar';
+import { setAutoWidthMode } from '@/redux/slices/appSlice';
+import { ThemeProvider } from '@/components/theme-provider';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -15,9 +15,7 @@ type LayoutProps = {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const { isMediumScreen } = useIsMediumScreen();
-  const { autoWidthMode, isSidebarOpen, sidebarType } = useAppSelector(
-    (state) => state.app
-  );
+  const { autoWidthMode, isSidebarOpen } = useAppSelector((state) => state.app);
 
   useEffect(() => {
     if (isMediumScreen) {

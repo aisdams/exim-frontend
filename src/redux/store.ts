@@ -14,7 +14,6 @@ import { WebStorage } from 'redux-persist/lib/types';
 
 import appReducer from '@/redux/slices/appSlice';
 
-// Fungsi untuk membuat penyimpanan web untuk Redux Persist
 const createPersistStorage = (key: string): WebStorage => {
   const isServer = typeof window === 'undefined';
   return createWebStorage(isServer ? 'local' : key);
@@ -22,12 +21,11 @@ const createPersistStorage = (key: string): WebStorage => {
 
 // Konfigurasi Redux Persist
 const persistConfig = {
-  key: 'root', // Nama kunci untuk penyimpanan
-  storage: createPersistStorage('root'), // Menggunakan penyimpanan web
-  whitelist: ['app'], // Nama slice yang ingin Anda simpan
+  key: 'root',
+  storage: createPersistStorage('root'),
+  whitelist: ['app'],
 };
 
-// Membuat store Redux
 const rootReducer = combineReducers({
   app: persistReducer(persistConfig, appReducer),
   // Tambahkan reducer lain jika diperlukan

@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useEffect, useRef, useState, type FC } from 'react';
-import { Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { startCase } from 'lodash';
-
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+import { startCase } from 'lodash';
+import { DateInput } from './date-input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Calendar } from '@/components/ui/calendar';
+import { Check, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useEffect, useRef, useState, type FC } from 'react';
+
 import {
   Popover,
   PopoverContent,
@@ -20,8 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { DateInput } from './date-input';
 
 export interface DateRangePickerProps {
   /** Click handler for applying the updates from DateRangePicker. */
@@ -365,7 +365,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
             type="button"
             size={buttonSize || 'lg'}
             variant="outline"
-            className="w-full justify-start px-2.5 dark:bg-secondDarkBlue dark:border-white"
+            className="w-full justify-start px-2.5 dark:bg-secondDarkBlue dark:border-white border-graySecondary"
           >
             <div className="py-1">
               {`${formatDate(range.from, locale)}${
@@ -531,6 +531,9 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
                     }
                   }}
                   selected={range}
+                  fromYear={1960}
+                  toYear={2030}
+                  captionLayout="dropdown-buttons"
                   numberOfMonths={isSmallScreen ? 1 : 2}
                   defaultMonth={
                     new Date(
@@ -572,6 +575,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
           </Button>
           <Button
             type="button"
+            className="dark:bg-blueNav"
             onClick={() => {
               setIsOpen(false);
               if (

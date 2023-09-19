@@ -1,14 +1,12 @@
-import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useDebouncedValue } from '@mantine/hooks';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { toast } from 'react-toastify';
 import {
   createColumnHelper,
   getCoreRowModel,
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-
 import {
   Select,
   SelectContent,
@@ -18,22 +16,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-import { format } from 'date-fns';
 import {
   CheckCircle2,
   PlusCircle,
@@ -43,13 +30,24 @@ import {
   Search,
   Command,
 } from 'lucide-react';
-import { toast } from 'react-toastify';
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn, getErrMessage } from '@/lib/utils';
-import InputSearch from '@/components/table/input-search';
-import ReactTable from '@/components/table/react-table';
 import { Button } from '@/components/ui/button';
+// import QuotationServ from '../../apis/quotation.api';
+import React, { useMemo, useState } from 'react';
+import { useDebouncedValue } from '@mantine/hooks';
+import ReactTable from '@/components/table/react-table';
+import InputSearch from '@/components/table/input-search';
 import { DateRangePicker } from '@/components/forms/data-range-picker';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Input } from '@/components/ui/input';
 
 type Quotation = {
   quotation_code: string;
@@ -106,44 +104,16 @@ const columnsDef = [
   }),
 ];
 
-const searchByOptions = [
-  { value: 'quotation_code', label: 'Quotation Code' },
-  { value: 'title', label: 'Quotation Title' },
-];
-
 export default function Index() {
   const qc = useQueryClient();
-
-  const [searchBy, setSearchBy] = useState(searchByOptions[0].value);
-  const [searchKey, setSearchKey] = useState('');
   const [statusesKey, setStatusesKey] = useState<string[]>([]);
-  const [date, setDate] = React.useState<Date>();
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [orderBy, setOrderBy] = useState('All');
   const [orderByTwo, setOrderByTwo] = useState('Quo No');
   const [orderByThree, setOrderByThree] = useState('Quo No');
 
-  const [searchKeyDebounce] = useDebouncedValue(searchKey, 500);
-
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
-
-  const searchQueries = useMemo(() => {
-    const queries = [
-      {
-        by: searchBy,
-        key: searchKeyDebounce.trim(),
-      },
-    ];
-
-    statusesKey.forEach((status) => {
-      queries.push({
-        by: 'status',
-        key: status,
-      });
-    });
-
-    return queries;
-  }, [searchBy, searchKeyDebounce, statusesKey]);
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -153,7 +123,6 @@ export default function Index() {
   const fetchDataOptions = {
     page: pageIndex + 1,
     limit: pageSize,
-    searchQueries,
   };
 
   const quotationsQuery = useQuery({
@@ -225,6 +194,14 @@ export default function Index() {
                   locale="en-GB"
                   showCompare={false}
                 />
+                {/* <Calendar
+                  mode="single"
+                  captionLayout="dropdown-buttons"
+                  selected={date}
+                  onSelect={setDate}
+                  fromYear={1960}
+                  toYear={2030}
+                /> */}
               </div>
             </div>
 
@@ -234,12 +211,11 @@ export default function Index() {
                 <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
                   <SelectValue placeholder="Order by" className="" />
                 </SelectTrigger>
-                <SelectContent align="end">
+                <SelectContent align="end" className="dark:text-black">
                   <SelectGroup>
-                    <SelectLabel>Order By</SelectLabel>
                     <SelectItem value="All">All</SelectItem>
-                    <SelectItem value="OUT_OF_STOCK">OUT_OF_STOCK</SelectItem>
-                    <SelectItem value="TOP_SELLING">TOP_SELLING</SelectItem>
+                    <SelectItem value="In Progress">In Progress</SelectItem>
+                    <SelectItem value="Executed">Executed</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -248,25 +224,23 @@ export default function Index() {
             <div className="flex items-center gap-3 mt-3">
               <h3>Filter By : </h3>
 
-              <div className="grid">
+              <div className="grid gap-1">
                 <div className="flex gap-1">
                   <Select value={orderByTwo} onValueChange={setOrderByTwo}>
-                    <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
+                    <SelectTrigger className="h-7 w-1/2 [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>
                     <SelectContent align="end" className="dark:text-black">
                       <SelectGroup>
-                        <SelectLabel>Order By</SelectLabel>
                         <SelectItem value="Quo No">Quo No</SelectItem>
-                        <SelectItem value="OUT_OF_STOCK">
-                          OUT_OF_STOCK
-                        </SelectItem>
-                        <SelectItem value="TOP_SELLING">TOP_SELLING</SelectItem>
+                        <SelectItem value="Customer">Customer</SelectItem>
+                        <SelectItem value="Tipe">Tipe</SelectItem>
+                        <SelectItem value="Delivery">Delivery</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
 
-                  <input
+                  <Input
                     type="text"
                     name=""
                     id=""
@@ -275,38 +249,34 @@ export default function Index() {
                   />
                 </div>
 
-                <div className="flex gap-1 mt-2">
-                  <Select value={orderByTwo} onValueChange={setOrderByTwo}>
-                    <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
-                      <SelectValue placeholder="Order by" className="" />
-                    </SelectTrigger>
-                    <SelectContent align="end" className="dark:text-black">
-                      <SelectGroup>
-                        <SelectLabel>Order By</SelectLabel>
-                        <SelectItem value="Quo No">Quo No</SelectItem>
-                        <SelectItem value="OUT_OF_STOCK">
-                          OUT_OF_STOCK
-                        </SelectItem>
-                        <SelectItem value="TOP_SELLING">TOP_SELLING</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                <div className="flex relative">
+                  <div className="flex gap-1">
+                    <Select value={orderByTwo} onValueChange={setOrderByTwo}>
+                      <SelectTrigger className="h-7 w-1/2 [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
+                        <SelectValue placeholder="Order by" className="" />
+                      </SelectTrigger>
+                      <SelectContent align="end" className="dark:text-black">
+                        <SelectGroup>
+                          <SelectItem value="Quo No">Quo No</SelectItem>
+                          <SelectItem value="Customer">Customer</SelectItem>
+                          <SelectItem value="Tipe">Tipe</SelectItem>
+                          <SelectItem value="Delivery">Delivery</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
 
-                  <input
-                    type="text"
-                    name=""
-                    id=""
-                    placeholder=""
-                    className="border border-graySecondary dark:border-white rounded-md"
-                  />
+                    <Input
+                      type="text"
+                      name=""
+                      id=""
+                      placeholder=""
+                      className="border border-graySecondary dark:border-white rounded-md"
+                    />
+                  </div>
 
-                  <Button
-                    className={cn(
-                      'justify-start text-left font-normal bg-blue-500 rounded-md h-7'
-                    )}
-                  >
-                    <Search className="w- 4 h-4 text-white" />
-                  </Button>
+                  <button className="bg-[#3c8dbc] rounded-md absolute -right-10 px-2 py-1">
+                    <Search className="text-white w-4" />
+                  </button>
                 </div>
               </div>
             </div>

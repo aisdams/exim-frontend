@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
   --secondary-gray: #4b4b4b;
 }
@@ -73,6 +72,7 @@ body {
 }
 
 /* --------- curve outside ---------- */
+/* CSS untuk tema gelap */
 .childOne .childTwo .childThree .childFour.hovered .Link::before,
 .childOne .childTwo .childThree .childFour.hovered .Link::before {
   content: '';
@@ -83,7 +83,7 @@ body {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px 35px 0 10px /*#262e4b*/ white;
+  box-shadow: 35px 35px 0 10px white;
   pointer-events: none;
   z-index: 1 !important;
 }
@@ -98,7 +98,22 @@ body {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px -35px 0 10px /*#262e4b*/ white;
+  box-shadow: 35px -35px 0 10px white;
   pointer-events: none;
   z-index: 1 !important;
+}
+
+/* CSS untuk tema gelap */
+.dark .childOne .childTwo .childThree .childFour.hovered .Link::before,
+.dark .childOne .childTwo .childThree .childFour.hovered .Link::before {
+  box-shadow: 35px 35px 0 10px #262e4b !important;
+}
+
+.dark .childOne .childTwo .childThree .childFour.hovered .Link::after,
+.dark .childOne .childTwo .childThree .childFour.hovered .Link::after {
+  box-shadow: 35px -35px 0 10px #262e4b !important;
+}
+
+.rdp-vhidden {
+  @apply hidden;
 }
