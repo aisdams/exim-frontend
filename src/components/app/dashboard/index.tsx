@@ -59,18 +59,13 @@ export default function Content() {
         <h1>Dashboard</h1>
       </div>
       <div className="grid grid-cols-[1fr_2fr_1fr] gap-5 mb-5">
-        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-white font-bold dark:bg-secondDarkBlue">
-          <div className="bg-black text-xl flex items-center gap-3">
-            <Menu />
-            <h1>Ar</h1>
+        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-white font-bold dark:bg-secondDarkBlue flex">
+          <div className="">
+            <h1>AR</h1>
+            <h3>Rp. 3000000</h3>
           </div>
 
-          <div className="bg-green-500 text-center py-2 text-xl">
-            <h1>IDR. 500.000</h1>
-          </div>
-          <div className="bg-blue-400 text-center py-2 text-xl">
-            <h1>USD. 20+</h1>
-          </div>
+          <Menu />
         </div>
 
         <div className="w-full px-5 py-1 border-graySecondary/50 rounded-md border-2 dark:bg-secondDarkBlue">
@@ -82,18 +77,13 @@ export default function Content() {
           />
         </div>
 
-        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-white font-bold dark:bg-secondDarkBlue">
-          <div className="bg-black text-xl flex items-center gap-3">
-            <Menu />
-            <h1>AP</h1>
+        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-white font-bold dark:bg-secondDarkBlue flex">
+          <div className="">
+            <h1>HR</h1>
+            <h3>Rp. 3000000</h3>
           </div>
 
-          <div className="bg-orange-500 text-center py-2 text-xl">
-            <h1>IDR. 500.000</h1>
-          </div>
-          <div className="bg-red-500 text-center py-2 text-xl">
-            <h1>USD. 20+</h1>
-          </div>
+          <Menu />
         </div>
       </div>
 

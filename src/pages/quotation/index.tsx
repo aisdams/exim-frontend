@@ -183,7 +183,7 @@ export default function Index() {
 
           <div className="">
             <div className="flex items-center gap-3">
-              <h3>Date & To: </h3>
+              <h3>Date and To: </h3>
 
               <div>
                 <DateRangePicker
