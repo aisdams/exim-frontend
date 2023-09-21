@@ -40,66 +40,50 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn, getErrMessage } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-// import QuotationServ from '../../apis/quotation.api';
+import * as QuotationService from '../../apis/quotation.api';
 import React, { useMemo, useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import ReactTable from '@/components/table/react-table';
-import InputSearch from '@/components/table/input-search';
+import InputSearch from '@/components/forms/input-search';
 import { DateRangePicker } from '@/components/forms/data-range-picker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 
-type Quotation = {
-  quotation_code: string;
-  title: string;
-  description: string;
-  createdBy: string;
-};
-
-const Quotation = [
-  {
-    quotation_code: 'QuoCode101',
-    title: 'Que Code Satu',
-  },
-  {
-    quotation_code: 'QuoCode102',
-    title: 'Que Code Dua',
-  },
-  {
-    quotation_code: 'QuoCode103',
-    title: 'Que Code Tiga',
-  },
-];
+import { Quotation } from '@/types';
 
 const columnHelper = createColumnHelper<Quotation>();
 
 const columnsDef = [
-  columnHelper.accessor('quotation_code', {
+  columnHelper.accessor('quo_no', {
     header: 'QUO NO QUO DATE',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('title', {
-    header: 'TYPE',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('description', {
-    header: 'CUSTOMER',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('createdBy', {
-    header: 'LOADING DISCHARGE',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('createdBy', {
-    header: 'SUBJECT',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('createdBy', {
+  columnHelper.accessor('sales', {
     header: 'SALES',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('createdBy', {
-    header: 'Action',
+  columnHelper.accessor('subject', {
+    header: 'SUBJECT',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('attn', {
+    header: 'ATTN',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('type', {
+    header: 'TYPE',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('delivery', {
+    header: 'DELIVERY',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('kurs', {
+    header: 'KURS',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('kurs', {
+    header: 'ACTION',
     cell: (info) => info.getValue(),
   }),
 ];
@@ -127,7 +111,7 @@ export default function Index() {
 
   const quotationsQuery = useQuery({
     queryKey: ['quotations', fetchDataOptions],
-    // queryFn: () => quotationService.getAll(fetchDataOptions)
+    queryFn: () => QuotationService.getAll(fetchDataOptions),
     keepPreviousData: true,
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -143,7 +127,7 @@ export default function Index() {
   );
 
   const deleteQuotationMutation = useMutation({
-    // mutationFn: quotationService.deleteById,
+    mutationFn: QuotationService.deleteById,
     onSuccess: () => {
       qc.invalidateQueries(['quotations']);
       toast.success('Quotation deleted successfully.');
@@ -155,8 +139,9 @@ export default function Index() {
 
   const table = useReactTable({
     columns,
-    data: quotationsQuery.data?.Quotation ?? defaultData,
-    // pageCount: quotationsQuery.data?.pagination.total_page ?? -1,
+    data: quotationsQuery.data?.data ?? defaultData,
+    pageCount: quotationsQuery.data?.pagination.total_page ?? -1,
+
     state: {
       pagination,
     },

@@ -1,20 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
 
-import * as quotationService from '@/apis/quotation.api';
+import * as constService from '@/apis/cost.api';
 import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
@@ -24,45 +19,130 @@ import { Label } from '@radix-ui/react-label';
 import { Input } from '@/components/ui/input';
 import { Command, Search } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { Cost } from '@/types';
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  PaginationState,
+  useReactTable,
+} from '@tanstack/react-table';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import ReactTable from '@/components/table/react-table';
 
 const defaultValues = {
-  sales: '',
-  subject: '',
-  attn: '',
-  type: '',
-  delivery: '',
-  kurs: '',
-  status: '',
+  item_name: '',
+  qty: '',
+  unit: '',
+  mata_uang: '',
+  amount: '',
+  note: '',
 };
 
 const Schema = yup.object({
-  sales: yup.string().required(),
-  subject: yup.string().required(),
-  attn: yup.string().required(),
-  type: yup.string().required(),
-  delivery: yup.string().required(),
-  kurs: yup.string().required(),
-  status: yup.string().required(),
+  item_name: yup.string().required(),
+  qty: yup.string().required(),
+  unit: yup.string().required(),
+  mata_uang: yup.string().required(),
+  amount: yup.string().required(),
+  note: yup.string().required(),
 });
 
-type QuotationSchema = InferType<typeof Schema>;
+const columnHelper = createColumnHelper<Cost>();
 
-export default function QuotationAdd() {
+const columnsDef = [
+  columnHelper.accessor('item_cost', {
+    header: 'Item Cost',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('item_name', {
+    header: 'Item Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('qty', {
+    header: 'Qyt',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('unit', {
+    header: 'Unit',
+    cell: (info) => info.getValue(),
+  }),
+];
+
+type CostSchema = InferType<typeof Schema>;
+
+export default function QuotationEdit() {
   const router = useRouter();
   const qc = useQueryClient();
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const methods = useForm<QuotationSchema>({
+  const methods = useForm<CostSchema>({
     mode: 'all',
     defaultValues,
     resolver: yupResolver(Schema),
   });
   const { handleSubmit, setValue, watch } = methods;
 
-  const addQuotationMutation = useMutation({
-    mutationFn: quotationService.create,
+  const columns = useMemo(() => columnsDef, []);
+  const defaultData = useMemo(() => [], []);
+
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const fetchDataOptions = {
+    page: pageIndex + 1,
+    limit: pageSize,
+  };
+
+  const quotationsQuery = useQuery({
+    queryKey: ['quotations', fetchDataOptions],
+    queryFn: () => constService.getAll(fetchDataOptions),
+    keepPreviousData: true,
+    onError: (err) => {
+      toast.error(`Error, ${getErrMessage(err)}`);
+    },
+  });
+
+  const pagination = useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
+  );
+
+  const deleteQuotationMutation = useMutation({
+    mutationFn: constService.deleteById,
     onSuccess: () => {
-      qc.invalidateQueries(['quotation']);
-      toast.success('Success, Quotation has been added.');
+      qc.invalidateQueries(['quotations']);
+      toast.success('Quotation deleted successfully.');
+    },
+    onError: (err) => {
+      toast.error(`Error, ${getErrMessage(err)}`);
+    },
+  });
+
+  const table = useReactTable({
+    columns,
+    data: quotationsQuery.data?.data ?? defaultData,
+    pageCount: quotationsQuery.data?.pagination.total_page ?? -1,
+
+    state: {
+      pagination,
+    },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    meta: {
+      deleteMutation: deleteQuotationMutation,
+    },
+  });
+
+  const addQuotationMutation = useMutation({
+    mutationFn: constService.create,
+    onSuccess: () => {
+      qc.invalidateQueries(['cost']);
+      toast.success('Success, Cost has been added.');
       router.push('/inbounds');
     },
     onError: (err) => {
@@ -70,7 +150,7 @@ export default function QuotationAdd() {
     },
   });
 
-  const onSubmit: SubmitHandler<QuotationSchema> = (data) => {
+  const onSubmit: SubmitHandler<CostSchema> = (data) => {
     if (IS_DEV) {
       console.log('data =>', data);
     }
@@ -102,12 +182,6 @@ export default function QuotationAdd() {
                 <div className="grid grid-cols-[1fr_2fr]">
                   <Label>Date :</Label>
                   <InputText placeholder="~Auto~" name="date" />
-                  {/* <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="rounded-md border"
-              /> */}
                 </div>
                 <div className="grid grid-cols-[1fr_2fr]">
                   <Label>Sales :</Label>
@@ -177,19 +251,18 @@ export default function QuotationAdd() {
             </div>
           </div>
           {/* Buttons */}
-          <div className="flex items-center justify-end gap-2">
-            <Link
-              href="/quotation"
-              className={cn(buttonVariants({ variant: 'grayish' }))}
-            >
+          <div className="flex items-center gap-2 my-3">
+            <Button type="submit" className="bg-green-500">
               Back
-            </Link>
-            <Button type="submit" disabled={addQuotationMutation.isLoading}>
-              {addQuotationMutation.isLoading ? 'Loading...' : 'Save'}
             </Button>
           </div>
         </form>
       </FormProvider>
+
+      <ReactTable
+        tableInstance={table}
+        isLoading={quotationsQuery.isFetching}
+      />
     </div>
   );
 }

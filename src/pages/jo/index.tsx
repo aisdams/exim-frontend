@@ -49,7 +49,7 @@ import { Button } from '@/components/ui/button';
 import { cn, getErrMessage } from '@/lib/utils';
 import { useDebouncedValue } from '@mantine/hooks';
 import ReactTable from '@/components/table/react-table';
-import InputSearch from '@/components/table/input-search';
+import InputSearch from '@/components/forms/input-search';
 import { DateRangePicker } from '@/components/forms/data-range-picker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

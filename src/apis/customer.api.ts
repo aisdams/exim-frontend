@@ -1,7 +1,7 @@
 import {
-  Quotation,
-  createQuotationInput,
-  updateQuotationInput,
+  Customer,
+  createCustomerInput,
+  updateCustomerInput,
   Pagination,
   Res,
 } from '@/types';
@@ -9,8 +9,8 @@ import {
 import { axios } from '@/lib/axios';
 import { generateSearchQuery } from '@/lib/utils';
 
-export const create = async (payload: createQuotationInput) => {
-  const res = await axios.post('/quotation', payload);
+export const create = async (payload: createCustomerInput) => {
+  const res = await axios.post('/customer', payload);
 
   return res.data;
 };
@@ -19,18 +19,18 @@ export const getAll = async ({
   page = 1,
   limit = 10,
   searchQueries,
-}: Pagination): Promise<Res<Quotation[]>> => {
+}: Pagination): Promise<Res<Customer[]>> => {
   const { strings } = generateSearchQuery({ searchQueries });
 
   const res = await axios.get(
-    `/quotation?page=${page}&limit=${limit}${strings}`
+    `/customer?page=${page}&limit=${limit}${strings}`
   );
 
   return res.data;
 };
 
-export const getById = async (id: string): Promise<Res<Quotation>> => {
-  const res = await axios.get(`/quotation/${id}`);
+export const getById = async (id: string): Promise<Res<Customer>> => {
+  const res = await axios.get(`/customer/${id}`);
   return res.data;
 };
 
@@ -39,14 +39,14 @@ export const updateById = async ({
   data,
 }: {
   id: string;
-  data: updateQuotationInput;
+  data: updateCustomerInput;
 }) => {
-  const res = await axios.put(`/quotation/${id}`, data);
+  const res = await axios.put(`/customer/${id}`, data);
 
   return res.data;
 };
 
 export const deleteById = async (id: string) => {
-  const res = await axios.delete(`/quotation/${id}`);
+  const res = await axios.delete(`/customer/${id}`);
   return res.data;
 };

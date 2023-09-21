@@ -21,6 +21,7 @@ module.exports = {
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         bluePrimary: '#294979',
+        blueHeaderCard: '#4783b7',
         blueLight: '#5a75d7',
         tryblue: '#bfcfe9',
         blueNav: '#3e53a0',
