@@ -33,6 +33,8 @@ const defaultValues = {
   delivery: '',
   kurs: '',
   status: '',
+  loading: '',
+  discharge: '',
 };
 
 const Schema = yup.object({
@@ -43,6 +45,8 @@ const Schema = yup.object({
   delivery: yup.string().required(),
   kurs: yup.string().required(),
   status: yup.string().required(),
+  loading: yup.string().required(),
+  discharge: yup.string().required(),
 });
 
 type QuotationSchema = InferType<typeof Schema>;
@@ -79,7 +83,7 @@ export default function QuotationAdd() {
   };
 
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden ml-3">
       <div className="mb-4 flex gap-3 ">
         <Command className="text-blueLight" />
         <h1 className="">Add Quotation</h1>
@@ -88,13 +92,13 @@ export default function QuotationAdd() {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
           <div className="grid grid-cols-2 gap-3">
-            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm shadow-md shadow-black">
+            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm">
               <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-0">
                 <Command className="text-white" />
                 <h1> Data Quotation</h1>
               </div>
 
-              <div className="px-3">
+              <div className="px-3 grid gap-3">
                 <div className="grid grid-cols-[1fr_2fr]">
                   <Label>#Quote No :</Label>
                   <InputText placeholder="~Auto" name="quo_no" />
@@ -177,14 +181,13 @@ export default function QuotationAdd() {
             </div>
           </div>
           {/* Buttons */}
-          <div className="flex items-center justify-end gap-2">
-            <Link
-              href="/quotation"
-              className={cn(buttonVariants({ variant: 'grayish' }))}
+          <div className="flex items-center gap-2">
+            <Button className="bg-graySecondary">Back</Button>
+            <Button
+              type="submit"
+              disabled={addQuotationMutation.isLoading}
+              className="bg-green-600"
             >
-              Back
-            </Link>
-            <Button type="submit" disabled={addQuotationMutation.isLoading}>
               {addQuotationMutation.isLoading ? 'Loading...' : 'Save'}
             </Button>
           </div>

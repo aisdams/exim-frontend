@@ -40,8 +40,8 @@ export default function App({
       <PersistGate loading={null} persistor={persistor}>
         <QueryClientProvider client={qc}>
           <Head>
-            <title>MY FORWARDING</title>
-            <meta name="keywords" key="keywords" content="MY FORWARDING" />
+            <title>EXIM | NELLO</title>
+            <meta name="keywords" key="keywords" content="EXIM NELLO" />
             <link
               rel="shortcut icon"
               href="https://i.postimg.cc/cCXVYXkC/favicon.png"

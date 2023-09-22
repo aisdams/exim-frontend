@@ -68,7 +68,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="border-2 p-2 text-start text-sm font-medium tracking-wide border-white/30"
+                    className="border-2 p-2 text-start text-sm font-medium tracking-wide border-graySecondary/70 dark:border-white/30"
                   >
                     <div className="">
                       {header.isPlaceholder

@@ -58,28 +58,28 @@ const columnsDef = [
     header: 'QUO NO QUO DATE',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('sales', {
-    header: 'SALES',
+  columnHelper.accessor('type', {
+    header: 'TYPE',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('customer_code', {
+    header: 'CUSTOMER',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('loading', {
+    header: 'LOADING DISCHARGE',
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('subject', {
     header: 'SUBJECT',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('attn', {
-    header: 'ATTN',
+  columnHelper.accessor('sales', {
+    header: 'SALES',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('type', {
-    header: 'TYPE',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('delivery', {
-    header: 'DELIVERY',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('kurs', {
-    header: 'KURS',
+  columnHelper.accessor('status', {
+    header: 'STATUS',
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('kurs', {

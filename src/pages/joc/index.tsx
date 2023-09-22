@@ -168,7 +168,7 @@ export default function Index() {
         <div className="w-full rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3 dark:bg-secondDarkBlue">
           <div className="flex gap-3 items-center mb-5">
             <Search className="w-4 h-4" />
-            <h3> Filter Data JO</h3>
+            <h3> Filter Data Consolidation</h3>
           </div>
 
           <div className="">
@@ -214,10 +214,15 @@ export default function Index() {
                     </SelectTrigger>
                     <SelectContent align="end" className="dark:text-black">
                       <SelectGroup>
-                        <SelectItem value="Quo No">JO No</SelectItem>
-                        <SelectItem value="Customer">Customer</SelectItem>
+                        <SelectItem value="JOC No">JOC No</SelectItem>
+                        <SelectItem value="Agent">Agent</SelectItem>
                         <SelectItem value="Tipe">Tipe</SelectItem>
-                        <SelectItem value="Delivery">Delivery</SelectItem>
+                        <SelectItem value="Loading">Loading</SelectItem>
+                        <SelectItem value="Discharge">Discharge</SelectItem>
+                        <SelectItem value="MBL">MBL</SelectItem>
+                        <SelectItem value="No. Container">
+                          No. Container
+                        </SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -239,10 +244,15 @@ export default function Index() {
                       </SelectTrigger>
                       <SelectContent align="end" className="dark:text-black">
                         <SelectGroup>
-                          <SelectItem value="Quo No">JO No</SelectItem>
-                          <SelectItem value="Customer">Customer</SelectItem>
+                          <SelectItem value="JOC No">JOC No</SelectItem>
+                          <SelectItem value="Agent">Agent</SelectItem>
                           <SelectItem value="Tipe">Tipe</SelectItem>
-                          <SelectItem value="Delivery">Delivery</SelectItem>
+                          <SelectItem value="Loading">Loading</SelectItem>
+                          <SelectItem value="Discharge">Discharge</SelectItem>
+                          <SelectItem value="MBL">MBL</SelectItem>
+                          <SelectItem value="No. Container">
+                            No. Container
+                          </SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -266,6 +276,12 @@ export default function Index() {
         </div>
       </div>
 
+      <Link href="/quotation/create">
+        <Button className="mb-5 bg-green-600 text-white w-max px-2 py-4 gap-2">
+          <PlusSquare className="h-5" />
+          <h3>Create JOC</h3>
+        </Button>
+      </Link>
       <ReactTable tableInstance={table} isLoading={JobOrdersQuery.isFetching} />
     </>
   );

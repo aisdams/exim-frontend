@@ -6,12 +6,14 @@ export type Quotation = {
   type: string | null;
   delivery: string | null;
   kurs: string | null;
+  loading: string | null;
+  discharge: string | null;
   status: string | null;
-  createdAt: Date | null;
-  updatedAt: Date | null;
   customer_code: string | null;
   item_cost: string | null;
   port_code: string | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 };
 
 export type createQuotationInput = {
@@ -21,7 +23,17 @@ export type createQuotationInput = {
   type: string | null;
   delivery: string | null;
   kurs: string | null;
+  loading: string | null;
+  discharge: string | null;
   status: string | null;
+  customer_code: string | null;
+  item_cost: string | null;
+  port_code: string | null;
 };
 
-export type updateQuotationInput = Omit<createQuotationInput>;
+export type updateQuotationInput = Omit<
+  createQuotationInput,
+  'customer_code',
+  'item_cost',
+  'port_code'
+>;
