@@ -14,26 +14,44 @@ import { WebStorage } from 'redux-persist/lib/types';
 
 import appReducer from '@/redux/slices/appSlice';
 
-const createPersistStorage = (key: string): WebStorage => {
+//! this function fix "redux-persist failed to create sync storage. falling back to noop storage" console error
+export function createPersistStorage(): WebStorage {
   const isServer = typeof window === 'undefined';
-  return createWebStorage(isServer ? 'local' : key);
-};
 
-// Konfigurasi Redux Persist
+  // returns noop (dummy) storage.
+  if (isServer) {
+    return {
+      getItem() {
+        return Promise.resolve(null);
+      },
+      setItem() {
+        return Promise.resolve();
+      },
+      removeItem() {
+        return Promise.resolve();
+      },
+    };
+  }
+
+  return createWebStorage('local');
+}
+
+const storage = createPersistStorage();
+
 const persistConfig = {
   key: 'root',
-  storage: createPersistStorage('root'),
+  storage,
   whitelist: ['app'],
 };
 
 const rootReducer = combineReducers({
-  app: persistReducer(persistConfig, appReducer),
-  // Tambahkan reducer lain jika diperlukan
+  app: appReducer,
 });
 
-// Membuat store Redux
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -42,15 +60,11 @@ const store = configureStore({
     }),
 });
 
-// Membuat persistor untuk Redux Persist
 const persistor = persistStore(store);
 
 const reduxStore = () => ({ store, persistor });
 
-// Ekspor AppDispatch dan RootState
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof rootReducer>;
-
-export { store, persistor };
 
 export default reduxStore;

@@ -64,13 +64,15 @@ const ReactTable: React.FC<ReactTableProps> = ({
                 key={headerGroup.id}
                 className="transition-colors border-graySecondary/50 border-y-2"
               >
-                <th className="p-0" />
+                <th className="p-2 border-l-2 border-graySecondary/70 dark:border-white/30">
+                  No
+                </th>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="border-2 p-2 text-start text-sm font-medium tracking-wide border-graySecondary/70 dark:border-white/30"
+                    className="border-x-2 p-2 text-start text-sm font-medium tracking-wide border-graySecondary/70 dark:border-white/30"
                   >
-                    <div className="">
+                    <div className="text-center">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -83,7 +85,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
               </tr>
             ))}
           </thead>
-          <tbody className="relative font-normal">
+          <tbody className="relative font-normal border-l-2 border-graySecondary/70 dark:border-white/30">
             {table.getRowModel().rows.map((row, idx) => {
               const rowNumber =
                 table.getState().pagination.pageIndex === 0
@@ -98,12 +100,15 @@ const ReactTable: React.FC<ReactTableProps> = ({
                     'transition-colors hover:bg-muted/50 [&:last-child>td]:!border-b-0'
                   )}
                 >
-                  <td className="border-b p-2 text-center font-semibold">
+                  <td className="border-b p-2 text-center font-semibold border-graySecondary/70">
                     {rowNumber + idx + 1}
                   </td>
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="border-b p-2">
-                      <div className="">
+                    <td
+                      key={cell.id}
+                      className="border-b border-x-2 p-2 text-center border-graySecondary/70 dark:border-white/30"
+                    >
+                      <div className="!grid">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()

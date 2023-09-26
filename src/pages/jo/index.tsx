@@ -55,11 +55,21 @@ const columnHelper = createColumnHelper<JobOrder>();
 
 const columnsDef = [
   columnHelper.accessor('jo_no', {
-    header: '#JO NO DATE',
+    header: () => (
+      <div>
+        <div>#JO NO</div>
+        <div>DATE</div>
+      </div>
+    ),
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('quo_no', {
-    header: 'QUO NO SALES',
+    header: () => (
+      <div>
+        <div>QUO NO</div>
+        <div>SALES</div>
+      </div>
+    ),
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('quo_no', {
@@ -71,15 +81,30 @@ const columnsDef = [
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('hbl', {
-    header: 'HBL/HAWB MBL/MAWB',
+    header: () => (
+      <div>
+        <div>HBL/HAWB</div>
+        <div>MBL/MAWB</div>
+      </div>
+    ),
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('quo_no', {
-    header: 'LOADING DISCHARGE',
+    header: () => (
+      <div>
+        <div>LOADING</div>
+        <div>DISCHARGE</div>
+      </div>
+    ),
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('etd', {
-    header: 'ETD ETA',
+    header: () => (
+      <div>
+        <div>ETD</div>
+        <div>ETA</div>
+      </div>
+    ),
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('createdBy', {
@@ -161,9 +186,13 @@ export default function Index() {
           <Command className="text-blueLight" />
           <h1> Job Order</h1>
         </div>
-        <div className="flex gap-2 mt-3 text-white">
-          <div className="bg-blueHeaderCard px-3 py-1 rounded-sm">Data JO</div>
-          <div className="bg-green-500 px-3 py-1 rounded-sm">Data JOC</div>
+        <div className="flex gap-1 mt-3 text-white">
+          <button className="bg-blueHeaderCard px-3 py-1 rounded-sm">
+            <Link href="#">Data JO</Link>
+          </button>
+          <button className="bg-green-500 px-3 py-1 rounded-sm">
+            <Link href="/joc">Data JOC</Link>
+          </button>
         </div>
         <div className="w-full rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3 dark:bg-secondDarkBlue">
           <div className="flex gap-3 items-center mb-5">

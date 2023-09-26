@@ -72,7 +72,6 @@ body {
 }
 
 /* --------- curve outside ---------- */
-/* CSS untuk tema gelap */
 .childOne .childTwo .childThree .childFour.hovered .Link::before,
 .childOne .childTwo .childThree .childFour.hovered .Link::before {
   content: '';
@@ -103,7 +102,6 @@ body {
   z-index: 1 !important;
 }
 
-/* CSS untuk tema gelap */
 .dark .childOne .childTwo .childThree .childFour.hovered .Link::before,
 .dark .childOne .childTwo .childThree .childFour.hovered .Link::before {
   box-shadow: 35px 35px 0 10px #262e4b !important;

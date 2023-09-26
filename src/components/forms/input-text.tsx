@@ -70,7 +70,7 @@ const InputText: React.FC<InputTextProps> = ({
 
       <div
         className={cn(
-          'relative flex items-center overflow-hidden rounded-md border border-input border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
+          'relative flex items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >
@@ -80,7 +80,7 @@ const InputText: React.FC<InputTextProps> = ({
           value={field.value ?? ''}
           id={id || name}
           className={cn(
-            'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
+            'h-9 w-[300px] bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
             inputCN
           )}
           placeholder={

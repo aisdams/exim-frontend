@@ -7,8 +7,8 @@ export type Customer = {
 };
 
 export type createCustomerInput = {
-  partner_name: string | null;
-  unit: string | null;
+  partner_name?: string | null;
+  unit?: string | null;
 };
 
 export type updateCustomerInput = Omit<createCustomerInput>;

@@ -39,7 +39,7 @@ const Schema = yup.object({
 
 type JoSchema = InferType<typeof Schema>;
 
-export default function JOAdd() {
+export default function JOEdit() {
   const router = useRouter();
   const qc = useQueryClient();
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);

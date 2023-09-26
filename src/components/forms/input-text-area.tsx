@@ -3,7 +3,7 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { cn } from '@/lib/utils';
 
-type InputNumberProps = {
+type InputTextAreaProps = {
   label?: string;
   name: string;
   id?: string;
@@ -15,7 +15,7 @@ type InputNumberProps = {
   inputCN?: string;
 };
 
-const InputNumber: React.FC<InputNumberProps> = ({
+const InputTextArea: React.FC<InputTextAreaProps> = ({
   label,
   name,
   id,
@@ -33,7 +33,7 @@ const InputNumber: React.FC<InputNumberProps> = ({
     fieldState: { error },
   } = useController({ name });
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     field.onChange(e.target.value);
   };
 
@@ -50,13 +50,12 @@ const InputNumber: React.FC<InputNumberProps> = ({
           inputWrapperCN
         )}
       >
-        <input
+        <textarea
           {...register(name)}
-          type='number'
-          value={field.value ?? ''}
+          value={field.value}
           id={id || name}
           className={cn(
-            'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:bg-slate-200 dark:disabled:bg-slate-800',
+            'w-full bg-background p-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:bg-muted',
             inputCN
           )}
           placeholder={
@@ -69,10 +68,7 @@ const InputNumber: React.FC<InputNumberProps> = ({
           }
           disabled={disabled}
           onChange={onChange}
-          onWheelCapture={(e) => {
-            //! disable scroll onChange
-            e.currentTarget.blur();
-          }}
+          rows={5}
           {...props}
         />
       </div>
@@ -83,4 +79,4 @@ const InputNumber: React.FC<InputNumberProps> = ({
   );
 };
 
-export default InputNumber;
+export default InputTextArea;

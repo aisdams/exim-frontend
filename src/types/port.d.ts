@@ -7,8 +7,8 @@ export type Port = {
 };
 
 export type createPortInput = {
-  port_name: string | null;
-  caption: string | null;
+  port_name?: string | null;
+  caption?: string | null;
 };
 
 export type updatePortInput = Omit<createPortInput>;

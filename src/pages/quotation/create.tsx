@@ -10,6 +10,15 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
@@ -25,6 +34,12 @@ import { Input } from '@/components/ui/input';
 import { Command, Search } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 
+interface Customer {
+  item_cost: string;
+  item_name: string;
+  unit: string;
+}
+
 const defaultValues = {
   sales: '',
   subject: '',
@@ -35,6 +50,9 @@ const defaultValues = {
   status: '',
   loading: '',
   discharge: '',
+  customer_code: '',
+  item_cost: '',
+  port_code: '',
 };
 
 const Schema = yup.object({
@@ -47,6 +65,9 @@ const Schema = yup.object({
   status: yup.string().required(),
   loading: yup.string().required(),
   discharge: yup.string().required(),
+  customer_code: yup.string().required(),
+  item_cost: yup.string().required(),
+  port_code: yup.string().required(),
 });
 
 type QuotationSchema = InferType<typeof Schema>;
@@ -54,20 +75,51 @@ type QuotationSchema = InferType<typeof Schema>;
 export default function QuotationAdd() {
   const router = useRouter();
   const qc = useQueryClient();
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
+  const [isPortModalOpen, setIsPortModalOpen] = useState(false);
+  const [customerData, setCustomerData] = useState<Customer[]>([]);
   const methods = useForm<QuotationSchema>({
     mode: 'all',
     defaultValues,
     resolver: yupResolver(Schema),
   });
   const { handleSubmit, setValue, watch } = methods;
+  const openCustomerModal = () => {
+    setIsCustomerModalOpen(true);
+
+    fetch('http://localhost:8089/api/customer')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data Pelanggan:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+  const openPortModal = () => {
+    setIsPortModalOpen(true);
+
+    fetch('http://localhost:8089/api/port')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data Port:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+  const closeCustomerModal = () => {
+    setIsCustomerModalOpen(false);
+  };
 
   const addQuotationMutation = useMutation({
     mutationFn: quotationService.create,
     onSuccess: () => {
       qc.invalidateQueries(['quotation']);
       toast.success('Success, Quotation has been added.');
-      router.push('/inbounds');
+      router.push('/quotation');
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -92,76 +144,76 @@ export default function QuotationAdd() {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
           <div className="grid grid-cols-2 gap-3">
-            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm">
-              <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-0">
+            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm pb-4">
+              <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-2">
                 <Command className="text-white" />
                 <h1> Data Quotation</h1>
               </div>
 
               <div className="px-3 grid gap-3">
                 <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>#Quote No :</Label>
-                  <InputText placeholder="~Auto" name="quo_no" />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Date :</Label>
-                  <InputText placeholder="~Auto~" name="date" />
-                  {/* <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="rounded-md border"
-              /> */}
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Sales :</Label>
-                  <InputText name="sales" mandatory />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Subject :</Label>
-                  <InputText name="subject" mandatory />
-                </div>
-                <div className="grid grid-cols-3">
-                  <Label>Customer :</Label>
-                  <InputText name="customer" mandatory />
-                  <Search className="bg-lightWhite text-base" />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Attn :</Label>
-                  <InputText name="attn" mandatory />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Type :</Label>
-                  <InputText name="type" mandatory />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Delivery :</Label>
-                  <InputText name="delivery" mandatory />
-                </div>
-                <div className="grid grid-cols-3">
-                  <Label>Loading :</Label>
-                  <InputText name="loading" mandatory />
-                  <Search className="bg-lightWhite text-base" />
-                </div>
-                <div className="grid grid-cols-3">
-                  <Label>Discharge :</Label>
-                  <InputText name="discharge" mandatory />
-                  <Search className="bg-lightWhite text-base" />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Kurs</Label>
-                  <InputText name="kurs" mandatory />
+                  <div className="grid gap-5">
+                    <Label>Date :</Label>
+                    <Label>Sales :</Label>
+                    <Label>Subject :</Label>
+                    <Label>Customer :</Label>
+                    <Label>Attn :</Label>
+                    <Label>Type :</Label>
+                    <Label>Delivery :</Label>
+                    <Label>Loading :</Label>
+                    <Label>Discharge :</Label>
+                    <Label>Kurs :</Label>
+                  </div>
+                  <div className="grid gap-2">
+                    <InputText placeholder="~Auto~" name="date" />
+                    <InputText name="sales" mandatory />
+                    <InputText name="subject" mandatory />
+                    <div className="flex gap-2">
+                      <InputText name="customer" mandatory />
+                      <button
+                        className="
+                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+                  rounded-md text-white"
+                        onClick={openCustomerModal}
+                      >
+                        <Search className="w-4" />
+                      </button>
+                    </div>
+                    <InputText name="attn" mandatory />
+                    <InputText name="type" mandatory />
+                    <InputText name="delivery" mandatory />
+                    <div className="flex gap-2">
+                      <InputText name="loading" mandatory />
+                      <button
+                        className="
+                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+                  rounded-md text-white"
+                        onClick={openCustomerModal}
+                      >
+                        <Search className="w-4" />
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <InputText name="discharge" mandatory />
+                      <Search
+                        className="
+                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1
+                  rounded-md text-white"
+                      />
+                    </div>
+                    <InputText name="kurs" mandatory />
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm shadow-md shadow-black relative">
-              <div className="flex gap-3 bg-blueHeaderCard max-h-6 text-white dark:bg-secondDarkBlue p-0">
+            <div className="block gap-2 dark:bg-graySecondary/50 rounded-sm shadow-md shadow-black">
+              <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-2 h-max">
                 <Command className="text-white" />
                 <h1> Data Quotation</h1>
               </div>
 
-              <div className="px-3 absolute top-14 w-full h-full">
+              <div className="px-3">
                 <div className="flex gap-2 mb-5">
                   <Label>Header: </Label>
                   <Textarea
@@ -182,7 +234,9 @@ export default function QuotationAdd() {
           </div>
           {/* Buttons */}
           <div className="flex items-center gap-2">
-            <Button className="bg-graySecondary">Back</Button>
+            <Button className="bg-graySecondary">
+              <Link href="/quotation">Back</Link>
+            </Button>
             <Button
               type="submit"
               disabled={addQuotationMutation.isLoading}
@@ -191,6 +245,48 @@ export default function QuotationAdd() {
               {addQuotationMutation.isLoading ? 'Loading...' : 'Save'}
             </Button>
           </div>
+
+          {isCustomerModalOpen && (
+            <div
+              style={{ overflow: 'hidden' }}
+              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                isCustomerModalOpen ? 'open' : 'closed'
+              }`}
+            >
+              <div className="absolute inset-0 bg-black opacity-75"></div>
+              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <Button
+                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  onClick={closeCustomerModal}
+                >
+                  <h1 className="text-xl">X</h1>
+                </Button>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="hover:!text-white">
+                        Partner Name
+                      </TableHead>
+                      <TableHead className="hover:!text-white">Unit</TableHead>
+                      <TableHead className="hover:!text-white">Add</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="text-black">
+                    {customerData.map((customer) => (
+                      <TableRow key={customer.item_cost}>
+                        <TableCell className="font-medium">
+                          {customer.item_name}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {customer.unit}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
         </form>
       </FormProvider>
     </div>

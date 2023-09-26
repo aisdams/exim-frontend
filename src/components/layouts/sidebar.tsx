@@ -36,6 +36,9 @@ export default function Sidebar() {
       '.childOne .childTwo .childThree .childFour'
     );
 
+    const firstItem = list[0];
+    firstItem.classList.add('hovered');
+
     function activeLink(this: HTMLElement) {
       list.forEach((item) => {
         item.classList.remove('hovered');

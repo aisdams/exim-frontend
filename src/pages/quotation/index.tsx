@@ -26,9 +26,11 @@ import {
   PlusCircle,
   XCircle,
   Calendar,
+  MoreHorizontal,
   PlusSquare,
   Search,
   Command,
+  PackageSearch,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -50,12 +52,20 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 
 import { Quotation } from '@/types';
+import ActionLink from '@/components/table/action-link';
+import ActionEdit from '@/components/table/action-edit';
+import ActionDelete from '@/components/table/action-delete';
 
 const columnHelper = createColumnHelper<Quotation>();
 
 const columnsDef = [
   columnHelper.accessor('quo_no', {
-    header: 'QUO NO QUO DATE',
+    header: () => (
+      <div>
+        <div>QUO NO</div>
+        <div>QUO DATE</div>
+      </div>
+    ),
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('type', {
@@ -67,7 +77,12 @@ const columnsDef = [
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('loading', {
-    header: 'LOADING DISCHARGE',
+    header: () => (
+      <div>
+        <div>LOADING</div>
+        <div>DISCHARGE</div>
+      </div>
+    ),
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('subject', {
@@ -82,9 +97,44 @@ const columnsDef = [
     header: 'STATUS',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('kurs', {
-    header: 'ACTION',
-    cell: (info) => info.getValue(),
+
+  columnHelper.display({
+    id: 'actions',
+    header: 'Actions',
+    cell: (info) => {
+      const { quo_no } = info.row.original;
+      const deleteQuotationMutation = info.table.options.meta?.deleteMutation;
+
+      const [open, setOpen] = useState(false);
+
+      return (
+        <DropdownMenu open={open} onOpenChange={setOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0 data-[state=open]:bg-muted"
+            >
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="font-normal">
+            <ActionLink
+              href={`/inbounds/details/${quo_no}`}
+              icon={PackageSearch}
+              text="Inbound Details"
+            />
+            <DropdownMenuSeparator />
+            <ActionEdit href={`/inbounds/edit/${quo_no}`} />
+            <ActionDelete
+              uniqueField={quo_no}
+              mutation={deleteQuotationMutation}
+              onDeleteSucceed={() => setOpen(false)}
+            />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   }),
 ];
 
@@ -141,7 +191,6 @@ export default function Index() {
     columns,
     data: quotationsQuery.data?.data ?? defaultData,
     pageCount: quotationsQuery.data?.pagination.total_page ?? -1,
-
     state: {
       pagination,
     },
@@ -158,7 +207,7 @@ export default function Index() {
       <div className="mb-4 z-[100]">
         <div className="flex gap-3 font-semibold">
           <Command className="text-blueLight" />
-          <h1> Quotation</h1>
+          <h1>Quotation</h1>
         </div>
         <div className="w-full rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3 dark:bg-secondDarkBlue">
           <div className="flex gap-3 items-center mb-5">
@@ -207,7 +256,7 @@ export default function Index() {
             </div>
 
             <div className="flex items-center gap-3 mt-3">
-              <h3>Filter By : </h3>
+              <h3>Filter By :</h3>
 
               <div className="grid gap-1">
                 <div className="flex gap-1">

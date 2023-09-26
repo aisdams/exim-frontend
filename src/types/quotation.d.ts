@@ -1,5 +1,5 @@
 export type Quotation = {
-  quo_no: string | null;
+  quo_no: string;
   sales: string | null;
   subject: string | null;
   attn: string | null;
@@ -17,18 +17,18 @@ export type Quotation = {
 };
 
 export type createQuotationInput = {
-  sales: string | null;
-  subject: string | null;
-  attn: string | null;
-  type: string | null;
-  delivery: string | null;
-  kurs: string | null;
-  loading: string | null;
-  discharge: string | null;
-  status: string | null;
-  customer_code: string | null;
-  item_cost: string | null;
-  port_code: string | null;
+  sales?: string | null;
+  subject?: string | null;
+  attn?: string | null;
+  type?: string | null;
+  delivery?: string | null;
+  kurs?: string | null;
+  loading?: string | null;
+  discharge?: string | null;
+  status?: string | null;
+  customer_code?: string | null;
+  item_cost?: string | null;
+  port_code?: string | null;
 };
 
 export type updateQuotationInput = Omit<
@@ -37,3 +37,9 @@ export type updateQuotationInput = Omit<
   'item_cost',
   'port_code'
 >;
+
+export type QuotationWithItem = Quotation & {
+  item: {
+    item_name: string;
+  };
+};
