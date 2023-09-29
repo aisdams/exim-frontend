@@ -4,6 +4,7 @@ export type Port = {
   caption: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
+  deletedAt: Date | null;
 };
 
 export type createPortInput = {

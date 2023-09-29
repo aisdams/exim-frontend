@@ -39,20 +39,20 @@ const InputNumber: React.FC<InputNumberProps> = ({
 
   return (
     <div className={cn('relative', containerCN)}>
-      <label htmlFor={id || name} className='mb-1 inline-block'>
+      {/* <label htmlFor={id || name} className='mb-1 inline-block'>
         {label || startCase(name)}
         {mandatory && <span className='text-[#f00]'>*</span>}
-      </label>
+      </label> */}
 
       <div
         className={cn(
-          'relative flex items-center overflow-hidden rounded-md border focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
+          'relative flex items-center overflow-hidden rounded-md border focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary w-[300px]',
           inputWrapperCN
         )}
       >
         <input
           {...register(name)}
-          type='number'
+          type="number"
           value={field.value ?? ''}
           id={id || name}
           className={cn(
@@ -77,7 +77,7 @@ const InputNumber: React.FC<InputNumberProps> = ({
         />
       </div>
       {error?.message && (
-        <p className='text-xs tracking-wide text-red-600'>{error.message}</p>
+        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
       )}
     </div>
   );

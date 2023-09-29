@@ -14,6 +14,7 @@ export type Quotation = {
   port_code: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
+  deletedAt: Date | null;
 };
 
 export type createQuotationInput = {

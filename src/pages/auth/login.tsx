@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
-import { Crown } from 'lucide-react';
+import { KeyIcon } from 'lucide-react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import bgLogin from 'public/img/bg-log.jpg';
 import ImageLogo from 'public/img/logo.png';
@@ -114,12 +114,12 @@ const Login: NextPageCustomLayout = () => {
               containerCN="mb-4"
               withLabel={false}
             />
-
             <Button
               type="submit"
               className="w-full text-[#fafafa]"
               disabled={isLoading}
             >
+              <KeyIcon />
               {isLoading ? 'Loading...' : 'Login'}
             </Button>
             {errMsgQS && (

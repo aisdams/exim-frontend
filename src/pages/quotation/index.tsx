@@ -17,6 +17,17 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -31,6 +42,11 @@ import {
   Search,
   Command,
   PackageSearch,
+  Trash,
+  Edit2,
+  Printer,
+  Copy,
+  MoreVertical,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -40,11 +56,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useDebouncedValue } from '@mantine/hooks';
 import { cn, getErrMessage } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import * as QuotationService from '../../apis/quotation.api';
 import React, { useMemo, useState } from 'react';
-import { useDebouncedValue } from '@mantine/hooks';
 import ReactTable from '@/components/table/react-table';
 import InputSearch from '@/components/forms/input-search';
 import { DateRangePicker } from '@/components/forms/data-range-picker';
@@ -97,40 +113,104 @@ const columnsDef = [
     header: 'STATUS',
     cell: (info) => info.getValue(),
   }),
+  columnHelper.display({
+    id: 'print',
+    header: 'COPY DATA',
+    cell: (info) => {
+      const { quo_no } = info.row.original;
+      const [preview, setPreview] = useState(false);
+
+      return <Copy size={15} className="dark:text-white items-center ml-5" />;
+    },
+  }),
+  columnHelper.display({
+    id: 'addJO',
+    header: 'ADD JO',
+    cell: (info) => {
+      const { quo_no } = info.row.original;
+
+      return (
+        <Link href={`/jo/create/${quo_no}`}>
+          <PlusSquare size={15} className="dark:text-white items-center ml-3" />
+        </Link>
+      );
+    },
+  }),
 
   columnHelper.display({
     id: 'actions',
-    header: 'Actions',
+    header: 'ACTIONS',
     cell: (info) => {
       const { quo_no } = info.row.original;
       const deleteQuotationMutation = info.table.options.meta?.deleteMutation;
-
       const [open, setOpen] = useState(false);
 
       return (
-        <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               className="h-8 w-8 p-0 data-[state=open]:bg-muted"
             >
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreVertical className="h-4 w-4 ml-5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="font-normal">
-            <ActionLink
-              href={`/inbounds/details/${quo_no}`}
-              icon={PackageSearch}
-              text="Inbound Details"
-            />
-            <DropdownMenuSeparator />
-            <ActionEdit href={`/inbounds/edit/${quo_no}`} />
-            <ActionDelete
-              uniqueField={quo_no}
-              mutation={deleteQuotationMutation}
-              onDeleteSucceed={() => setOpen(false)}
-            />
+            <DropdownMenuItem className="p-0">
+              <Link
+                href={`/quotation/edit/${quo_no}`}
+                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+              >
+                <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                Edit
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              className="p-0"
+            >
+              <AlertDialog open={open} onOpenChange={setOpen}>
+                <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
+                  <Trash className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                  Delete
+                </AlertDialogTrigger>
+
+                <AlertDialogContent className="font-sans">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you sure absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="font-sans">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={(e) => {
+                        e.preventDefault();
+
+                        deleteQuotationMutation?.mutate(quo_no, {
+                          onSuccess: () => {
+                            setOpen(false);
+                          },
+                        });
+                      }}
+                    >
+                      {deleteQuotationMutation?.isLoading
+                        ? 'Loading...'
+                        : 'Continue'}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -145,10 +225,10 @@ export default function Index() {
   const [orderBy, setOrderBy] = useState('All');
   const [orderByTwo, setOrderByTwo] = useState('Quo No');
   const [orderByThree, setOrderByThree] = useState('Quo No');
-
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedSearchValue = useDebouncedValue(searchValue, 500);
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
-
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -159,9 +239,26 @@ export default function Index() {
     limit: pageSize,
   };
 
+  // const quotationsQuery = useQuery({
+  // queryKey: ['quotations', fetchDataOptions, debouncedSearchValue],
+  // queryFn: () =>
+  //   QuotationService.getAll(fetchDataOptions, debouncedSearchValue),
+  // keepPreviousData: true,
+  // onError: (err) => {
+  //   toast.error(`Error, ${getErrMessage(err)}`);
+  // },
+  // });
+
+  const fetchData = (fetchDataOptions: any, debouncedSearchValue: any) => {
+    return QuotationService.getAll({
+      ...fetchDataOptions,
+      searchValue: debouncedSearchValue,
+    });
+  };
+
   const quotationsQuery = useQuery({
-    queryKey: ['quotations', fetchDataOptions],
-    queryFn: () => QuotationService.getAll(fetchDataOptions),
+    queryKey: ['quotations', { fetchDataOptions, debouncedSearchValue }],
+    queryFn: () => fetchData(fetchDataOptions, debouncedSearchValue),
     keepPreviousData: true,
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -305,10 +402,17 @@ export default function Index() {
                       id=""
                       placeholder=""
                       className="border border-graySecondary dark:border-white rounded-md"
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
                     />
                   </div>
 
-                  <button className="bg-[#3c8dbc] rounded-md absolute -right-10 px-2 py-1">
+                  <button
+                    className="bg-[#3c8dbc] rounded-md absolute -right-10 px-2 py-1"
+                    onClick={() => {
+                      console.log('Pencarian:', searchValue);
+                    }}
+                  >
                     <Search className="text-white w-4" />
                   </button>
                 </div>

@@ -8,6 +8,17 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -29,6 +40,10 @@ import {
   PlusSquare,
   Search,
   Command,
+  MoreHorizontal,
+  Edit2,
+  Trash,
+  Copy,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -63,7 +78,7 @@ const columnsDef = [
     ),
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('quo_no', {
+  columnHelper.accessor('jo_no', {
     header: () => (
       <div>
         <div>QUO NO</div>
@@ -72,7 +87,7 @@ const columnsDef = [
     ),
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('quo_no', {
+  columnHelper.accessor('jo_no', {
     header: 'TYPE',
     cell: (info) => info.getValue(),
   }),
@@ -89,7 +104,7 @@ const columnsDef = [
     ),
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('quo_no', {
+  columnHelper.accessor('jo_no', {
     header: () => (
       <div>
         <div>LOADING</div>
@@ -110,6 +125,94 @@ const columnsDef = [
   columnHelper.accessor('createdBy', {
     header: 'CREATED',
     cell: (info) => info.getValue(),
+  }),
+  columnHelper.display({
+    id: 'print',
+    header: 'COPY QUO',
+    cell: (info) => {
+      const { quo_no } = info.row.original;
+      const [preview, setPreview] = useState(false);
+
+      return <Copy size={15} className="dark:text-white" />;
+    },
+  }),
+  columnHelper.display({
+    id: 'actions',
+    cell: (info) => {
+      const { jo_no } = info.row.original;
+      const deleteJobOrderMutation = info.table.options.meta?.deleteMutation;
+      const [open, setOpen] = useState(false);
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0 data-[state=open]:bg-muted"
+            >
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="font-normal">
+            <DropdownMenuItem className="p-0">
+              <Link
+                href={`/jo/edit/${jo_no}`}
+                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+              >
+                <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                Edit
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              className="p-0"
+            >
+              <AlertDialog open={open} onOpenChange={setOpen}>
+                <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
+                  <Trash className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                  Delete
+                </AlertDialogTrigger>
+
+                <AlertDialogContent className="font-sans">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you sure absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="font-sans">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={(e) => {
+                        e.preventDefault();
+
+                        deleteJobOrderMutation?.mutate(jo_no, {
+                          onSuccess: () => {
+                            setOpen(false);
+                          },
+                        });
+                      }}
+                    >
+                      {deleteJobOrderMutation?.isLoading
+                        ? 'Loading...'
+                        : 'Continue'}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   }),
 ];
 

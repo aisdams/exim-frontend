@@ -8,6 +8,7 @@ export type Cost = {
   note: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
+  deletedAt: Date | null;
 };
 
 export type createCostInput = {

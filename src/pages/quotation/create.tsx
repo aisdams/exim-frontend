@@ -33,11 +33,20 @@ import { Label } from '@radix-ui/react-label';
 import { Input } from '@/components/ui/input';
 import { Command, Search } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import InputDate from '@/components/forms/input-date';
+import InputNumber from '@/components/forms/input-number';
+import InputSelect from '@/components/forms/input-select';
 
 interface Customer {
-  item_cost: string;
-  item_name: string;
+  customer_code: string;
+  partner_name: string;
   unit: string;
+}
+
+interface Port {
+  port_code: string;
+  port_name: string;
+  caption: string;
 }
 
 const defaultValues = {
@@ -75,14 +84,21 @@ type QuotationSchema = InferType<typeof Schema>;
 export default function QuotationAdd() {
   const router = useRouter();
   const qc = useQueryClient();
+  const [isHeader, setIsHeader] = useState('');
+  const [isFooter, setIsFooter] = useState('');
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [isPortModalOpen, setIsPortModalOpen] = useState(false);
   const [customerData, setCustomerData] = useState<Customer[]>([]);
+  const [PortData, setPortData] = useState<Port[]>([]);
   const methods = useForm<QuotationSchema>({
     mode: 'all',
     defaultValues,
     resolver: yupResolver(Schema),
   });
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null
+  );
+  const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const { handleSubmit, setValue, watch } = methods;
   const openCustomerModal = () => {
     setIsCustomerModalOpen(true);
@@ -90,7 +106,8 @@ export default function QuotationAdd() {
     fetch('http://localhost:8089/api/customer')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Pelanggan:', data);
+        console.log('Data Pelanggan:', data.data);
+        setCustomerData(data.data);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -103,7 +120,8 @@ export default function QuotationAdd() {
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data);
+        console.log('Data Port:', data.data);
+        setPortData(data.data);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -112,6 +130,10 @@ export default function QuotationAdd() {
 
   const closeCustomerModal = () => {
     setIsCustomerModalOpen(false);
+  };
+
+  const closePortModal = () => {
+    setIsPortModalOpen(false);
   };
 
   const addQuotationMutation = useMutation({
@@ -165,11 +187,22 @@ export default function QuotationAdd() {
                     <Label>Kurs :</Label>
                   </div>
                   <div className="grid gap-2">
-                    <InputText placeholder="~Auto~" name="date" />
+                    <Input
+                      name="date"
+                      className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted  w-[300px] border-none"
+                      disabled
+                      placeholder="~AUTO~"
+                    />
                     <InputText name="sales" mandatory />
                     <InputText name="subject" mandatory />
                     <div className="flex gap-2">
-                      <InputText name="customer" mandatory />
+                      <InputText
+                        name="customer"
+                        mandatory
+                        value={
+                          selectedCustomer ? selectedCustomer.partner_name : ''
+                        }
+                      />
                       <button
                         className="
                   dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
@@ -180,28 +213,55 @@ export default function QuotationAdd() {
                       </button>
                     </div>
                     <InputText name="attn" mandatory />
-                    <InputText name="type" mandatory />
+                    <InputSelect
+                      name="type"
+                      options={[
+                        {
+                          value: 'Import',
+                          label: 'Import',
+                        },
+                        {
+                          value: 'Export',
+                          label: 'Export',
+                        },
+                        {
+                          value: 'Domestik',
+                          label: 'Domestik',
+                        },
+                      ]}
+                    />
                     <InputText name="delivery" mandatory />
                     <div className="flex gap-2">
-                      <InputText name="loading" mandatory />
+                      <InputText
+                        name="loading"
+                        mandatory
+                        value={selectedPort ? selectedPort.port_name : ''}
+                      />
                       <button
                         className="
                   dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
                   rounded-md text-white"
-                        onClick={openCustomerModal}
+                        onClick={openPortModal}
                       >
                         <Search className="w-4" />
                       </button>
                     </div>
                     <div className="flex gap-2">
-                      <InputText name="discharge" mandatory />
-                      <Search
-                        className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1
-                  rounded-md text-white"
+                      <InputText
+                        name="discharge"
+                        mandatory
+                        value={selectedPort ? selectedPort.port_name : ''}
                       />
+                      <button
+                        className="
+                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+                  rounded-md text-white"
+                        onClick={openPortModal}
+                      >
+                        <Search className="w-4" />
+                      </button>
                     </div>
-                    <InputText name="kurs" mandatory />
+                    <InputNumber name="kurs" mandatory />
                   </div>
                 </div>
               </div>
@@ -240,7 +300,7 @@ export default function QuotationAdd() {
             <Button
               type="submit"
               disabled={addQuotationMutation.isLoading}
-              className="bg-green-600"
+              className="bg-blueLight"
             >
               {addQuotationMutation.isLoading ? 'Loading...' : 'Save'}
             </Button>
@@ -273,12 +333,72 @@ export default function QuotationAdd() {
                   </TableHeader>
                   <TableBody className="text-black">
                     {customerData.map((customer) => (
-                      <TableRow key={customer.item_cost}>
+                      <TableRow key={customer.customer_code}>
                         <TableCell className="font-medium">
-                          {customer.item_name}
+                          {customer.partner_name}
                         </TableCell>
                         <TableCell className="font-medium">
                           {customer.unit}
+                        </TableCell>
+                        <TableCell className="!w-2 !h-2 rounded-md">
+                          <Button
+                            className=""
+                            onClick={() => {
+                              setSelectedCustomer(customer);
+                              closeCustomerModal();
+                            }}
+                          >
+                            add
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
+
+          {isPortModalOpen && (
+            <div
+              style={{ overflow: 'hidden' }}
+              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                isPortModalOpen ? 'open' : 'closed'
+              }`}
+            >
+              <div className="absolute inset-0 bg-black opacity-75"></div>
+              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <Button
+                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  onClick={closePortModal}
+                >
+                  <h1 className="text-xl">X</h1>
+                </Button>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="hover:!text-white">
+                        Port Name
+                      </TableHead>
+                      <TableHead className="hover:!text-white">Add</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="text-black">
+                    {PortData.map((port) => (
+                      <TableRow key={port.port_code}>
+                        <TableCell className="font-medium">
+                          {port.port_name}
+                        </TableCell>
+                        <TableCell className="!w-2 !h-2 rounded-md">
+                          <Button
+                            className=""
+                            onClick={() => {
+                              setSelectedPort(port);
+                              closePortModal();
+                            }}
+                          >
+                            add
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}

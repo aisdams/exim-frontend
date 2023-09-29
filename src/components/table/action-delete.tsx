@@ -37,7 +37,7 @@ const ActionDelete: React.FC<ActionDeleteProps> = ({
     >
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
-          <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+          <Trash className="mr-2 h-3.5 w-3.5 text-black" />
           Delete
         </AlertDialogTrigger>
 

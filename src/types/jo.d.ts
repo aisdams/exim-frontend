@@ -1,5 +1,5 @@
 export type JobOrder = {
-  jo_no: string | null;
+  jo_no: string;
   jo_date: string | null;
   hbl: string | null;
   mbl: string | null;
@@ -15,6 +15,7 @@ export type JobOrder = {
   port_code: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
+  deletedAt: Date | null;
 };
 
 export type createJobOrderInput = {

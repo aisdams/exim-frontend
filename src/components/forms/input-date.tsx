@@ -38,12 +38,12 @@ const InputDate: React.FC<InputDateProps> = ({
 
   return (
     <div>
-      <label htmlFor={id || name} className='mb-1 inline-block'>
+      <label htmlFor={id || name} className="mb-1 inline-block">
         {label || startCase(name)}
-        {mandatory && <span className='text-[#f00]'>*</span>}
+        {mandatory && <span className="text-[#f00]">*</span>}
       </label>
 
-      <div className='relative'>
+      <div className="relative !z-[999]">
         <DatePickerInput
           ref={field.ref}
           value={
@@ -55,14 +55,14 @@ const InputDate: React.FC<InputDateProps> = ({
           }
           onBlur={field.onBlur}
           onChange={onChange}
-          className='disabled:bg-muted [&_.mantine-Popover-dropdown]:bg-background'
-          styles={{
-            placeholder: {
-              fontWeight: 'normal',
-              color: 'hsl(var(--muted-foreground)) !important',
-            },
-          }}
-          valueFormat='DD/MM/YYYY'
+          className="disabled:bg-blue-300 [&_.mantine-Popover-dropdown]:bg-red-500"
+          // styles={{
+          //   placeholder: {
+          //     fontWeight: 'normal',
+          //     color: 'hsl(var(--muted-foreground)) !important',
+          //   },
+          // }}
+          valueFormat="DD/MM/YYYY"
           placeholder={
             !disabled
               ? placeholder ||
@@ -76,8 +76,8 @@ const InputDate: React.FC<InputDateProps> = ({
 
         {!noClear && field.value && !disabled && (
           <button
-            type='button'
-            className='absolute right-[.6rem] top-[50%] grid h-[20px] w-[20px] translate-y-[-50%] cursor-pointer place-items-center rounded-full bg-slate-400 text-sm transition-all hover:bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600'
+            type="button"
+            className="absolute right-[.6rem] top-[50%] grid h-[20px] w-[20px] translate-y-[-50%] cursor-pointer place-items-center rounded-full bg-slate-400 text-sm transition-all hover:bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600"
             onClick={() => {
               setValue(name, undefined, {
                 shouldValidate: true,
@@ -85,12 +85,12 @@ const InputDate: React.FC<InputDateProps> = ({
               additionalOnClear();
             }}
           >
-            <X className='h-3 w-3 text-black' />
+            <X className="h-3 w-3 text-black" />
           </button>
         )}
       </div>
       {error?.message && (
-        <p className='text-xs tracking-wide text-red-600'>{error.message}</p>
+        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
       )}
     </div>
   );

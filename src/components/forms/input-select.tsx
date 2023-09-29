@@ -68,13 +68,13 @@ const InputSelect: React.FC<InputSelectProps> = ({
   };
 
   return (
-    <div className=''>
-      <div className=''>
-        <label htmlFor={id || name} className='mb-1 inline-block'>
+    <div className="">
+      <div className="">
+        {/* <label htmlFor={id || name} className="mb-1 inline-block">
           {label || startCase(name)}
-          {mandatory && <span className='text-[#f00]'>*</span>}
-        </label>
-        <div className='relative'>
+          {mandatory && <span className="text-[#f00]">*</span>}
+        </label> */}
+        <div className="relative">
           {mounted && (
             <Select
               {...register(name)}
@@ -98,8 +98,8 @@ const InputSelect: React.FC<InputSelectProps> = ({
                   : null
               }
               components={animatedComponents}
-              className=''
-              classNamePrefix='select'
+              className="!w-[300px] bg-black rounded-md"
+              classNamePrefix="select"
               theme={(theme) => ({
                 ...theme,
                 colors: {
@@ -113,7 +113,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
               })}
               menuPortalTarget={noPortal ? undefined : document.body}
               styles={{
-                menuPortal: (base) => ({ ...base, zIndex: menuZIndex || 10 }),
+                menuPortal: (base) => ({ ...base, zIndex: 999 || 10 }),
                 control: (baseStyles, state) => ({
                   ...baseStyles,
                   height: '36px',
@@ -127,9 +127,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
                   opacity: state.isDisabled ? '0.5' : '1',
                   pointerEvents: state.isDisabled ? 'auto' : 'auto',
                   '&:hover': {
-                    color: state.isDisabled
-                      ? 'hsl(var(--input))'
-                      : 'hsl(0, 0%, 70%)',
+                    color: state.isDisabled ? '#fff' : '#fff',
                   },
                 }),
                 menu: (provided) => ({
@@ -150,16 +148,16 @@ const InputSelect: React.FC<InputSelectProps> = ({
                   ...provided,
                   padding: 0,
                   paddingBlock: '0.4rem',
-                  paddingInline: '0.5rem',
+                  zIndex: 40,
                   fontSize: '0.875rem',
                   fontWeight: 400,
                   borderRadius: '0.25rem',
                   color:
                     isSelected || isFocused
                       ? 'white'
-                      : `${isDark ? '#FAFAFA' : 'black'}`,
+                      : `${isDark ? '#fff' : 'black'}`,
                   '&:hover': {
-                    backgroundColor: 'hsl(var(--primary))',
+                    backgroundColor: '#000',
                     color: 'white',
                   },
                 }),
@@ -199,8 +197,8 @@ const InputSelect: React.FC<InputSelectProps> = ({
           )}
           {!noClear && field.value && !disabled && (
             <button
-              type='button'
-              className='absolute right-[3rem] top-[50%] grid h-[20px] w-[20px] translate-y-[-50%] cursor-pointer place-items-center rounded-full bg-slate-400 text-sm transition-all hover:bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600'
+              type="button"
+              className="absolute right-[3rem] top-[50%] grid h-[20px] w-[20px] translate-y-[-50%] cursor-pointer place-items-center rounded-full bg-slate-400 text-sm transition-all hover:bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600"
               onClick={() => {
                 setValue(name, '', {
                   shouldValidate: true,
@@ -208,13 +206,13 @@ const InputSelect: React.FC<InputSelectProps> = ({
                 additionalOnClear();
               }}
             >
-              <X className='h-3 w-3 text-black' />
+              <X className="h-3 w-3 text-black" />
             </button>
           )}
         </div>
       </div>
       {error?.message && (
-        <p className='text-xs tracking-wide text-red-600'>{error.message}</p>
+        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
       )}
     </div>
   );

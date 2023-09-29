@@ -17,9 +17,18 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import InputText from '@/components/forms/input-text';
 import { Label } from '@radix-ui/react-label';
 import { Input } from '@/components/ui/input';
-import { Command, Search } from 'lucide-react';
+import { Command, PlusSquare, Printer, Search } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Cost } from '@/types';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -28,6 +37,14 @@ import {
 } from '@tanstack/react-table';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import ReactTable from '@/components/table/react-table';
+import InputSelect from '@/components/forms/input-select';
+import InputNumber from '@/components/forms/input-number';
+
+interface Port {
+  item_cost: string;
+  qty: string;
+  caption: string;
+}
 
 const defaultValues = {
   item_name: '',
@@ -74,12 +91,22 @@ export default function QuotationEdit() {
   const router = useRouter();
   const qc = useQueryClient();
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isCostModalOpen, setIsCostModalOpen] = useState(false);
+  const [orderBy, setOrderBy] = useState('Choose');
   const methods = useForm<CostSchema>({
     mode: 'all',
     defaultValues,
     resolver: yupResolver(Schema),
   });
   const { handleSubmit, setValue, watch } = methods;
+
+  const closePortModal = () => {
+    setIsCostModalOpen(false);
+  };
+
+  const openCostModal = () => {
+    setIsCostModalOpen(true);
+  };
 
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
@@ -143,7 +170,7 @@ export default function QuotationEdit() {
     onSuccess: () => {
       qc.invalidateQueries(['cost']);
       toast.success('Success, Cost has been added.');
-      router.push('/inbounds');
+      router.push('/quotation');
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -168,13 +195,13 @@ export default function QuotationEdit() {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
           <div className="grid grid-cols-2 gap-3">
-            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm shadow-md shadow-black">
+            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm pb-5">
               <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-0">
                 <Command className="text-white" />
                 <h1> Data Quotation</h1>
               </div>
 
-              <div className="px-3">
+              <div className="px-3 grid gap-5">
                 <div className="grid grid-cols-[1fr_2fr]">
                   <Label>#Quote No :</Label>
                   <InputText placeholder="~Auto" name="quo_no" />
@@ -225,7 +252,7 @@ export default function QuotationEdit() {
               </div>
             </div>
 
-            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm shadow-md shadow-black relative">
+            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm relative">
               <div className="flex gap-3 bg-blueHeaderCard max-h-6 text-white dark:bg-secondDarkBlue p-0">
                 <Command className="text-white" />
                 <h1> Data Quotation</h1>
@@ -250,12 +277,15 @@ export default function QuotationEdit() {
               </div>
             </div>
           </div>
-          {/* Buttons */}
-          <div className="flex items-center gap-2 my-3">
-            <Button type="submit" className="bg-green-500">
-              Back
+          <Link href="#">
+            <Button
+              className="mb-5 bg-green-600 text-white w-max px-2 py-4 gap-2"
+              onClick={openCostModal}
+            >
+              <PlusSquare className="h-5" />
+              <h3>Create Cost</h3>
             </Button>
-          </div>
+          </Link>
         </form>
       </FormProvider>
 
@@ -263,6 +293,97 @@ export default function QuotationEdit() {
         tableInstance={table}
         isLoading={quotationsQuery.isFetching}
       />
+
+      {/* Buttons */}
+      <div className="flex items-center gap-2 my-3">
+        <Button className="bg-green-500">
+          <Link href="/jo">Back</Link>
+        </Button>
+        <Button
+          type="submit"
+          disabled={addQuotationMutation.isLoading}
+          className="bg-blueLight"
+        >
+          {addQuotationMutation.isLoading ? 'Loading...' : 'Save'}
+        </Button>
+        <Button>
+          <Link href="/" className="flex items-center gap-1">
+            <Printer size={15} className="dark:text-white" />
+            Print Quotation
+          </Link>
+        </Button>
+      </div>
+
+      {isCostModalOpen && (
+        <div
+          style={{ overflow: 'hidden' }}
+          className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+            isCostModalOpen ? 'open' : 'closed'
+          }`}
+        >
+          <div className="absolute inset-0 bg-black opacity-75"></div>
+          <div className="z-10 bg-white px-1 pt-1 rounded-lg shadow-lg w-1/2 relative">
+            <Button
+              className="absolute -top-9 right-0 text-white !bg-transparent"
+              onClick={closePortModal}
+            >
+              <h1 className="text-xl">X</h1>
+            </Button>
+
+            <div className="w-full">
+              <div className="flex gap-3 w-full bg-secondDarkBlue pl-5 py-2">
+                <Command />
+                <h1>Add Data Cost</h1>
+              </div>
+              <FormProvider {...methods}>
+                <form onSubmit={handleSubmit(onSubmit)} className="py-5">
+                  <div>
+                    <div className="flex gap-3">
+                      <div className="grid gap-2 text-black w-full">
+                        <Label>Item Cost </Label>
+                        <Label>Qyt</Label>
+                        <Label>Price</Label>
+                        <Label>Note</Label>
+                      </div>
+
+                      <div className="grid gap-3 justify-start">
+                        <InputText name="item_cost" />
+                        <div className="flex">
+                          <InputNumber name="qty" />
+                          <Select value={orderBy} onValueChange={setOrderBy}>
+                            <SelectTrigger className="rounded-md w-max [&>span]:text-xs bg-lightWhite dark:bg-black h-9">
+                              <SelectValue
+                                placeholder="Order by"
+                                className=""
+                              />
+                            </SelectTrigger>
+                            <SelectContent
+                              align="end"
+                              className="dark:text-black"
+                            >
+                              <SelectGroup>
+                                <SelectItem value="Choose">Choose</SelectItem>
+                                <SelectItem value="10FR">10FR</SelectItem>
+                                <SelectItem value="20FR">20FR</SelectItem>
+                                <SelectItem value="30FR">30FR</SelectItem>
+                                <SelectItem value="40FR">40FR</SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="flex">
+                          <InputNumber name="price" />
+                        </div>
+                        <InputText name="note" />
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </FormProvider>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

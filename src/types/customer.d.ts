@@ -4,6 +4,7 @@ export type Customer = {
   unit: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
+  deletedAt: Date | null;
 };
 
 export type createCustomerInput = {

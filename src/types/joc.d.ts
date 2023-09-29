@@ -11,6 +11,7 @@ export type JOC = {
   createdBy: string | null;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt: Date | null;
 };
 
 export type createJOCInput = {

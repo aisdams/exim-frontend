@@ -6,7 +6,7 @@ import React from 'react';
 
 export default function create() {
   return (
-    <div>
+    <div className="overflow-hidden">
       <div className="flex">
         <Command />
         <h1>Data Consolidation</h1>
@@ -80,6 +80,10 @@ export default function create() {
       </div>
       <Button className="bg-green-600">Save</Button>
       <Button>Back</Button>
+
+      <div className="flex">
+        <Button className="bg-green-600">Data</Button>
+      </div>
     </div>
   );
 }

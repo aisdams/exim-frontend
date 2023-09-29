@@ -78,7 +78,7 @@ const QuotationPdf: React.FC<QuotationPdfProps> = () => {
         <Page size="A4" style={styles.page}>
           <View style={styles.headTI}>
             <Image
-              src="https://i.postimg.cc/cCXVYXkC/favicon.png"
+              src="https://i.postimg.cc/cCXVYXkC/logo.png"
               style={styles.imageLogo}
             />
 

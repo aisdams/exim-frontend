@@ -11,12 +11,12 @@ type ActionEditProps = {
 const ActionEdit: React.FC<ActionEditProps> = ({ href, onClick }) => {
   return (
     <Link href={href}>
-      <a onClick={onClick} className="cursor-pointer">
-        <DropdownMenuItem>
-          <Edit2 size={20} />
+      <button onClick={onClick} className="cursor-pointer w-full">
+        <DropdownMenuItem className="gap-3">
+          <Edit2 size={15} className="text-black" />
           Edit
         </DropdownMenuItem>
-      </a>
+      </button>
     </Link>
   );
 };

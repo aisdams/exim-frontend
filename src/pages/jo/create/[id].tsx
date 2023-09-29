@@ -117,6 +117,15 @@ export default function JOEdit() {
               </div>
             </div>
           </div>
+
+          <div className="flex gap-3 mt-4">
+            <Link href="/quotation">
+              <Button className="bg-graySecondary">Back</Button>
+            </Link>
+            <Button type="submit" className="bg-blueLight">
+              Save
+            </Button>
+          </div>
         </form>
       </FormProvider>
     </div>
