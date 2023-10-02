@@ -92,7 +92,12 @@ export default function JOAdd() {
                   </div>
 
                   <div className="grid gap-2 z-20">
-                    <Input name="jo_no" placeholder="~Auto~" disabled />
+                    <Input
+                      name="jo_no"
+                      placeholder="~Auto~"
+                      disabled
+                      className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted  w-[300px] border-none"
+                    />
                     <Input name="jo_date" placeholder="25-09-2023" disabled />
                     <InputNumber name="quo_no" placeholder="Import" disabled />
                     <InputNumber

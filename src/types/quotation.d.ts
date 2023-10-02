@@ -3,7 +3,7 @@ export type Quotation = {
   sales: string | null;
   subject: string | null;
   attn: string | null;
-  type: string | null;
+  type: string;
   delivery: string | null;
   kurs: string | null;
   loading: string | null;
@@ -21,7 +21,7 @@ export type createQuotationInput = {
   sales?: string | null;
   subject?: string | null;
   attn?: string | null;
-  type?: string | null;
+  type?: string;
   delivery?: string | null;
   kurs?: string | null;
   loading?: string | null;
@@ -30,6 +30,7 @@ export type createQuotationInput = {
   customer_code?: string | null;
   item_cost?: string | null;
   port_code?: string | null;
+  createdAt: Date | null;
 };
 
 export type updateQuotationInput = Omit<

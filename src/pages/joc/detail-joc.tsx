@@ -49,25 +49,17 @@ import { DateRangePicker } from '@/components/forms/data-range-picker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 
-import { JobOrder } from '@/types';
+import { JOC } from '@/types';
+import { useRouter } from 'next/router';
 
-const columnHelper = createColumnHelper<JobOrder>();
+const columnHelper = createColumnHelper<JOC>();
 
 const columnsDef = [
   columnHelper.accessor('jo_no', {
     header: () => (
       <div>
-        <div>#JO NO</div>
+        <div>#JOC NO</div>
         <div>DATE</div>
-      </div>
-    ),
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('quo_no', {
-    header: () => (
-      <div>
-        <div>QUO NO</div>
-        <div>SALES</div>
       </div>
     ),
     cell: (info) => info.getValue(),
@@ -76,11 +68,16 @@ const columnsDef = [
     header: 'TYPE',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('customer_code', {
-    header: 'CUSTOMER',
+
+  columnHelper.accessor('quo_no', {
+    header: 'AGENT',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('hbl', {
+  columnHelper.accessor('no_mbl', {
+    header: 'No. MBL',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('loading', {
     header: () => (
       <div>
         <div>HBL/HAWB</div>
@@ -101,7 +98,7 @@ const columnsDef = [
   columnHelper.accessor('etd', {
     header: () => (
       <div>
-        <div>ETD</div>
+        revant ="Home Run "<div>ETD</div>
         <div>ETA</div>
       </div>
     ),
@@ -115,6 +112,7 @@ const columnsDef = [
 
 export default function Index() {
   const qc = useQueryClient();
+  const router = useRouter();
   const [statusesKey, setStatusesKey] = useState<string[]>([]);
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [orderBy, setOrderBy] = useState('All');
@@ -187,12 +185,20 @@ export default function Index() {
           <h1> Job Order</h1>
         </div>
         <div className="flex gap-1 mt-3 text-white">
-          <Button className="bg-blueHeaderCard px-3 py-1 rounded-sm">
+          <button
+            className={`px-3 py-1 rounded-sm ${
+              router.pathname === '/jo' ? 'bg-blueHeaderCard' : 'bg-green-500'
+            }`}
+          >
             <Link href="/jo">Data JO</Link>
-          </Button>
-          <Button className="bg-green-500 px-3 py-1 rounded-sm">
-            <Link href="/joc">Data JOC</Link>
-          </Button>
+          </button>
+          <button
+            className={`px-3 py-1 rounded-sm ${
+              router.pathname === '/joc' ? 'bg-blueHeaderCard' : 'bg-green-500'
+            }`}
+          >
+            <Link href="/joc">Data Consolidation</Link>
+          </button>
         </div>
         <div className="w-full rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3 dark:bg-secondDarkBlue">
           <div className="flex gap-3 items-center mb-5">
@@ -260,7 +266,7 @@ export default function Index() {
                     type="text"
                     name=""
                     id=""
-                    placeholder=""
+                    placeholder="Search..."
                     className="border border-graySecondary dark:border-white rounded-md"
                   />
                 </div>
@@ -290,7 +296,7 @@ export default function Index() {
                       type="text"
                       name=""
                       id=""
-                      placeholder=""
+                      placeholder="Search..."
                       className="border border-graySecondary dark:border-white rounded-md"
                     />
                   </div>

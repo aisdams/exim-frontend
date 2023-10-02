@@ -118,9 +118,39 @@ const columnsDef = [
     header: 'COPY DATA',
     cell: (info) => {
       const { quo_no } = info.row.original;
-      const [preview, setPreview] = useState(false);
+      const [isCopying, setIsCopying] = useState(false);
 
-      return <Copy size={15} className="dark:text-white items-center ml-5" />;
+      const handleCopyData = async () => {
+        try {
+          setIsCopying(true);
+
+          const response = await QuotationService.copyQuotationData(quo_no);
+
+          if (response.status === 200) {
+            console.log('Data has been copied successfully');
+          } else {
+            console.error('Failed to copy data:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error copying data:', error);
+        } finally {
+          setIsCopying(false);
+        }
+      };
+
+      return (
+        <button
+          onClick={handleCopyData}
+          disabled={isCopying}
+          className="cursor-pointer"
+        >
+          {isCopying ? (
+            'Copying...'
+          ) : (
+            <Copy size={15} className="dark:text-white items-center ml-5" />
+          )}
+        </button>
+      );
     },
   }),
   columnHelper.display({
@@ -239,26 +269,17 @@ export default function Index() {
     limit: pageSize,
   };
 
-  // const quotationsQuery = useQuery({
-  // queryKey: ['quotations', fetchDataOptions, debouncedSearchValue],
-  // queryFn: () =>
-  //   QuotationService.getAll(fetchDataOptions, debouncedSearchValue),
-  // keepPreviousData: true,
-  // onError: (err) => {
-  //   toast.error(`Error, ${getErrMessage(err)}`);
-  // },
-  // });
-
   const fetchData = (fetchDataOptions: any, debouncedSearchValue: any) => {
     return QuotationService.getAll({
       ...fetchDataOptions,
       searchValue: debouncedSearchValue,
+      quo_no: debouncedSearchValue,
     });
   };
 
   const quotationsQuery = useQuery({
-    queryKey: ['quotations', { fetchDataOptions, debouncedSearchValue }],
-    queryFn: () => fetchData(fetchDataOptions, debouncedSearchValue),
+    queryKey: ['quotations', { fetchDataOptions, searchValue }],
+    queryFn: () => fetchData(fetchDataOptions, searchValue),
     keepPreviousData: true,
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -286,12 +307,11 @@ export default function Index() {
 
   const table = useReactTable({
     columns,
-    data: quotationsQuery.data?.data ?? defaultData,
+    data: quotationsQuery.data?.data ?? [],
     pageCount: quotationsQuery.data?.pagination.total_page ?? -1,
     state: {
       pagination,
     },
-    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     meta: {
@@ -299,6 +319,8 @@ export default function Index() {
     },
   });
 
+  console.log('Search Value:', searchValue);
+  console.log('Quotations Data:', quotationsQuery.data?.data);
   return (
     <>
       <div className="mb-4 z-[100]">
@@ -375,14 +397,17 @@ export default function Index() {
                     type="text"
                     name=""
                     id=""
-                    placeholder=""
+                    placeholder="Search...."
                     className="border border-graySecondary dark:border-white rounded-md"
                   />
                 </div>
 
                 <div className="flex relative">
                   <div className="flex gap-1">
-                    <Select value={orderByTwo} onValueChange={setOrderByTwo}>
+                    <Select
+                      value={orderByThree}
+                      onValueChange={setOrderByThree}
+                    >
                       <SelectTrigger className="h-7 w-1/2 [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
                         <SelectValue placeholder="Order by" className="" />
                       </SelectTrigger>
@@ -400,7 +425,7 @@ export default function Index() {
                       type="text"
                       name=""
                       id=""
-                      placeholder=""
+                      placeholder="Search...."
                       className="border border-graySecondary dark:border-white rounded-md"
                       value={searchValue}
                       onChange={(e) => setSearchValue(e.target.value)}

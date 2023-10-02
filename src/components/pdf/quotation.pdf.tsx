@@ -41,29 +41,26 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
     borderBottomWidth: 0,
   },
-  tableRow: {
-    margin: 'auto',
-    flexDirection: 'row',
-  },
-  tableCol: {
-    width: '22%',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderLeftWidth: 0,
-    borderTopWidth: 0,
-  },
-  tableCell: {
-    margin: 'auto',
-    marginTop: 5,
-    fontSize: 10,
-  },
-  textNameCom: {
+  textHeadOne: {
     fontSize: 14,
     fontWeight: 'bold',
-    letterSpacing: 2,
   },
-  textUnderComp: {
-    fontSize: 12,
+  textUnderheadTI: {
+    width: '30%',
+  },
+  textReCus: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  tableNew: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  tableCol: {
+    width: '100%',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 
@@ -88,8 +85,19 @@ const QuotationPdf: React.FC<QuotationPdfProps> = () => {
           </View>
 
           <View>
-            <Text>Mobile : 0893</Text>
-            <Text>Email : b@yahoo.com</Text>
+            <Text style={styles.textHeadOne}>PT. CIPTA KARYA KU INDONE</Text>
+            <Text style={styles.textUnderheadTI}>
+              Jl.Wijaya XI,No.X AB Kebayoran Baru Jakarta Selatan
+            </Text>
+
+            <Text>Attn. Ibu Yuli</Text>
+            <Text style={styles.textReCus}>Re. Customer CLEARANCE SEA</Text>
+
+            <Text>We are pleased to quote you the following :</Text>
+          </View>
+
+          <View style={styles.tableCol}>
+            <View></View>
           </View>
         </Page>
       </Document>

@@ -62,6 +62,7 @@ const defaultValues = {
   customer_code: '',
   item_cost: '',
   port_code: '',
+  createdAt: new Date(),
 };
 
 const Schema = yup.object({
@@ -77,6 +78,7 @@ const Schema = yup.object({
   customer_code: yup.string().required(),
   item_cost: yup.string().required(),
   port_code: yup.string().required(),
+  createdAt: yup.date().required(),
 });
 
 type QuotationSchema = InferType<typeof Schema>;
@@ -86,15 +88,15 @@ export default function QuotationAdd() {
   const qc = useQueryClient();
   const [isHeader, setIsHeader] = useState('');
   const [isFooter, setIsFooter] = useState('');
-  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
-  const [isPortModalOpen, setIsPortModalOpen] = useState(false);
-  const [customerData, setCustomerData] = useState<Customer[]>([]);
-  const [PortData, setPortData] = useState<Port[]>([]);
   const methods = useForm<QuotationSchema>({
     mode: 'all',
     defaultValues,
     resolver: yupResolver(Schema),
   });
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
+  const [isPortModalOpen, setIsPortModalOpen] = useState(false);
+  const [customerData, setCustomerData] = useState<Customer[]>([]);
+  const [PortData, setPortData] = useState<Port[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
@@ -188,7 +190,7 @@ export default function QuotationAdd() {
                   </div>
                   <div className="grid gap-2">
                     <Input
-                      name="date"
+                      name="createdAt"
                       className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted  w-[300px] border-none"
                       disabled
                       placeholder="~AUTO~"
@@ -197,7 +199,7 @@ export default function QuotationAdd() {
                     <InputText name="subject" mandatory />
                     <div className="flex gap-2">
                       <InputText
-                        name="customer"
+                        name="try"
                         mandatory
                         value={
                           selectedCustomer ? selectedCustomer.partner_name : ''
@@ -230,22 +232,36 @@ export default function QuotationAdd() {
                         },
                       ]}
                     />
-                    <InputText name="delivery" mandatory />
-                    <div className="flex gap-2">
+                    <InputSelect
+                      name="delivery"
+                      options={[
+                        {
+                          value: 'FCL',
+                          label: 'FCL',
+                        },
+                        {
+                          value: 'LCL',
+                          label: 'LCL',
+                        },
+                      ]}
+                    />
+                    {/* <div className="flex gap-2">
                       <InputText
-                        name="loading"
+                        name="customer_code"
                         mandatory
-                        value={selectedPort ? selectedPort.port_name : ''}
+                        value={
+                          selectedCustomer ? selectedCustomer.partner_name : ''
+                        }
                       />
                       <button
                         className="
                   dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
                   rounded-md text-white"
-                        onClick={openPortModal}
+                        onClick={openCustomerModal}
                       >
                         <Search className="w-4" />
                       </button>
-                    </div>
+                    </div> */}
                     <div className="flex gap-2">
                       <InputText
                         name="discharge"

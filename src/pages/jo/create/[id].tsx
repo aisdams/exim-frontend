@@ -89,7 +89,12 @@ export default function JOEdit() {
                 </div>
 
                 <div className="grid gap-2">
-                  <InputText name="jo_no" placeholder="~Auto~" />
+                  <Input
+                    name="jo_no"
+                    className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted  w-[300px] border-none"
+                    disabled
+                    placeholder="~AUTO~"
+                  />
                   <InputText name="jo_date" placeholder="25-09-2023" />
                   <InputText name="quo_no" placeholder="" />
                   <InputText name="customer_code" placeholder="" />
@@ -122,9 +127,11 @@ export default function JOEdit() {
             <Link href="/quotation">
               <Button className="bg-graySecondary">Back</Button>
             </Link>
-            <Button type="submit" className="bg-blueLight">
-              Save
-            </Button>
+            <Link href="/jo/detail/${jo_no}">
+              <Button type="submit" className="bg-blueLight">
+                Save
+              </Button>
+            </Link>
           </div>
         </form>
       </FormProvider>

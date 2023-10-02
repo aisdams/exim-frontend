@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import Link from 'next/link';
+import { ParsedUrlQuery } from 'querystring';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,7 +18,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import InputText from '@/components/forms/input-text';
 import { Label } from '@radix-ui/react-label';
 import { Input } from '@/components/ui/input';
-import { Command, PlusSquare, Printer, Search } from 'lucide-react';
+import { Command, Loader2, PlusSquare, Printer, Search } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Cost } from '@/types';
 import {
@@ -63,6 +64,8 @@ const Schema = yup.object({
   amount: yup.string().required(),
   note: yup.string().required(),
 });
+
+type InboundSchema = InferType<typeof Schema>;
 
 const columnHelper = createColumnHelper<Cost>();
 
@@ -188,106 +191,112 @@ export default function QuotationEdit() {
   return (
     <div className="overflow-hidden">
       <div className="mb-4 flex gap-3 ">
+        <div className=""></div>
         <Command className="text-blueLight" />
         <h1 className="">Add Quotation</h1>
       </div>
+      {quotationsQuery.isLoading ? (
+        <Loader2 />
+      ) : quotationsQuery.isLoadingError ? (
+        <p className="text-red-600">Something went wrong!</p>
+      ) : (
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm pb-5">
+                <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-0">
+                  <Command className="text-white" />
+                  <h1> Data Quotation</h1>
+                </div>
 
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm pb-5">
-              <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-0">
-                <Command className="text-white" />
-                <h1> Data Quotation</h1>
+                <div className="px-3 grid gap-5">
+                  <div className="grid grid-cols-[1fr_2fr]">
+                    <Label>#Quote No :</Label>
+                    <InputText placeholder="~Auto" name="quo_no" disabled />
+                  </div>
+                  <div className="grid grid-cols-[1fr_2fr]">
+                    <Label>Date :</Label>
+                    <InputText placeholder="~Auto~" name="date" disabled />
+                  </div>
+                  <div className="grid grid-cols-[1fr_2fr]">
+                    <Label>Sales :</Label>
+                    <InputText name="sales" mandatory />
+                  </div>
+                  <div className="grid grid-cols-[1fr_2fr]">
+                    <Label>Subject :</Label>
+                    <InputText name="subject" mandatory />
+                  </div>
+                  <div className="grid grid-cols-3">
+                    <Label>Customer :</Label>
+                    <InputText name="customer" mandatory />
+                    <Search className="bg-lightWhite text-base" />
+                  </div>
+                  <div className="grid grid-cols-[1fr_2fr]">
+                    <Label>Attn :</Label>
+                    <InputText name="attn" mandatory />
+                  </div>
+                  <div className="grid grid-cols-[1fr_2fr]">
+                    <Label>Type :</Label>
+                    <InputText name="type" mandatory />
+                  </div>
+                  <div className="grid grid-cols-[1fr_2fr]">
+                    <Label>Delivery :</Label>
+                    <InputText name="delivery" mandatory />
+                  </div>
+                  <div className="grid grid-cols-3">
+                    <Label>Loading :</Label>
+                    <InputText name="loading" mandatory />
+                    <Search className="bg-lightWhite text-base" />
+                  </div>
+                  <div className="grid grid-cols-3">
+                    <Label>Discharge :</Label>
+                    <InputText name="discharge" mandatory />
+                    <Search className="bg-lightWhite text-base" />
+                  </div>
+                  <div className="grid grid-cols-[1fr_2fr]">
+                    <Label>Kurs</Label>
+                    <InputText name="kurs" mandatory />
+                  </div>
+                </div>
               </div>
 
-              <div className="px-3 grid gap-5">
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>#Quote No :</Label>
-                  <InputText placeholder="~Auto" name="quo_no" />
+              <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm relative">
+                <div className="flex gap-3 bg-blueHeaderCard max-h-6 text-white dark:bg-secondDarkBlue p-0">
+                  <Command className="text-white" />
+                  <h1> Data Quotation</h1>
                 </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Date :</Label>
-                  <InputText placeholder="~Auto~" name="date" />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Sales :</Label>
-                  <InputText name="sales" mandatory />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Subject :</Label>
-                  <InputText name="subject" mandatory />
-                </div>
-                <div className="grid grid-cols-3">
-                  <Label>Customer :</Label>
-                  <InputText name="customer" mandatory />
-                  <Search className="bg-lightWhite text-base" />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Attn :</Label>
-                  <InputText name="attn" mandatory />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Type :</Label>
-                  <InputText name="type" mandatory />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Delivery :</Label>
-                  <InputText name="delivery" mandatory />
-                </div>
-                <div className="grid grid-cols-3">
-                  <Label>Loading :</Label>
-                  <InputText name="loading" mandatory />
-                  <Search className="bg-lightWhite text-base" />
-                </div>
-                <div className="grid grid-cols-3">
-                  <Label>Discharge :</Label>
-                  <InputText name="discharge" mandatory />
-                  <Search className="bg-lightWhite text-base" />
-                </div>
-                <div className="grid grid-cols-[1fr_2fr]">
-                  <Label>Kurs</Label>
-                  <InputText name="kurs" mandatory />
+
+                <div className="px-3 absolute top-14 w-full h-full">
+                  <div className="flex gap-2 mb-5">
+                    <Label>Header: </Label>
+                    <Textarea
+                      className="header h-32"
+                      value="We are pleased to quote you the following :"
+                    />{' '}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Label>Footer: </Label>
+                    <Textarea
+                      className="footer h-32"
+                      value="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention. "
+                    />{' '}
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm relative">
-              <div className="flex gap-3 bg-blueHeaderCard max-h-6 text-white dark:bg-secondDarkBlue p-0">
-                <Command className="text-white" />
-                <h1> Data Quotation</h1>
-              </div>
-
-              <div className="px-3 absolute top-14 w-full h-full">
-                <div className="flex gap-2 mb-5">
-                  <Label>Header: </Label>
-                  <Textarea
-                    className="header h-32"
-                    value="We are pleased to quote you the following :"
-                  />{' '}
-                </div>
-
-                <div className="flex gap-2">
-                  <Label>Footer: </Label>
-                  <Textarea
-                    className="footer h-32"
-                    value="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention. "
-                  />{' '}
-                </div>
-              </div>
-            </div>
-          </div>
-          <Link href="#">
-            <Button
-              className="mb-5 bg-green-600 text-white w-max px-2 py-4 gap-2"
-              onClick={openCostModal}
-            >
-              <PlusSquare className="h-5" />
-              <h3>Create Cost</h3>
-            </Button>
-          </Link>
-        </form>
-      </FormProvider>
+            <Link href="#">
+              <Button
+                className="mb-5 bg-green-600 text-white w-max px-2 py-4 gap-2"
+                onClick={openCostModal}
+              >
+                <PlusSquare className="h-5" />
+                <h3>Create Cost</h3>
+              </Button>
+            </Link>
+          </form>
+        </FormProvider>
+      )}
 
       <ReactTable
         tableInstance={table}
@@ -322,7 +331,7 @@ export default function QuotationEdit() {
           }`}
         >
           <div className="absolute inset-0 bg-black opacity-75"></div>
-          <div className="z-10 bg-white px-1 pt-1 rounded-lg shadow-lg w-1/2 relative">
+          <div className="z-10 bg-white px-1 pt-1 rounded-lg shadow-lg w-2/5 relative">
             <Button
               className="absolute -top-9 right-0 text-white !bg-transparent"
               onClick={closePortModal}
@@ -331,14 +340,14 @@ export default function QuotationEdit() {
             </Button>
 
             <div className="w-full">
-              <div className="flex gap-3 w-full bg-secondDarkBlue pl-5 py-2">
+              <div className="flex gap-3 w-full bg-blueHeaderCard pl-5 py-2">
                 <Command />
                 <h1>Add Data Cost</h1>
               </div>
               <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)} className="py-5">
                   <div>
-                    <div className="flex gap-3">
+                    <div className="flex  gap-3">
                       <div className="grid gap-2 text-black w-full">
                         <Label>Item Cost </Label>
                         <Label>Qyt</Label>
@@ -346,7 +355,7 @@ export default function QuotationEdit() {
                         <Label>Note</Label>
                       </div>
 
-                      <div className="grid gap-3 justify-start">
+                      <div className="grid gap-3 justify-end">
                         <InputText name="item_cost" />
                         <div className="flex">
                           <InputNumber name="qty" />
@@ -377,6 +386,19 @@ export default function QuotationEdit() {
                         <InputText name="note" />
                       </div>
                     </div>
+                  </div>
+                  {/* Buttons */}
+                  <div className="flex items-center gap-2 mt-5">
+                    <Button className="bg-graySecondary">
+                      <Link href="/quotation">Back</Link>
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={addQuotationMutation.isLoading}
+                      className="bg-blueLight"
+                    >
+                      {addQuotationMutation.isLoading ? 'Loading...' : 'Save'}
+                    </Button>
                   </div>
                 </form>
               </FormProvider>

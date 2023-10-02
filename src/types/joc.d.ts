@@ -9,6 +9,10 @@ export type JOC = {
   jo_no: string | null;
   customer_code: string | null;
   createdBy: string | null;
+  loading: string | null;
+  discharge: string | null;
+  etd: string | null;
+  eta: string | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -21,9 +25,13 @@ export type createJOCInput = {
   vessel?: string | null;
   no_container?: string | null;
   general_purpose?: string | null;
+  etd: string | null;
+  eta: string | null;
   quo_no?: string | null;
   jo_no?: string | null;
   customer_code?: string | null;
+  loading: string | null;
+  discharge: string | null;
   createdBy?: string | null;
 };
 

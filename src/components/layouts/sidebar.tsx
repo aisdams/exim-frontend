@@ -12,11 +12,13 @@ import {
 } from '@/components/ui/navigation-menu';
 import sidebarData from '@/data/sidebar-data';
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Sidebar() {
   const [isActive, setIsActive] = useState(0);
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [menuIcon, setMenuIcon] = useState('Menu');
+  const router = useRouter();
 
   const handleToggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
