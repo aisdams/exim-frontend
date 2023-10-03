@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -66,6 +67,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 
 import { JobOrder } from '@/types';
+import { Label } from '@/components/ui/label';
 
 const columnHelper = createColumnHelper<JobOrder>();
 
@@ -313,10 +315,15 @@ export default function Index() {
             <h3> Filter Data JO</h3>
           </div>
 
-          <div className="">
-            <div className="flex items-center gap-3">
-              <h3>Date and To: </h3>
+          {/* NEW CHANGED */}
+          <div className="flex gap-20">
+            <div className="grid gap-1">
+              <Label className="mt-4">Date TO</Label>
+              <Label>Status</Label>
+              <Label>FIlter By</Label>
+            </div>
 
+            <div className="grid gap-6">
               <div>
                 <DateRangePicker
                   onUpdate={(values) => console.log(values)}
@@ -327,10 +334,6 @@ export default function Index() {
                   showCompare={false}
                 />
               </div>
-            </div>
-
-            <div className="flex items-center gap-3 mt-3">
-              <h1>Status : </h1>
               <Select value={orderBy} onValueChange={setOrderBy}>
                 <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
                   <SelectValue placeholder="Order by" className="" />
@@ -343,10 +346,6 @@ export default function Index() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-            </div>
-
-            <div className="flex items-center gap-3 mt-3">
-              <h3>Filter By : </h3>
 
               <div className="grid gap-1">
                 <div className="flex gap-1">

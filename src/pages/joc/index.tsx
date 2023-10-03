@@ -86,6 +86,26 @@ const columnsDef = [
     ),
     cell: (info) => info.getValue(),
   }),
+  columnHelper.accessor('status', {
+    header: 'STATUS',
+    cell: (info) => (
+      <div>
+        <button
+          className={`rounded-md px-2 ${
+            info.getValue() === 'InProgress'
+              ? 'bg-yellow-600'
+              : info.getValue() === 'Executed'
+              ? 'bg-green-500'
+              : info.getValue() === 'Cancel'
+              ? 'bg-red-600'
+              : ''
+          }`}
+        >
+          {info.getValue()}
+        </button>
+      </div>
+    ),
+  }),
   columnHelper.accessor('quo_no', {
     header: () => (
       <div>

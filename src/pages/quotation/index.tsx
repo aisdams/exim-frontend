@@ -7,6 +7,7 @@ import {
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -47,6 +48,7 @@ import {
   Printer,
   Copy,
   MoreVertical,
+  CheckIcon,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -76,6 +78,7 @@ const columnHelper = createColumnHelper<Quotation>();
 
 const columnsDef = [
   columnHelper.accessor('quo_no', {
+    enableSorting: false,
     header: () => (
       <div>
         <div>QUO NO</div>
@@ -111,7 +114,23 @@ const columnsDef = [
   }),
   columnHelper.accessor('status', {
     header: 'STATUS',
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <div>
+        <button
+          className={`rounded-md px-2 ${
+            info.getValue() === 'InProgress'
+              ? 'bg-yellow-600'
+              : info.getValue() === 'Executed'
+              ? 'bg-green-500'
+              : info.getValue() === 'Cancel'
+              ? 'bg-red-600'
+              : ''
+          }`}
+        >
+          {info.getValue()}
+        </button>
+      </div>
+    ),
   }),
   columnHelper.display({
     id: 'print',
@@ -166,7 +185,6 @@ const columnsDef = [
       );
     },
   }),
-
   columnHelper.display({
     id: 'actions',
     header: 'ACTIONS',
@@ -194,6 +212,15 @@ const columnsDef = [
               >
                 <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
                 Edit
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="p-0">
+              <Link
+                href={`/quotation/edit/${quo_no}`}
+                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+              >
+                <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                Executed
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -318,9 +345,6 @@ export default function Index() {
       deleteMutation: deleteQuotationMutation,
     },
   });
-
-  console.log('Search Value:', searchValue);
-  console.log('Quotations Data:', quotationsQuery.data?.data);
   return (
     <>
       <div className="mb-4 z-[100]">
@@ -329,15 +353,14 @@ export default function Index() {
           <h1>Quotation</h1>
         </div>
         <div className="w-full rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3 dark:bg-secondDarkBlue">
-          <div className="flex gap-3 items-center mb-5">
-            <Search className="w-4 h-4" />
-            <h3> Filter Data</h3>
-          </div>
+          <div className="flex gap-20">
+            <div className="grid gap-1">
+              <Label className="mt-4">Date TO</Label>
+              <Label>Status</Label>
+              <Label>FIlter By</Label>
+            </div>
 
-          <div className="">
-            <div className="flex items-center gap-3">
-              <h3>Date and To: </h3>
-
+            <div className="grid gap-6">
               <div>
                 <DateRangePicker
                   onUpdate={(values) => console.log(values)}
@@ -347,19 +370,7 @@ export default function Index() {
                   locale="en-GB"
                   showCompare={false}
                 />
-                {/* <Calendar
-                  mode="single"
-                  captionLayout="dropdown-buttons"
-                  selected={date}
-                  onSelect={setDate}
-                  fromYear={1960}
-                  toYear={2030}
-                /> */}
               </div>
-            </div>
-
-            <div className="flex items-center gap-3 mt-3">
-              <h1>Status : </h1>
               <Select value={orderBy} onValueChange={setOrderBy}>
                 <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
                   <SelectValue placeholder="Order by" className="" />
@@ -372,10 +383,6 @@ export default function Index() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-            </div>
-
-            <div className="flex items-center gap-3 mt-3">
-              <h3>Filter By :</h3>
 
               <div className="grid gap-1">
                 <div className="flex gap-1">
