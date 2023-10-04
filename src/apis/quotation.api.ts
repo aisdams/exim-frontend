@@ -16,7 +16,7 @@ export const create = async (payload: createQuotationInput) => {
 };
 
 export const copyQuotationData = async (quo_no: string) => {
-  const res = await axios.post(`/quotation/copy/${quo_no}`);
+  const res = await axios.post(`/quotation/${quo_no}`);
 
   return res.data;
 };

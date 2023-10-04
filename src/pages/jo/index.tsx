@@ -130,17 +130,8 @@ const columnsDef = [
     cell: (info) => info.getValue(),
   }),
   columnHelper.display({
-    id: 'print',
-    header: 'COPY QUO',
-    cell: (info) => {
-      const { quo_no } = info.row.original;
-      const [preview, setPreview] = useState(false);
-
-      return <Copy size={15} className="dark:text-white" />;
-    },
-  }),
-  columnHelper.display({
     id: 'actions',
+    header: 'ACTIONS',
     cell: (info) => {
       const { jo_no } = info.row.original;
       const deleteJobOrderMutation = info.table.options.meta?.deleteMutation;
@@ -151,7 +142,7 @@ const columnsDef = [
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="h-8 w-8 p-0 data-[state=open]:bg-muted"
+              className="h-8 w-8 p-0 data-[state=open]:bg-muted grid mx-auto justify-center items-center"
             >
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />

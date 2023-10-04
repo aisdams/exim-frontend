@@ -75,7 +75,7 @@ import ActionEdit from '@/components/table/action-edit';
 import ActionDelete from '@/components/table/action-delete';
 
 const columnHelper = createColumnHelper<Quotation>();
-
+const [newStatus, setNewStatus] = useState('InProgress');
 const columnsDef = [
   columnHelper.accessor('quo_no', {
     enableSorting: false,
@@ -120,14 +120,14 @@ const columnsDef = [
           className={`rounded-md px-2 ${
             info.getValue() === 'InProgress'
               ? 'bg-yellow-600'
-              : info.getValue() === 'Executed'
+              : info.getValue() === newStatus
               ? 'bg-green-500'
               : info.getValue() === 'Cancel'
               ? 'bg-red-600'
               : ''
           }`}
         >
-          {info.getValue()}
+          {newStatus}
         </button>
       </div>
     ),
@@ -166,7 +166,10 @@ const columnsDef = [
           {isCopying ? (
             'Copying...'
           ) : (
-            <Copy size={15} className="dark:text-white items-center ml-5" />
+            <Copy
+              size={15}
+              className="dark:text-white grid mx-auto justify-center items-center"
+            />
           )}
         </button>
       );
@@ -180,7 +183,10 @@ const columnsDef = [
 
       return (
         <Link href={`/jo/create/${quo_no}`}>
-          <PlusSquare size={15} className="dark:text-white items-center ml-3" />
+          <PlusSquare
+            size={15}
+            className="dark:text-white items-center grid mx-auto justify-center"
+          />
         </Link>
       );
     },
@@ -192,16 +198,15 @@ const columnsDef = [
       const { quo_no } = info.row.original;
       const deleteQuotationMutation = info.table.options.meta?.deleteMutation;
       const [open, setOpen] = useState(false);
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="h-8 w-8 p-0 data-[state=open]:bg-muted"
+              className="h-8 w-8 p-0 data-[state=open]:bg-muted grid mx-auto justify-center items-center"
             >
               <span className="sr-only">Open menu</span>
-              <MoreVertical className="h-4 w-4 ml-5" />
+              <MoreVertical className="h-4 w-4 grid mx-auto justify-center items-center" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="font-normal">
@@ -215,13 +220,23 @@ const columnsDef = [
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="p-0">
-              <Link
-                href={`/quotation/edit/${quo_no}`}
-                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+              <button
+                onClick={() => {
+                  setNewStatus('Executed'); // Perbarui status saat tombol diklik
+                }}
+                className={`rounded-md px-2 flex w-full select-none items-center py-1.5 hover:cursor-default ${
+                  newStatus === 'InProgress'
+                    ? 'bg-yellow-600'
+                    : newStatus === 'Executed'
+                    ? 'bg-green-500'
+                    : newStatus === 'Cancel'
+                    ? 'bg-red-600'
+                    : ''
+                }`}
               >
                 <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
                 Executed
-              </Link>
+              </button>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
