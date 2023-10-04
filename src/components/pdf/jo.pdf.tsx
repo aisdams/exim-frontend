@@ -157,6 +157,13 @@ const QuotationPdf: React.FC<QuotationPdfProps> = () => {
               <Text>PT. UNI INDO JAYA</Text>
             </View>
           </View>
+
+          <View>
+            <Text>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Pariatur, debitis!
+            </Text>
+          </View>
         </Page>
       </Document>
     </PDFViewer>

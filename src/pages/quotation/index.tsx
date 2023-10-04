@@ -48,7 +48,7 @@ import {
   Printer,
   Copy,
   MoreVertical,
-  CheckIcon,
+  CheckSquare,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -75,7 +75,7 @@ import ActionEdit from '@/components/table/action-edit';
 import ActionDelete from '@/components/table/action-delete';
 
 const columnHelper = createColumnHelper<Quotation>();
-const [newStatus, setNewStatus] = useState('InProgress');
+// const [newStatus, setNewStatus] = useState('InProgress');
 const columnsDef = [
   columnHelper.accessor('quo_no', {
     enableSorting: false,
@@ -120,14 +120,15 @@ const columnsDef = [
           className={`rounded-md px-2 ${
             info.getValue() === 'InProgress'
               ? 'bg-yellow-600'
-              : info.getValue() === newStatus
+              : info.getValue() === 'newStatus'
               ? 'bg-green-500'
               : info.getValue() === 'Cancel'
               ? 'bg-red-600'
               : ''
           }`}
         >
-          {newStatus}
+          {/* {newStatus} */}
+          {info.getValue()}
         </button>
       </div>
     ),
@@ -198,6 +199,7 @@ const columnsDef = [
       const { quo_no } = info.row.original;
       const deleteQuotationMutation = info.table.options.meta?.deleteMutation;
       const [open, setOpen] = useState(false);
+      const [newStatus, setNewStatus] = useState('InProgress');
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -219,10 +221,10 @@ const columnsDef = [
                 Edit
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="p-0">
+            {/* <DropdownMenuItem className="p-0">
               <button
                 onClick={() => {
-                  setNewStatus('Executed'); // Perbarui status saat tombol diklik
+                  setNewStatus('Executed');
                 }}
                 className={`rounded-md px-2 flex w-full select-none items-center py-1.5 hover:cursor-default ${
                   newStatus === 'InProgress'
@@ -237,7 +239,7 @@ const columnsDef = [
                 <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
                 Executed
               </button>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuItem
               onClick={(e) => {
                 e.preventDefault();

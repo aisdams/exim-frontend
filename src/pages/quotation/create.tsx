@@ -91,16 +91,19 @@ export default function QuotationAdd() {
   const methods = useForm<QuotationSchema>({
     mode: 'all',
     defaultValues,
-    resolver: yupResolver(Schema),
+    rFreporesolver: yupResolver(Schema),
   });
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [isPortModalOpen, setIsPortModalOpen] = useState(false);
+  const [isPortTwoModalOpen, setIsPortTwoModalOpen] = useState(false);
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [PortData, setPortData] = useState<Port[]>([]);
+  const [PortDataTwo, setPortDataTwo] = useState<Port[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
+  const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
   const { handleSubmit, setValue, watch } = methods;
   const openCustomerModal = () => {
     setIsCustomerModalOpen(true);
@@ -130,11 +133,29 @@ export default function QuotationAdd() {
       });
   };
 
+  const openPortTwoModal = () => {
+    setIsPortTwoModalOpen(true);
+
+    fetch('http://localhost:8089/api/port')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data Port:', data.data);
+        setPortData(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
   const closeCustomerModal = () => {
     setIsCustomerModalOpen(false);
   };
 
   const closePortModal = () => {
+    setIsPortModalOpen(false);
+  };
+
+  const closePortTwoModal = () => {
     setIsPortModalOpen(false);
   };
 
@@ -245,26 +266,9 @@ export default function QuotationAdd() {
                         },
                       ]}
                     />
-                    {/* <div className="flex gap-2">
-                      <InputText
-                        name="customer_code"
-                        mandatory
-                        value={
-                          selectedCustomer ? selectedCustomer.partner_name : ''
-                        }
-                      />
-                      <button
-                        className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
-                        onClick={openCustomerModal}
-                      >
-                        <Search className="w-4" />
-                      </button>
-                    </div> */}
                     <div className="flex gap-2">
                       <InputText
-                        name="discharge"
+                        name="loading"
                         mandatory
                         value={selectedPort ? selectedPort.port_name : ''}
                       />
@@ -273,6 +277,22 @@ export default function QuotationAdd() {
                   dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
                   rounded-md text-white"
                         onClick={openPortModal}
+                      >
+                        <Search className="w-4" />
+                      </button>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <InputText
+                        name="discharge"
+                        mandatory
+                        value={selectedPortTwo ? selectedPortTwo.port_name : ''}
+                      />
+                      <button
+                        className="
+                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+                  rounded-md text-white"
+                        onClick={openPortTwoModal}
                       >
                         <Search className="w-4" />
                       </button>
@@ -299,7 +319,7 @@ export default function QuotationAdd() {
                 </div>
 
                 <div className="flex gap-2">
-                  <Label>Footer: </Label>
+                  <Label>Footer:</Label>
                   <Textarea
                     className="footer h-32"
                     value="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention. "
@@ -387,6 +407,55 @@ export default function QuotationAdd() {
                 <Button
                   className="absolute -top-9 right-0 text-white !bg-transparent"
                   onClick={closePortModal}
+                >
+                  <h1 className="text-xl">X</h1>
+                </Button>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="hover:!text-white">
+                        Port Name
+                      </TableHead>
+                      <TableHead className="hover:!text-white">Add</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="text-black">
+                    {PortData.map((port) => (
+                      <TableRow key={port.port_code}>
+                        <TableCell className="font-medium">
+                          {port.port_name}
+                        </TableCell>
+                        <TableCell className="!w-2 !h-2 rounded-md">
+                          <Button
+                            className=""
+                            onClick={() => {
+                              setSelectedPort(port);
+                              closePortModal();
+                            }}
+                          >
+                            add
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
+
+          {isPortTwoModalOpen && (
+            <div
+              style={{ overflow: 'hidden' }}
+              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                isPortTwoModalOpen ? 'open' : 'closed'
+              }`}
+            >
+              <div className="absolute inset-0 bg-black opacity-75"></div>
+              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <Button
+                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  onClick={closePortTwoModal}
                 >
                   <h1 className="text-xl">X</h1>
                 </Button>

@@ -149,7 +149,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
         </table>
       </div>
 
-      {/* Pagination */}
+      {/* Pagination*/}
       <div className="flex flex-wrap items-center justify-between gap-2">
         {/* Page Count & Show */}
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -160,7 +160,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
           </span>
         </div>
 
-        {/* Next & Prev Buttons */}
+        {/* Next & Prev Buttons*/}
         <div className="flex flex-wrap items-center gap-2">
           {[...Array(table.getPageCount() > 0 ? table.getPageCount() : 3)].map(
             (_, pageIndex) => (
