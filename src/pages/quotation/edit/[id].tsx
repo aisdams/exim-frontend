@@ -271,7 +271,7 @@ export default function QuotationEdit() {
                     <Label>Header: </Label>
                     <Textarea
                       className="header h-32"
-                      value="We are pleased to quote you the following :"
+                      value="We are pleased to quote you the following:"
                     />{' '}
                   </div>
 
@@ -356,7 +356,7 @@ export default function QuotationEdit() {
                       </div>
 
                       <div className="grid gap-3 justify-end">
-                        <InputText name="item_cost" />
+                        <InputText name="item_cost" disabled />
                         <div className="flex">
                           <InputNumber name="qty" />
                           <Select value={orderBy} onValueChange={setOrderBy}>

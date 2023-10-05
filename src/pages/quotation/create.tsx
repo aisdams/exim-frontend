@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { format } from 'date-fns';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
@@ -52,33 +53,25 @@ interface Port {
 const defaultValues = {
   sales: '',
   subject: '',
+  customer: '',
   attn: '',
   type: '',
   delivery: '',
-  kurs: '',
-  status: '',
   loading: '',
   discharge: '',
-  customer_code: '',
-  item_cost: '',
-  port_code: '',
-  createdAt: new Date(),
+  kurs: '',
 };
 
 const Schema = yup.object({
   sales: yup.string().required(),
   subject: yup.string().required(),
+  customer: yup.string().required(),
   attn: yup.string().required(),
   type: yup.string().required(),
   delivery: yup.string().required(),
-  kurs: yup.string().required(),
-  status: yup.string().required(),
   loading: yup.string().required(),
   discharge: yup.string().required(),
-  customer_code: yup.string().required(),
-  item_cost: yup.string().required(),
-  port_code: yup.string().required(),
-  createdAt: yup.date().required(),
+  kurs: yup.string().required(),
 });
 
 type QuotationSchema = InferType<typeof Schema>;
@@ -86,22 +79,26 @@ type QuotationSchema = InferType<typeof Schema>;
 export default function QuotationAdd() {
   const router = useRouter();
   const qc = useQueryClient();
-  const [isHeader, setIsHeader] = useState('');
-  const [isFooter, setIsFooter] = useState('');
   const methods = useForm<QuotationSchema>({
     mode: 'all',
     defaultValues,
-    rFreporesolver: yupResolver(Schema),
+    resolver: yupResolver(Schema),
   });
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [isPortModalOpen, setIsPortModalOpen] = useState(false);
   const [isPortTwoModalOpen, setIsPortTwoModalOpen] = useState(false);
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [PortData, setPortData] = useState<Port[]>([]);
-  const [PortDataTwo, setPortDataTwo] = useState<Port[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
+  const [headerText, setHeaderText] = useState(
+    'We are pleased to quote you the following :'
+  );
+  const [footerText, setFooterText] = useState(
+    'Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention.'
+  );
+
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
   const { handleSubmit, setValue, watch } = methods;
@@ -156,7 +153,7 @@ export default function QuotationAdd() {
   };
 
   const closePortTwoModal = () => {
-    setIsPortModalOpen(false);
+    setIsPortTwoModalOpen(false);
   };
 
   const addQuotationMutation = useMutation({
@@ -215,12 +212,13 @@ export default function QuotationAdd() {
                       className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted  w-[300px] border-none"
                       disabled
                       placeholder="~AUTO~"
+                      value="2023-10-05T03:17:44.892Z"
                     />
                     <InputText name="sales" mandatory />
                     <InputText name="subject" mandatory />
                     <div className="flex gap-2">
                       <InputText
-                        name="try"
+                        name="customer"
                         mandatory
                         value={
                           selectedCustomer ? selectedCustomer.partner_name : ''
@@ -314,16 +312,18 @@ export default function QuotationAdd() {
                   <Label>Header: </Label>
                   <Textarea
                     className="header h-32"
-                    value="We are pleased to quote you the following :"
-                  />{' '}
+                    value={headerText}
+                    onChange={(e) => setHeaderText(e.target.value)}
+                  />
                 </div>
 
                 <div className="flex gap-2">
                   <Label>Footer:</Label>
                   <Textarea
                     className="footer h-32"
-                    value="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention. "
-                  />{' '}
+                    value={footerText}
+                    onChange={(e) => setFooterText(e.target.value)}
+                  />
                 </div>
               </div>
             </div>
@@ -478,8 +478,8 @@ export default function QuotationAdd() {
                           <Button
                             className=""
                             onClick={() => {
-                              setSelectedPort(port);
-                              closePortModal();
+                              setSelectedPortTwo(port);
+                              closePortTwoModal();
                             }}
                           >
                             add

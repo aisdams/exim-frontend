@@ -48,7 +48,7 @@ import {
   Printer,
   Copy,
   MoreVertical,
-  CheckSquare,
+  CheckIcon,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -71,11 +71,8 @@ import { Input } from '@/components/ui/input';
 
 import { Quotation } from '@/types';
 import ActionLink from '@/components/table/action-link';
-import ActionEdit from '@/components/table/action-edit';
-import ActionDelete from '@/components/table/action-delete';
 
 const columnHelper = createColumnHelper<Quotation>();
-// const [newStatus, setNewStatus] = useState('InProgress');
 const columnsDef = [
   columnHelper.accessor('quo_no', {
     enableSorting: false,
@@ -120,21 +117,20 @@ const columnsDef = [
           className={`rounded-md px-2 ${
             info.getValue() === 'InProgress'
               ? 'bg-yellow-600'
-              : info.getValue() === 'newStatus'
+              : info.getValue() === 'Executed'
               ? 'bg-green-500'
               : info.getValue() === 'Cancel'
               ? 'bg-red-600'
               : ''
           }`}
         >
-          {/* {newStatus} */}
           {info.getValue()}
         </button>
       </div>
     ),
   }),
   columnHelper.display({
-    id: 'print',
+    id: 'copy',
     header: 'COPY DATA',
     cell: (info) => {
       const { quo_no } = info.row.original;
@@ -193,6 +189,22 @@ const columnsDef = [
     },
   }),
   columnHelper.display({
+    id: 'printQuo',
+    header: 'Print',
+    cell: (info) => {
+      const { quo_no } = info.row.original;
+
+      return (
+        <Link href={`/quotation/print/${quo_no}`}>
+          <Printer
+            size={15}
+            className="dark:text-white items-center grid mx-auto justify-center"
+          />
+        </Link>
+      );
+    },
+  }),
+  columnHelper.display({
     id: 'actions',
     header: 'ACTIONS',
     cell: (info) => {
@@ -221,7 +233,7 @@ const columnsDef = [
                 Edit
               </Link>
             </DropdownMenuItem>
-            {/* <DropdownMenuItem className="p-0">
+            <DropdownMenuItem className="p-0">
               <button
                 onClick={() => {
                   setNewStatus('Executed');
@@ -239,7 +251,7 @@ const columnsDef = [
                 <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
                 Executed
               </button>
-            </DropdownMenuItem> */}
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
                 e.preventDefault();
