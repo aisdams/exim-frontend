@@ -1,6 +1,9 @@
 export type JobOrder = {
   jo_no: string;
   jo_date: string | null;
+  shipper?: string | null;
+  consignee?: string | null;
+  qty?: string | null;
   hbl: string | null;
   mbl: string | null;
   etd: string | null;
@@ -20,6 +23,9 @@ export type JobOrder = {
 
 export type createJobOrderInput = {
   jo_date?: string | null;
+  shipper?: string | null;
+  consignee?: string | null;
+  qty?: string | null;
   hbl?: string | null;
   mbl?: string | null;
   etd?: string | null;

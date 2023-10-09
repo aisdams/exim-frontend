@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'text-primary-foreground bg-primary text-white shadow',
+        default: 'text-primary-foreground bg-redColor text-white shadow',
         secondary: 'text-secondary-foreground bg-secondary shadow-sm',
         warning: 'bg-warning text-black shadow-sm',
         destructive: 'bg-destructive text-destructive-foreground shadow-sm ',
@@ -20,7 +20,7 @@ const buttonVariants = cva(
       },
       size: {
         xs: 'h-7 rounded-md px-2 text-xs',
-        default: 'h-9 px-4 py-2',
+        default: 'h-8 px-2',
         sm: 'h-8 rounded-md px-3 text-xs',
         lg: 'h-10 rounded-md px-8',
         icon: 'h-9 w-9',

@@ -88,7 +88,7 @@ const columnsDef = [
     header: 'TYPE',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('customer_code', {
+  columnHelper.accessor('customer', {
     header: 'CUSTOMER',
     cell: (info) => info.getValue(),
   }),
@@ -108,26 +108,6 @@ const columnsDef = [
   columnHelper.accessor('sales', {
     header: 'SALES',
     cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('status', {
-    header: 'STATUS',
-    cell: (info) => (
-      <div>
-        <button
-          className={`rounded-md px-2 ${
-            info.getValue() === 'InProgress'
-              ? 'bg-yellow-600'
-              : info.getValue() === 'Executed'
-              ? 'bg-green-500'
-              : info.getValue() === 'Cancel'
-              ? 'bg-red-600'
-              : ''
-          }`}
-        >
-          {info.getValue()}
-        </button>
-      </div>
-    ),
   }),
   columnHelper.display({
     id: 'copy',
@@ -195,12 +175,14 @@ const columnsDef = [
       const { quo_no } = info.row.original;
 
       return (
-        <Link href={`/quotation/print/${quo_no}`}>
-          <Printer
-            size={15}
-            className="dark:text-white items-center grid mx-auto justify-center"
-          />
-        </Link>
+        <Button>
+          <Link href={`/quotation/print/${quo_no}`} target="_blank">
+            <Printer
+              size={15}
+              className="dark:text-white items-center grid mx-auto justify-center"
+            />
+          </Link>
+        </Button>
       );
     },
   }),
@@ -232,25 +214,6 @@ const columnsDef = [
                 <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
                 Edit
               </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="p-0">
-              <button
-                onClick={() => {
-                  setNewStatus('Executed');
-                }}
-                className={`rounded-md px-2 flex w-full select-none items-center py-1.5 hover:cursor-default ${
-                  newStatus === 'InProgress'
-                    ? 'bg-yellow-600'
-                    : newStatus === 'Executed'
-                    ? 'bg-green-500'
-                    : newStatus === 'Cancel'
-                    ? 'bg-red-600'
-                    : ''
-                }`}
-              >
-                <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                Executed
-              </button>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {

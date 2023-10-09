@@ -1,21 +1,41 @@
+import { ParsedUrlQuery } from 'querystring';
 import React from 'react';
+import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
+
 import { NextPageCustomLayout } from '@/pages/_app';
 
-const JoPdf = dynamic(() => import('@/components/pdf/jo.pdf'), {
+const JOPdf = dynamic(() => import('@/components/pdf/jo.pdf'), {
   ssr: false,
 });
 
-const JoPrint: NextPageCustomLayout = () => {
-  return (
-    <div>
-      <JoPdf />
-    </div>
-  );
+interface IParams extends ParsedUrlQuery {
+  id: string;
+}
+
+export const getServerSideProps: GetServerSideProps<{
+  id: string;
+}> = async (ctx) => {
+  const { id } = ctx.params as IParams;
+
+  return {
+    props: {
+      id,
+    },
+  };
 };
 
-JoPrint.getLayout = function getLayout(page: React.ReactElement) {
+type JOPrintProps = {
+  id: string;
+};
+
+const JOPrint: NextPageCustomLayout<JOPrintProps> = ({ id: jo_no }) => {
+  return <JOPdf jo_no={jo_no} />;
+};
+
+JOPrint.theme = 'light';
+JOPrint.getLayout = function getLayout(page: React.ReactElement) {
   return page;
 };
 
-export default JoPrint;
+export default JOPrint;

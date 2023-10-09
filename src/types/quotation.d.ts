@@ -1,14 +1,15 @@
 export type Quotation = {
   quo_no: string;
-  sales: string | null;
-  subject: string | null;
-  attn: string | null;
+  sales: string;
+  subject: string;
+  attn: string;
   type: string;
-  delivery: string | null;
-  kurs: string | null;
-  loading: string | null;
+  delivery: string;
+  customer: string;
+  kurs: string;
+  loading: string;
   no_count: string;
-  discharge: string | null;
+  discharge: string;
   status: string | null;
   customer_code: string | null;
   item_cost: string | null;
@@ -23,7 +24,7 @@ export type createQuotationInput = {
   subject?: string | null;
   customer?: string | null;
   attn?: string | null;
-  type?: string;
+  type?: string | null;
   delivery?: string | null;
   kurs?: string | null;
   loading?: string | null;

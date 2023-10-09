@@ -45,6 +45,7 @@ import {
   Edit2,
   Trash,
   Copy,
+  Printer,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -130,6 +131,24 @@ const columnsDef = [
     cell: (info) => info.getValue(),
   }),
   columnHelper.display({
+    id: 'printQuo',
+    header: 'Print',
+    cell: (info) => {
+      const { jo_no } = info.row.original;
+
+      return (
+        <Button>
+          <Link href={`/jo/print/${jo_no}`} target="_blank">
+            <Printer
+              size={15}
+              className="dark:text-white items-center grid mx-auto justify-center"
+            />
+          </Link>
+        </Button>
+      );
+    },
+  }),
+  columnHelper.display({
     id: 'actions',
     header: 'ACTIONS',
     cell: (info) => {
@@ -149,15 +168,6 @@ const columnsDef = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="font-normal">
-            <DropdownMenuItem className="p-0">
-              <Link
-                href={`/jo/edit/${jo_no}`}
-                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
-              >
-                <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                Edit
-              </Link>
-            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
                 e.preventDefault();

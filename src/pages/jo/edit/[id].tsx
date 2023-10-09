@@ -22,8 +22,9 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import InputText from '@/components/forms/input-text';
 import { Label } from '@radix-ui/react-label';
 import { Input } from '@/components/ui/input';
-import { Command, Search } from 'lucide-react';
+import { Command, Printer, Search } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import InputNumber from '@/components/forms/input-number';
 
 const defaultValues = {
   jo_date: '',
@@ -39,7 +40,7 @@ const Schema = yup.object({
 
 type JoSchema = InferType<typeof Schema>;
 
-export default function JOCreate(quo_no: any) {
+export default function JOEdit(quo_no: any) {
   const router = useRouter();
   const qc = useQueryClient();
 
@@ -151,15 +152,94 @@ export default function JOCreate(quo_no: any) {
             </div>
           </div>
 
-          <div className="flex gap-3 mt-4">
-            <Link href="/quotation">
-              <Button className="bg-graySecondary">Back</Button>
-            </Link>
-            <Link href="/jo/detail/${jo_no}">
-              <Button type="submit" className="bg-blueLight">
-                Save
-              </Button>
-            </Link>
+          <div className="flex gap-3 border border-graySecondary rounded-md mt-5 p-5">
+            <div className="grid gap-8">
+              <Label>Shipper</Label>
+              <Label>Consignee</Label>
+              <Label>Loading</Label>
+              <Label>Discharge</Label>
+              <Label>ETD</Label>
+              <Label>ETA</Label>
+              <Label>No. HBL</Label>
+              <Label>No. MBL</Label>
+              <Label>Vessel</Label>
+              <Label>Qty</Label>
+              <Label>Gross Weight</Label>
+              <Label>Volume</Label>
+              <Label>Name of Goods</Label>
+            </div>
+
+            <div className="grid">
+              <div className="flex gap-2">
+                <InputText name="shipper" />
+                <button
+                  className="
+                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+                  rounded-md text-white"
+                >
+                  <Search className="w-4" />
+                </button>
+              </div>
+              <div className="flex gap-2">
+                <InputText name="consignee" />
+                <button
+                  className="
+                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+                  rounded-md text-white"
+                >
+                  <Search className="w-4" />
+                </button>
+              </div>
+              <div className="flex gap-2">
+                <InputText name="loading" />
+                <button
+                  className="
+                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+                  rounded-md text-white"
+                >
+                  <Search className="w-4" />
+                </button>
+              </div>
+              <div className="flex gap-2">
+                <InputText name="discharge" />
+                <button
+                  className="
+                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+                  rounded-md text-white"
+                >
+                  <Search className="w-4" />
+                </button>
+              </div>
+              <InputText name="etd" />
+              <InputText name="eta" />
+              <InputText name="hbl" />
+              <InputText name="mbl" />
+              <InputText name="vessel" />
+              <div className="flex">
+                <InputNumber name="qty" />
+              </div>
+              <div className="flex gap-3">
+                <InputText name="gross_weight" />
+                KGS
+              </div>
+              <InputText name="volume" />
+              <InputText name="name_of_goods" />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 my-3">
+            <Button className="bg-green-500">
+              <Link href="/jo">Back</Link>
+            </Button>
+            <Button type="submit" className="bg-blueLight">
+              Save
+            </Button>
+            <Button>
+              <Link href="/" className="flex items-center gap-1">
+                <Printer size={15} className="dark:text-white" />
+                Print Job Order
+              </Link>
+            </Button>
           </div>
         </form>
       </FormProvider>

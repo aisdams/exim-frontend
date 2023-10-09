@@ -26,6 +26,7 @@ module.exports = {
         tryblue: '#bfcfe9',
         blueNav: '#3e53a0',
         lightWhite: '#ebebe4',
+        redColor: '#FF1000',
         graySecondary: '#6f6b66',
         darkBlue: '#262e4b',
         secondDarkBlue: '#323954',

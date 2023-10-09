@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 
 import { NextPageCustomLayout } from '@/pages/_app';
 
-const QuotationPdf = dynamic(() => import('@/components/pdf/quotation.pdf'), {
+const JOCPdf = dynamic(() => import('@/components/pdf/joc.pdf'), {
   ssr: false,
 });
 
@@ -25,19 +25,17 @@ export const getServerSideProps: GetServerSideProps<{
   };
 };
 
-type QuotationPrintProps = {
+type JOCPrintProps = {
   id: string;
 };
 
-const QuotationPrint: NextPageCustomLayout<QuotationPrintProps> = ({
-  id: quo_no,
-}) => {
-  return <QuotationPdf quo_no={quo_no} />;
+const JOCPrint: NextPageCustomLayout<JOCPrintProps> = ({ id: joc_no }) => {
+  return <JOCPdf joc_no={joc_no} />;
 };
 
-QuotationPrint.theme = 'light';
-QuotationPrint.getLayout = function getLayout(page: React.ReactElement) {
+JOCPrint.theme = 'light';
+JOCPrint.getLayout = function getLayout(page: React.ReactElement) {
   return page;
 };
 
-export default QuotationPrint;
+export default JOCPrint;

@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import Loader from '../table/loading';
+import Loader from './loader';
 import ButtonNavigation from './button-navigation';
 import { flexRender, Table } from '@tanstack/react-table';
 

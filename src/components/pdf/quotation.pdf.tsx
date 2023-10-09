@@ -1,3 +1,4 @@
+import { Quotation } from '@/types';
 import {
   Document,
   Text,
@@ -8,6 +9,14 @@ import {
   Image,
   Font,
 } from '@react-pdf/renderer';
+import { toast } from 'react-toastify';
+import { IS_DEV } from '@/constants';
+import { useQuery } from '@tanstack/react-query';
+import * as quotationService from '@/apis/quotation.api';
+import { getErrMessage } from '@/lib/utils';
+import Loader from '@/components/table/loader';
+
+import React, { useState } from 'react';
 
 Font.register({
   family: 'DustismoRoman',
@@ -20,14 +29,13 @@ const styles = StyleSheet.create({
   page: {
     width: '100%',
     fontFamily: 'DustismoRoman',
-    fontSize: '12px',
-    display: 'none',
+    fontSize: 12,
+
     paddingTop: 40,
     paddingHorizontal: 20,
     paddingBottom: 69,
   },
   headTI: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -36,39 +44,44 @@ const styles = StyleSheet.create({
     width: 220,
     height: 80,
   },
-  tableOne: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  // IN HEREEE
+  tableRow0: {
+    borderLeft: '1px solid #000',
+    borderRight: '1px solid #000',
+    borderTop: '1px solid #000',
   },
-  tableRowO: {
-    border: '1px solid #000',
-  },
-  textRowO: {
-    fontSize: 12,
-    alignItems: 'center',
-    fontWeight: 'bold',
-    letterSpacing: 4,
-    paddingHorizontal: 25,
+  tablePad: {
     borderBottom: '1px solid #000',
   },
-  tableL: {
-    paddingLeft: 20,
-    paddingRight: 5,
-    borderBottom: '1px solid sama',
-    borderRight: '1px solid #00',
+  textPad: {
+    marginHorizontal: 'auto',
+    textAlign: 'center',
+    alignItems: 'center',
   },
-  tableR: {
-    paddingLeft: 12,
-    paddingRight: 20,
-    borderBottom: '1px solid sama',
+  tableUnderPad: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 'auto',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+  tableL: {
+    borderRight: '1px solid #000',
+  },
+  tableColumn: {
+    borderBottom: '1px solid #000',
+    paddingHorizontal: 12,
+  },
+  tableColumnTwo: {
+    borderBottom: '1px solid #000',
+    paddingHorizontal: 12,
   },
   topMargin: {
     marginTop: 40,
   },
   textHead: {
     fontSize: 9,
-    fontWeight: 'extrabold',
+    fontWeight: 'bold',
   },
   textHeadTwo: {
     marginTop: 2,
@@ -83,50 +96,66 @@ const styles = StyleSheet.create({
     width: '13%',
   },
   textHeadFour: {
-    marginTop: 10,
+    marginVertical: 10,
     fontSize: 9,
     fontWeight: 'bold',
   },
   textParagrapf: {
     fontSize: 12,
-    fontWeight: 'light',
+    fontWeight: 'normal',
   },
   table: {
-    border: '1px solid #000',
+    width: 'auto',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
   },
   tableRow: {
-    borderLeft: '1px solid #000',
+    margin: 'auto',
+    flexDirection: 'row',
+    backgroundColor: '#e1e3f5',
+  },
+  tableCol: {
+    width: '22%',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+  },
+  tableCell: {
+    margin: 'auto',
+    marginTop: 5,
+    fontSize: 10,
+  },
+  header: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: 'grey',
+    backgroundColor: 'yellow',
+  },
+  pageNumber: {
+    position: 'absolute',
+    fontSize: 12,
+    bottom: 30,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    color: 'grey',
   },
   secApprov: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     fontSize: 9,
-    fontWeight: 'extrabold',
+    fontWeight: 'bold',
     marginTop: 20,
     justifyContent: 'space-between',
   },
-  tableUnder: {
-    border: '1px solid #000',
-    marginTop: '20',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  tableUnderTwo: {
-    borderLeft: '1px solid @000',
-    paddingLeft: 20,
-  },
-  tableUTwo: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 5,
-  },
+  // ADDD IN HEREE DONT FORGET
   textTableUnder: {
-    marginTop: '20',
+    marginTop: 20,
     fontSize: 9,
-    fontWeight: 'extrabold',
+    fontWeight: 'bold',
   },
   textFinally: {
     marginTop: 80,
@@ -143,11 +172,26 @@ const styles = StyleSheet.create({
 });
 
 type QuotationPdfProps = {
-  // rows: RequestItemDetailWithItem[];
+  quo_no: string;
 };
 
-const QuotationPdf: React.FC<QuotationPdfProps> = () => {
-  return (
+const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
+  //! get quotation
+  const quotationQuery = useQuery({
+    queryKey: ['quotation', quo_no],
+    queryFn: () => quotationService.getById(quo_no),
+    onError: (err) => {
+      toast.error(`Error, ${getErrMessage(err)}`);
+    },
+  });
+
+  return quotationQuery.isLoading ? (
+    <div className="grid place-items-center">
+      <Loader />
+    </div>
+  ) : quotationQuery.isError ? (
+    <p className="text-center text-destructive">Something went wrong...</p>
+  ) : (
     <PDFViewer className="h-screen w-full" style={styles.textParagrapf}>
       <Document>
         <Page size="A4" style={styles.page}>
@@ -156,20 +200,26 @@ const QuotationPdf: React.FC<QuotationPdfProps> = () => {
               src="https://i.ibb.co/JmVLcR2/logo.png"
               style={styles.imgLogo}
             />
-            <View style={styles.tableRowO}>
+            <View style={styles.tableRow0}>
               <View>
-                <Text style={styles.textRowO}>QUOTATION</Text>
-                <View style={styles.tableOne}>
-                  <Text style={styles.tableL}>Quo No</Text>
-                  <Text style={styles.tableR}>20230001</Text>
+                <View style={styles.tablePad}>
+                  <Text style={styles.textPad}>QUOTATIONS</Text>
                 </View>
-                <View style={styles.tableOne}>
-                  <Text style={styles.tableL}>Date</Text>
-                  <Text style={styles.tableR}>2023-09-01</Text>
-                </View>
-                <View style={styles.tableOne}>
-                  <Text style={styles.tableL}>Kurs</Text>
-                  <Text style={styles.tableR}>30</Text>
+                <View style={styles.tableUnderPad}>
+                  <View style={styles.tableL}>
+                    <Text style={styles.tableColumn}>Quo No</Text>
+                    <Text style={styles.tableColumn}>Date</Text>
+                    <Text style={styles.tableColumn}>Kurs</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.tableColumnTwo}>
+                      {quotationQuery.data.data.quo_no}
+                    </Text>
+                    <Text style={styles.tableColumnTwo}>2023-08-24</Text>
+                    <Text style={styles.tableColumnTwo}>
+                      {quotationQuery.data.data.kurs}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
@@ -177,35 +227,86 @@ const QuotationPdf: React.FC<QuotationPdfProps> = () => {
 
           <View style={styles.topMargin}>
             <View>
-              <Text style={styles.textHead}>PT. CIPTA KARYA KU INDONESIA</Text>
+              <Text style={styles.textHead}>
+                {quotationQuery.data.data.customer}
+              </Text>
               <Text style={styles.textHeadTwo}>
                 Jl.Wijaya XI,No.X AB Kebayoran Baru Jakarta Selatan
               </Text>
             </View>
 
             <View>
-              <Text style={styles.textHeadThree}>Attn. Ibu. Yuli</Text>
+              <Text style={styles.textHeadThree}>
+                Attn. {quotationQuery.data.data.attn}
+              </Text>
               <Text style={styles.textHead}>Re. CUSTOMS CLEARANCE SEA</Text>
               <Text style={styles.textHeadFour}>
                 We are pleased to quote you the following :
               </Text>
             </View>
 
-            <View style={styles.tableUnder}>
-              <Text style={styles.tableUnderTwo}>NO</Text>
-              <Text style={styles.tableUnderTwo}>ITEMS</Text>
-              <Text style={styles.tableUnderTwo}>QTY</Text>
-              <Text style={styles.tableUnderTwo}>UNIT</Text>
-              <View style={styles.tableUnderTwo}>
-                Pricee
-                <Text>Price</Text>
-                <View style={styles.tableUTwo}>
-                  <Text>IDR</Text>
-                  <Text>USD</Text>
+            {/* Table Items */}
+            <View style={[styles.table, { marginBottom: '16px' }]}>
+              {/* Columns */}
+              <View style={[styles.tableRow, { fontWeight: 'bold' }]}>
+                <View style={[styles.tableCol, { width: '5%' }]}>
+                  <Text style={styles.tableCell}>No.</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '20%' }]}>
+                  <Text style={styles.tableCell}>Items</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>QTY</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>Unit</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>Price</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>Amount</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>Remarks</Text>
                 </View>
               </View>
-              <Text style={styles.tableUnderTwo}>AMOUNT</Text>
-              <Text style={styles.tableUnderTwo}>REMARKS</Text>
+              {/* Rows */}
+              <View style={[styles.tableRow, { fontWeight: 'normal' }]}>
+                <View style={[styles.tableCol, { width: '5%' }]}>
+                  <Text style={styles.tableCell}>1</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '20%' }]}>
+                  <Text style={styles.tableCell}>
+                    {quotationQuery.data.data.item_cost}
+                  </Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>
+                    {quotationQuery.data.data.item_cost}
+                  </Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>
+                    {quotationQuery.data.data.item_cost}
+                  </Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>
+                    {quotationQuery.data.data.item_cost}
+                  </Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>
+                    {quotationQuery.data.data.item_cost}
+                  </Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>
+                    {quotationQuery.data.data.item_cost}
+                  </Text>
+                </View>
+              </View>
             </View>
 
             <Text style={styles.textTableUnder}>
@@ -218,7 +319,7 @@ const QuotationPdf: React.FC<QuotationPdfProps> = () => {
               <Text>Yours Faithfully</Text>
               <View>
                 <Text>Approved By,</Text>
-                <Text>PT. CIPTA KARYA KU INDONESIA</Text>
+                <Text>{quotationQuery.data.data.customer}</Text>
               </View>
             </View>
 
