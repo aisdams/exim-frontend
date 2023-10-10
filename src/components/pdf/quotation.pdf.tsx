@@ -170,6 +170,10 @@ const styles = StyleSheet.create({
     height: 'auto',
   },
 });
+interface ItemCost {
+  qty: number; // Ganti dengan tipe data yang sesuai dengan data qty
+  // Tambahkan properti lain sesuai kebutuhan
+}
 
 type QuotationPdfProps = {
   quo_no: string;
@@ -184,6 +188,7 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
+  console.log('item_cost:', quotationQuery.data?.data?.item_cost);
 
   return quotationQuery.isLoading ? (
     <div className="grid place-items-center">
@@ -278,7 +283,17 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
                 </View>
                 <View style={[styles.tableCol, { width: '20%' }]}>
                   <Text style={styles.tableCell}>
-                    {quotationQuery.data.data.item_cost}
+                    {typeof quotationQuery.data?.data?.item_cost === 'object' &&
+                    'qty' in quotationQuery.data.data.item_cost
+                      ? quotationQuery.data.data.item_cost.qty
+                      : 'N/A'}
+                  </Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>
+                    {typeof quotationQuery.data?.data?.item_cost === 'string'
+                      ? quotationQuery.data.data.item_cost
+                      : 'N/A'}
                   </Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
@@ -288,12 +303,11 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
                   <Text style={styles.tableCell}>
-                    {quotationQuery.data.data.item_cost}
-                  </Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>
-                    {quotationQuery.data.data.item_cost}
+                    {Array.isArray(quotationQuery.data?.data?.item_cost)
+                      ? quotationQuery.data.data.item_cost
+                          .map((item) => item.qty)
+                          .join(', ')
+                      : 'N/A'}
                   </Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>

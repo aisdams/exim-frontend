@@ -12,7 +12,7 @@ export type Quotation = {
   discharge: string;
   status: string | null;
   customer_code: string | null;
-  item_cost: string | null;
+  item_cost: string;
   port_code: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;

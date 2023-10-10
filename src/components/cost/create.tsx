@@ -84,6 +84,7 @@ const defaultValues = {
   item_name: '',
   qty: '',
   unit: '',
+  price: '',
   note: '',
 };
 
@@ -91,6 +92,7 @@ const Schema = yup.object({
   item_name: yup.string().required(),
   qty: yup.string().required(),
   unit: yup.string().required(),
+  price: yup.string().required(),
   note: yup.string().required(),
 });
 
@@ -210,8 +212,8 @@ export default function CreateCost() {
     onSuccess: () => {
       qc.invalidateQueries(['cost']);
       toast.success('Success, Cost has been added.');
-      // const { quo_no } = router.query;
-      router.push(`/quotation`);
+      const { quo_no } = router.query;
+      router.push(`/quotation/edit/${quo_no}`);
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -268,17 +270,12 @@ export default function CreateCost() {
                         {/* <Label>Item Cost </Label> */}
                         <Label>Item Name </Label>
                         <Label>Qyt</Label>
+                        <Label>Unit</Label>
                         <Label>Price</Label>
                         <Label>Note</Label>
                       </div>
 
                       <div className="grid gap-3 justify-end">
-                        {/* <Input
-                          name="item_cost"
-                          disabled
-                          placeholder="COST-00001"
-                          className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted  w-[300px] border-none"
-                        /> */}
                         <InputText name="item_name" />
                         <div className="flex">
                           <InputNumber name="qty" />
@@ -303,6 +300,7 @@ export default function CreateCost() {
                             </SelectContent>
                           </Select> */}
                         </div>
+                        <InputNumber name="unit" />
                         <div className="flex">
                           <InputNumber name="price" />
                         </div>

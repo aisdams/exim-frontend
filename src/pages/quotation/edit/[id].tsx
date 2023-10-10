@@ -41,7 +41,7 @@ import InputDate from '@/components/forms/input-date';
 import InputNumber from '@/components/forms/input-number';
 import InputSelect from '@/components/forms/input-select';
 import Loader from '@/components/table/loader';
-import CreateCost from '@/components/cosst/create';
+import CreateCost from '@/components/cost/create';
 
 interface Customer {
   customer_code: string;
