@@ -283,9 +283,8 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
                 </View>
                 <View style={[styles.tableCol, { width: '20%' }]}>
                   <Text style={styles.tableCell}>
-                    {typeof quotationQuery.data?.data?.item_cost === 'object' &&
-                    'qty' in quotationQuery.data.data.item_cost
-                      ? quotationQuery.data.data.item_cost.qty
+                    {typeof quotationQuery.data?.data?.item_cost === 'string'
+                      ? quotationQuery.data.data.item_cost
                       : 'N/A'}
                   </Text>
                 </View>
