@@ -1,7 +1,8 @@
 export type Customer = {
-  customer_code: string | null;
-  partner_name: string | null;
-  unit: string | null;
+  customer_code: string;
+  partner_name: string;
+  address: string;
+  unit: string;
   createdAt: Date | null;
   updatedAt: Date | null;
   deletedAt: Date | null;

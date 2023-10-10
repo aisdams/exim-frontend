@@ -8,8 +8,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import ActionDelete from './action-delete';
-import ActionEdit from './action-edit';
 import ActionLink from './action-link';
 
 type LinkAction = {
@@ -84,7 +82,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
               />
             )}
 
-        {editProps && (
+        {/* {editProps && (
           <ActionEdit href={editProps.href} onClick={() => setOpen(false)} />
         )}
 
@@ -94,7 +92,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
             mutation={deleteProps.mutation}
             onDeleteSucceed={() => setOpen(false)}
           />
-        )}
+        )} */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -13,19 +13,20 @@ import { toast } from 'react-toastify';
 import { IS_DEV } from '@/constants';
 import { useQuery } from '@tanstack/react-query';
 import * as JOService from '@/apis/jo.api';
+import * as QuotationService from '@/apis/quotation.api';
 import { getErrMessage } from '@/lib/utils';
 import Loader from '@/components/table/loader';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 Font.register({
-  family: 'fabersans.ttf',
-  fonts: [{ src: '/fonts/fabersans.ttf' }],
+  family: 'tahoma.ttf',
+  fonts: [{ src: '/fonts/tahoma.ttf' }],
 });
 const styles = StyleSheet.create({
   page: {
     width: '100%',
-    fontFamily: 'fabersans.ttf',
+    fontFamily: 'tahoma.ttf',
     fontSize: 12,
 
     paddingTop: 40,
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   tableCData: {
-    fontSize: 10,
+    fontSize: 8,
     paddingHorizontal: 12,
     paddingVertical: 1,
     letterSpacing: 1,
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     borderRight: '1px solid #000',
   },
   tableDData: {
-    fontSize: 10,
+    fontSize: 8,
     paddingHorizontal: 12,
     paddingVertical: 1,
     letterSpacing: 1,
@@ -126,6 +127,19 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
+  const [quotation, setQuotation] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (joQuery.data?.data?.quo_no) {
+      QuotationService.getById(joQuery.data.data.quo_no)
+        .then((res) => {
+          setQuotation(res.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching quotation data:', error);
+        });
+    }
+  }, [joQuery.data?.data?.quo_no]);
 
   return joQuery.isLoading ? (
     <div className="grid place-items-center">
@@ -158,13 +172,14 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
                     <Text style={styles.tableColumnTwo}>
                       {joQuery.data.data.jo_no}
                     </Text>
-                    <Text style={styles.tableColumnTwo}>customer_code</Text>
                     <Text style={styles.tableColumnTwo}>
-                      {joQuery.data.data.quo_no}
+                      {joQuery.data.data.createdAt}
+                    </Text>
+                    <Text style={styles.tableColumnTwo}>
+                      {quotation ? quotation.type : 'type tidak ditemukan'}
                     </Text>
                     <Text style={styles.tableColumn}>
-                      DOMESTIK
-                      <Text>{joQuery.data.data.quo_no}</Text>
+                      {quotation ? quotation.sales : 'sales tidak ditemukan'}
                     </Text>
                   </View>
                 </View>
@@ -194,19 +209,47 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
               </View>
 
               <View style={{ fontSize: 10, width: '100%' }}>
-                <Text style={styles.tableDData}>JO-00001</Text>
-                <Text style={styles.tableDData}>Test</Text>
-                <Text style={styles.tableDData}>TestTwo</Text>
-                <Text style={styles.tableDData}>TestTwo</Text>
-                <Text style={styles.tableDData}>TestTwo</Text>
-                <Text style={styles.tableDData}>test</Text>
-                <Text style={styles.tableDData}>test</Text>
-                <Text style={styles.tableDData}>test</Text>
-                <Text style={styles.tableDData}>test</Text>
-                <Text style={styles.tableDData}>test</Text>
-                <Text style={styles.tableDData}>test</Text>
-                <Text style={styles.tableDData}>test</Text>
-                <Text style={styles.tableDData}>test</Text>
+                <Text style={styles.tableDData}>
+                  {quotation ? quotation.customer : 'customer tidak ditemukan'}
+                </Text>
+                <Text style={styles.tableDData}>
+                  {' '}
+                  {joQuery.data.data.shipper}
+                </Text>
+                <Text style={styles.tableDData}>
+                  {' '}
+                  {joQuery.data.data.consignee}
+                </Text>
+                <Text style={styles.tableDData}>
+                  {' '}
+                  {quotation ? quotation.loading : 'loading tidak ditemukan'}
+                </Text>
+                <Text style={styles.tableDData}>
+                  {' '}
+                  {quotation
+                    ? quotation.discharge
+                    : 'discharge tidak ditemukan'}
+                </Text>
+                <Text style={styles.tableDData}>{joQuery.data.data.etd}</Text>
+                <Text style={styles.tableDData}>{joQuery.data.data.eta}</Text>
+                <Text style={styles.tableDData}>{joQuery.data.data.hbl}</Text>
+                <Text style={styles.tableDData}>{joQuery.data.data.mbl}</Text>
+                <Text style={styles.tableDData}>
+                  {joQuery.data.data.vessel}
+                </Text>
+                <Text style={styles.tableDData}>
+                  {' '}
+                  {joQuery.data.data.qty} Cartoon BOx
+                </Text>
+                <Text style={styles.tableDData}>
+                  {' '}
+                  {joQuery.data.data.gross_weight}
+                  {``} KGS
+                </Text>
+                <Text style={styles.tableDData}>
+                  {' '}
+                  {joQuery.data.data.volume}
+                </Text>
               </View>
             </View>
             <View

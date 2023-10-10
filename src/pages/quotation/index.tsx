@@ -105,6 +105,26 @@ const columnsDef = [
     header: 'SUBJECT',
     cell: (info) => info.getValue(),
   }),
+  columnHelper.accessor('status', {
+    header: 'STATUS',
+    cell: (info) => (
+      <div>
+        <button
+          className={`rounded-md px-2 ${
+            info.getValue() === 'InProgress'
+              ? 'bg-yellow-600'
+              : info.getValue() === 'Executed'
+              ? 'bg-green-500'
+              : info.getValue() === 'Cancel'
+              ? 'bg-red-600'
+              : ''
+          }`}
+        >
+          {info.getValue()}
+        </button>
+      </div>
+    ),
+  }),
   columnHelper.accessor('sales', {
     header: 'SALES',
     cell: (info) => info.getValue(),
@@ -274,7 +294,9 @@ export default function Index() {
   const [orderBy, setOrderBy] = useState('All');
   const [orderByTwo, setOrderByTwo] = useState('Quo No');
   const [orderByThree, setOrderByThree] = useState('Quo No');
+  const [searchResults, setSearchResults] = useState<Quotation[]>([]);
   const [searchValue, setSearchValue] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('All');
   const debouncedSearchValue = useDebouncedValue(searchValue, 500);
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
@@ -294,6 +316,21 @@ export default function Index() {
       searchValue: debouncedSearchValue,
       quo_no: debouncedSearchValue,
     });
+  };
+
+  const handleSearch = () => {
+    const filteredData = quotationsQuery.data?.data.filter((item) => {
+      if (selectedStatus === 'All') {
+        return item.status.toLowerCase().includes(searchValue.toLowerCase());
+      } else {
+        return (
+          item.status.toLowerCase().includes(searchValue.toLowerCase()) &&
+          item.status === selectedStatus
+        );
+      }
+    });
+
+    setSearchResults(filteredData || []);
   };
 
   const quotationsQuery = useQuery({
@@ -324,9 +361,22 @@ export default function Index() {
     },
   });
 
+  // const table = useReactTable({
+  //   columns,
+  //   data: quotationsQuery.data?.data ?? [],
+  //   pageCount: quotationsQuery.data?.pagination.total_page ?? -1,
+  //   state: {
+  //     pagination,
+  //   },
+  //   getCoreRowModel: getCoreRowModel(),
+  //   manualPagination: true,
+  //   meta: {
+  //     deleteMutation: deleteQuotationMutation,
+  //   },
+  // });
   const table = useReactTable({
     columns,
-    data: quotationsQuery.data?.data ?? [],
+    data: searchValue ? searchResults : quotationsQuery.data?.data ?? [],
     pageCount: quotationsQuery.data?.pagination.total_page ?? -1,
     state: {
       pagination,
@@ -337,6 +387,7 @@ export default function Index() {
       deleteMutation: deleteQuotationMutation,
     },
   });
+
   return (
     <>
       <div className="mb-4 z-[100]">
@@ -363,7 +414,12 @@ export default function Index() {
                   showCompare={false}
                 />
               </div>
-              <Select value={orderBy} onValueChange={setOrderBy}>
+              <Select
+                value={orderBy}
+                onValueChange={(value) => {
+                  setSelectedStatus(value);
+                }}
+              >
                 <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
                   <SelectValue placeholder="Order by" className="" />
                 </SelectTrigger>
@@ -398,6 +454,17 @@ export default function Index() {
                     id=""
                     placeholder="Search...."
                     className="border border-graySecondary dark:border-white rounded-md"
+                    value={searchValue}
+                    onChange={(e) => {
+                      setSearchValue(e.target.value);
+                      const filteredData = quotationsQuery.data?.data.filter(
+                        (item) =>
+                          item.quo_no
+                            .toLowerCase()
+                            .includes(e.target.value.toLowerCase())
+                      );
+                      setSearchResults(filteredData || []);
+                    }}
                   />
                 </div>
 
@@ -419,7 +486,6 @@ export default function Index() {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-
                     <Input
                       type="text"
                       name=""
@@ -427,7 +493,16 @@ export default function Index() {
                       placeholder="Search...."
                       className="border border-graySecondary dark:border-white rounded-md"
                       value={searchValue}
-                      onChange={(e) => setSearchValue(e.target.value)}
+                      onChange={(e) => {
+                        setSearchValue(e.target.value);
+                        const filteredData = quotationsQuery.data?.data.filter(
+                          (item) =>
+                            item.quo_no
+                              .toLowerCase()
+                              .includes(e.target.value.toLowerCase())
+                        );
+                        setSearchResults(filteredData || []);
+                      }}
                     />
                   </div>
 

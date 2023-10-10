@@ -1,10 +1,10 @@
 export type Cost = {
-  item_cost: string | null;
-  item_name: string | null;
-  qty: string | null;
-  unit: string | null;
-  mata_uang: string | null;
-  note: string | null;
+  item_cost: string;
+  item_name: string;
+  qty: string;
+  unit: string;
+  mata_uang: string;
+  note: string;
   createdAt: Date | null;
   updatedAt: Date | null;
   deletedAt: Date | null;

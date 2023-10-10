@@ -1,4 +1,5 @@
 import { Quotation } from '@/types';
+import { useEffect } from 'react';
 import {
   Document,
   Text,
@@ -13,6 +14,8 @@ import { toast } from 'react-toastify';
 import { IS_DEV } from '@/constants';
 import { useQuery } from '@tanstack/react-query';
 import * as quotationService from '@/apis/quotation.api';
+import * as customerService from '@/apis/customer.api';
+import * as costService from '@/apis/cost.api';
 import { getErrMessage } from '@/lib/utils';
 import Loader from '@/components/table/loader';
 
@@ -162,6 +165,8 @@ const styles = StyleSheet.create({
     fontSize: 9,
   },
   textS: {
+    borderBottom: '1px solid #000',
+    width: 40,
     fontSize: 9,
   },
   viewHr: {
@@ -171,8 +176,7 @@ const styles = StyleSheet.create({
   },
 });
 interface ItemCost {
-  qty: number; // Ganti dengan tipe data yang sesuai dengan data qty
-  // Tambahkan properti lain sesuai kebutuhan
+  qty: number;
 }
 
 type QuotationPdfProps = {
@@ -188,6 +192,38 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
+
+  const [customer, setCustomer] = useState<any | null>(null);
+  const [cost, setCost] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (quotationQuery.data?.data?.customer_code) {
+      customerService
+        .getById(quotationQuery.data.data.customer_code)
+        .then((res) => {
+          setCustomer(res.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching customer data:', error);
+        });
+    }
+  }, [quotationQuery.data?.data?.customer_code]);
+
+  useEffect(() => {
+    if (quotationQuery.data?.data?.item_cost) {
+      costService
+        .getById(quotationQuery.data.data.item_cost)
+        .then((res) => {
+          setCost(res.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching customer data:', error);
+        });
+    }
+  }, [quotationQuery.data?.data?.item_cost]);
+
+  // ...
+
   console.log('item_cost:', quotationQuery.data?.data?.item_cost);
 
   return quotationQuery.isLoading ? (
@@ -233,10 +269,12 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
           <View style={styles.topMargin}>
             <View>
               <Text style={styles.textHead}>
-                {quotationQuery.data.data.customer}
+                {customer
+                  ? customer.partner_name
+                  : 'Partner Name tidak ditemukan'}
               </Text>
               <Text style={styles.textHeadTwo}>
-                Jl.Wijaya XI,No.X AB Kebayoran Baru Jakarta Selatan
+                {customer ? customer.address : 'Alamat tidak ditemukan'}
               </Text>
             </View>
 
@@ -283,35 +321,27 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
                 </View>
                 <View style={[styles.tableCol, { width: '20%' }]}>
                   <Text style={styles.tableCell}>
-                    {typeof quotationQuery.data?.data?.item_cost === 'string'
-                      ? quotationQuery.data.data.item_cost
-                      : 'N/A'}
+                    {cost ? cost.item_name : 'item_name tidak ditemukan'}
                   </Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
                   <Text style={styles.tableCell}>
-                    {typeof quotationQuery.data?.data?.item_cost === 'string'
-                      ? quotationQuery.data.data.item_cost
-                      : 'N/A'}
+                    {cost ? cost.qty : 'qty tidak ditemukan'}
                   </Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
                   <Text style={styles.tableCell}>
-                    {quotationQuery.data.data.item_cost}
+                    {cost ? cost.unit : 'unit tidak ditemukan'}
                   </Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
                   <Text style={styles.tableCell}>
-                    {Array.isArray(quotationQuery.data?.data?.item_cost)
-                      ? quotationQuery.data.data.item_cost
-                          .map((item) => item.qty)
-                          .join(', ')
-                      : 'N/A'}
+                    {cost ? cost.price : 'price tidak ditemukan'}
                   </Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
                   <Text style={styles.tableCell}>
-                    {quotationQuery.data.data.item_cost}
+                    {cost ? cost.price : 'item_name tidak ditemukan'}
                   </Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
@@ -332,12 +362,16 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
               <Text>Yours Faithfully</Text>
               <View>
                 <Text>Approved By,</Text>
-                <Text>{quotationQuery.data.data.customer}</Text>
+                <Text>
+                  {customer
+                    ? customer.partner_name
+                    : 'Partner Name tidak ditemukan'}
+                </Text>
               </View>
             </View>
 
             <View style={styles.textFinally}>
-              <Text style={styles.textS}>SALES 2</Text>
+              <Text style={styles.textS}>{quotationQuery.data.data.sales}</Text>
               <View style={styles.viewHr} />
               <Text>Mobile : 0893</Text>
               <Text>Email : b@yahoo.com</Text>

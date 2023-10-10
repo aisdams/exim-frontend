@@ -1,7 +1,7 @@
 export type Port = {
-  port_code: string | null;
-  port_name: string | null;
-  caption: string | null;
+  port_code: string;
+  port_name: string;
+  caption: string;
   createdAt: Date | null;
   updatedAt: Date | null;
   deletedAt: Date | null;

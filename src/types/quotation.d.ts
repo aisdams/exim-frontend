@@ -10,7 +10,7 @@ export type Quotation = {
   loading: string;
   no_count: string;
   discharge: string;
-  status: string | null;
+  status: string;
   customer_code: string | null;
   item_cost: string;
   port_code: string | null;

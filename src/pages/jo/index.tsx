@@ -225,6 +225,8 @@ export default function Index() {
   const router = useRouter();
   const [statusesKey, setStatusesKey] = useState<string[]>([]);
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [searchResults, setSearchResults] = useState<JobOrder[]>([]);
+  const [searchValue, setSearchValue] = useState('');
   const [orderBy, setOrderBy] = useState('All');
   const [orderByTwo, setOrderByTwo] = useState('Quo No');
   const [orderByThree, setOrderByThree] = useState('Quo No');
