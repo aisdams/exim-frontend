@@ -49,3 +49,27 @@ export const generateSearchQuery = ({
 
   return { strings };
 };
+
+export const handleResetFieldAfterChange = ({
+  resetFieldAfterChange = [],
+  setValue,
+}: {
+  resetFieldAfterChange?: string | string[];
+  setValue: (
+    name: string,
+    value: any,
+    options?: Partial<{
+      shouldValidate: boolean;
+      shouldDirty: boolean;
+      shouldTouch: boolean;
+    }>
+  ) => void;
+}) => {
+  if (typeof resetFieldAfterChange === 'string') {
+    setValue(resetFieldAfterChange, '');
+  }
+
+  if (Array.isArray(resetFieldAfterChange)) {
+    resetFieldAfterChange.map((field) => setValue(field, ''));
+  }
+};
