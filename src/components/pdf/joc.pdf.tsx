@@ -13,19 +13,24 @@ import { toast } from 'react-toastify';
 import { IS_DEV } from '@/constants';
 import { useQuery } from '@tanstack/react-query';
 import * as JOCService from '@/apis/joc.api';
+import * as customerService from '@/apis/customer.api';
+import * as joService from '@/apis/jo.api';
 import { getErrMessage } from '@/lib/utils';
 import Loader from '@/components/table/loader';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 Font.register({
-  family: 'fabersans.ttf',
-  fonts: [{ src: '/fonts/fabersans.ttf' }],
+  family: 'tahoma.ttf',
+  fonts: [
+    { src: '/fonts/tahoma.ttf' },
+    { src: '/fonts/tahomaBold.ttf', fontWeight: 'bold' },
+  ],
 });
 const styles = StyleSheet.create({
   page: {
     width: '100%',
-    fontFamily: 'fabersans.ttf',
+    fontFamily: 'tahoma.ttf',
     fontSize: 12,
 
     paddingTop: 40,
@@ -51,6 +56,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000',
   },
   textPad: {
+    fontWeight: 'bold',
     paddingVertical: 3,
     marginHorizontal: 'auto',
     textAlign: 'center',
@@ -80,6 +86,37 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'normal',
   },
+  headerF: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    fontSize: 9,
+    marginTop: 20,
+  },
+  table: {
+    width: 'auto',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
+  },
+  tableRow: {
+    margin: 'auto',
+    flexDirection: 'row',
+    backgroundColor: '#e1e3f5',
+  },
+  tableCol: {
+    width: '22%',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+  },
+  tableCell: {
+    margin: 'auto',
+    marginTop: 5,
+    fontSize: 8,
+  },
 });
 
 type JOCPdfProps = {
@@ -95,6 +132,35 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
+
+  const [customer, setCustomer] = useState<any | null>(null);
+  const [jo, setJO] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (jocQuery.data?.data?.customer_code) {
+      customerService
+        .getById(jocQuery.data.data.customer_code)
+        .then((res) => {
+          setCustomer(res.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching customer data:', error);
+        });
+    }
+  }, [jocQuery.data?.data?.customer_code]);
+
+  useEffect(() => {
+    if (jocQuery.data?.data?.jo_no) {
+      joService
+        .getById(jocQuery.data.data.jo_no)
+        .then((res) => {
+          setJO(res.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching JO data:', error);
+        });
+    }
+  }, [jocQuery.data?.data?.jo_no]);
 
   return jocQuery.isLoading ? (
     <div className="grid place-items-center">
@@ -114,7 +180,7 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
             <View style={styles.tableRow0}>
               <View>
                 <View style={styles.tablePad}>
-                  <Text style={styles.textPad}>JOB ORDERS</Text>
+                  <Text style={styles.textPad}>JO CONSOLIDATION</Text>
                 </View>
                 <View style={styles.tableUnderPad}>
                   <View style={styles.tableL}>
@@ -136,43 +202,79 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
             </View>
           </View>
 
-          <View>
+          <View style={styles.headerF}>
             <View>
-              <Text>Agent :</Text>
-              <Text>Loading :</Text>
-              <Text>Discharge :</Text>
-              <Text>ETD :</Text>
-              <Text>ETA :</Text>
+              <Text>Agent : {jocQuery.data.data.agent}</Text>
+              <Text>Loading : {jocQuery.data.data.loading}</Text>
+              <Text>Discharge : {jocQuery.data.data.discharge}</Text>
+              <Text>ETD : {jocQuery.data.data.etd}</Text>
+              <Text>ETA : {jocQuery.data.data.eta}</Text>
             </View>
             <View>
-              <Text>No. HBL :</Text>
-              <Text>No. MBL :</Text>
-              <Text>Vessel :</Text>
-              <Text>No. Containe :</Text>
+              <Text>No. HBL : </Text>
+              <Text>No. MBL : {jocQuery.data.data.no_mbl}</Text>
+              <Text>Vessel : {jocQuery.data.data.vessel}</Text>
+              <Text>No. Container : {jocQuery.data.data.no_container}</Text>
             </View>
           </View>
 
-          <View>
-            <Text>DATA JO</Text>
+          <View style={{ marginTop: 30 }}>
+            <Text style={{ fontSize: 10, fontWeight: 'semibold' }}>
+              DATA JO
+            </Text>
 
-            <View>
-              <View>
-                <Text>No.</Text>
-                <Text>No JO.</Text>
-                <Text>Customer</Text>
-                <Text>No. BL</Text>
-                <Text>Discharge</Text>
-                <Text>Gw</Text>
-                <Text>Meas</Text>
+            <View style={[styles.table, { marginBottom: '16px' }]}>
+              {/* Columns */}
+              <View style={[styles.tableRow, { fontWeight: 'bold' }]}>
+                <View style={[styles.tableCol, { width: '5%' }]}>
+                  <Text style={styles.tableCell}>No.</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '20%' }]}>
+                  <Text style={styles.tableCell}>NO JO</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>CUSTOMER</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>NO BL</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>DISCHARGE</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>GW</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>MEAS</Text>
+                </View>
               </View>
-              <View>
-                <Text>No.</Text>
-                <Text>No JO.</Text>
-                <Text>Customer</Text>
-                <Text>No. BL</Text>
-                <Text>Discharge</Text>
-                <Text>Gw</Text>
-                <Text>Meas</Text>
+              {/* Rows */}
+              <View style={[styles.tableRow, { fontWeight: 'normal' }]}>
+                <View style={[styles.tableCol, { width: '5%' }]}>
+                  <Text style={styles.tableCell}>1</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '20%' }]}>
+                  <Text style={styles.tableCell}>{jo ? jo.jo_no : ''}</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>
+                    {customer ? customer.partner_name : ''}
+                  </Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>-</Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>
+                    {jocQuery.data.data.discharge}
+                  </Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}></Text>
+                </View>
+                <View style={[styles.tableCol, { width: '15%' }]}>
+                  <Text style={styles.tableCell}>0</Text>
+                </View>
               </View>
             </View>
           </View>
@@ -190,7 +292,7 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
             <View>
               <Text>Created</Text>
               <Text style={{ fontSize: 10, marginTop: 80 }}>
-                {/* ({joQuery.data.data.createdBy}) */}
+                ({jocQuery.data.data.createdBy})
               </Text>
             </View>
             <View

@@ -10,54 +10,70 @@ import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
-import * as JoService from '@/apis/jo.api';
+import * as JOCService from '@/apis/joc.api';
 import yup from '@/lib/yup';
 import { useRouter } from 'next/router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const defaultValues = {
-  jo_date: '',
+  no_mbl: '',
+  vessel: '',
+  agent: '',
+  no_container: '',
+  loading: '',
+  discharge: '',
+  etd: '',
+  eta: '',
   quo_no: '',
+  jo_no: '',
   customer_code: '',
 };
 
 const Schema = yup.object({
-  jo_date: yup.string().required(),
+  no_mbl: yup.string().required(),
+  vessel: yup.string().required(),
+  agent: yup.string().required(),
+  no_container: yup.string().required(),
+  loading: yup.string().required(),
+  discharge: yup.string().required(),
+  etd: yup.string().required(),
+  eta: yup.string().required(),
   quo_no: yup.string().required(),
+  jo_no: yup.string().required(),
   customer_code: yup.string().required(),
 });
 
-type JoSchema = InferType<typeof Schema>;
+type JOCSchema = InferType<typeof Schema>;
 
 export default function create() {
   const router = useRouter();
   const qc = useQueryClient();
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
-  const methods = useForm<JoSchema>({
+  const methods = useForm<JOCSchema>({
     mode: 'all',
     defaultValues,
     resolver: yupResolver(Schema),
   });
   const { handleSubmit, setValue, watch } = methods;
 
-  const addJOMutation = useMutation({
-    mutationFn: JoService.create,
+  const addJOCMutation = useMutation({
+    mutationFn: JOCService.create,
     onSuccess: () => {
-      qc.invalidateQueries(['jo']);
-      toast.success('Success, jo has been added.');
-      router.push('/jo');
+      qc.invalidateQueries(['joc']);
+      toast.success('Success, JOC has been added.');
+      router.push('/joc');
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
 
-  const onSubmit: SubmitHandler<JoSchema> = (data) => {
+  const onSubmit: SubmitHandler<JOCSchema> = (data) => {
     if (IS_DEV) {
       console.log('data =>', data);
     }
 
-    addJOMutation.mutate(data);
+    addJOCMutation.mutate(data);
   };
 
   return (

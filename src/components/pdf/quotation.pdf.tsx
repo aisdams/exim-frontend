@@ -22,16 +22,16 @@ import Loader from '@/components/table/loader';
 import React, { useState } from 'react';
 
 Font.register({
-  family: 'DustismoRoman',
+  family: 'tahoma',
   fonts: [
-    { src: '/fonts/DustismoRoman.ttf' },
-    { src: '/fonts/DustismoRomanBold.ttf', fontWeight: 'bold' },
+    { src: '/fonts/tahoma.ttf' },
+    { src: '/fonts/tahomaBold.ttf', fontWeight: 'bold' },
   ],
 });
 const styles = StyleSheet.create({
   page: {
     width: '100%',
-    fontFamily: 'DustismoRoman',
+    fontFamily: 'tahoma',
     fontSize: 12,
 
     paddingTop: 40,
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000',
   },
   textPad: {
+    fontWeight: 'bold',
     marginHorizontal: 'auto',
     textAlign: 'center',
     alignItems: 'center',
@@ -165,8 +166,7 @@ const styles = StyleSheet.create({
     fontSize: 9,
   },
   textS: {
-    borderBottom: '1px solid #000',
-    width: 40,
+    width: 'auto',
     fontSize: 9,
   },
   viewHr: {
@@ -192,6 +192,9 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
+
+  const datenya = new Date(`${quotationQuery.data?.data.createdAt}`);
+  const dateString = datenya.toDateString();
 
   const [customer, setCustomer] = useState<any | null>(null);
   const [cost, setCost] = useState<any | null>(null);
@@ -256,7 +259,7 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
                     <Text style={styles.tableColumnTwo}>
                       {quotationQuery.data.data.quo_no}
                     </Text>
-                    <Text style={styles.tableColumnTwo}>2023-08-24</Text>
+                    <Text style={styles.tableColumnTwo}>{dateString}</Text>
                     <Text style={styles.tableColumnTwo}>
                       {quotationQuery.data.data.kurs}
                     </Text>
@@ -269,12 +272,10 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
           <View style={styles.topMargin}>
             <View>
               <Text style={styles.textHead}>
-                {customer
-                  ? customer.partner_name
-                  : 'Partner Name tidak ditemukan'}
+                {customer ? customer.partner_name : ''}
               </Text>
               <Text style={styles.textHeadTwo}>
-                {customer ? customer.address : 'Alamat tidak ditemukan'}
+                {customer ? customer.address : ''}
               </Text>
             </View>
 
@@ -321,28 +322,20 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
                 </View>
                 <View style={[styles.tableCol, { width: '20%' }]}>
                   <Text style={styles.tableCell}>
-                    {cost ? cost.item_name : 'item_name tidak ditemukan'}
+                    {cost ? cost.item_name : ''}
                   </Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>
-                    {cost ? cost.qty : 'qty tidak ditemukan'}
-                  </Text>
+                  <Text style={styles.tableCell}>{cost ? cost.qty : ''}</Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>
-                    {cost ? cost.unit : 'unit tidak ditemukan'}
-                  </Text>
+                  <Text style={styles.tableCell}>{cost ? cost.unit : ''}</Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>
-                    {cost ? cost.price : 'price tidak ditemukan'}
-                  </Text>
+                  <Text style={styles.tableCell}>{cost ? cost.price : ''}</Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>
-                    {cost ? cost.price : 'item_name tidak ditemukan'}
-                  </Text>
+                  <Text style={styles.tableCell}>{cost ? cost.price : ''}</Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
                   <Text style={styles.tableCell}>
@@ -362,11 +355,7 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
               <Text>Yours Faithfully</Text>
               <View>
                 <Text>Approved By,</Text>
-                <Text>
-                  {customer
-                    ? customer.partner_name
-                    : 'Partner Name tidak ditemukan'}
-                </Text>
+                <Text>{customer ? customer.partner_name : ''}</Text>
               </View>
             </View>
 

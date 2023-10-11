@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
+import { ParsedUrlQuery } from 'querystring';
+import { GetServerSideProps } from 'next';
 import {
   useInfiniteQuery,
   useMutation,
@@ -16,6 +18,7 @@ import { toast } from 'react-toastify';
 import { InferType } from 'yup';
 
 import * as JoService from '@/apis/jo.api';
+import * as QuotationService from '@/apis/quotation.api';
 import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
@@ -25,6 +28,7 @@ import { Label } from '@radix-ui/react-label';
 import { Input } from '@/components/ui/input';
 import { Command, Search } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { axios } from '@/lib/axios';
 
 const defaultValues = {
   jo_date: '',
@@ -40,7 +44,26 @@ const Schema = yup.object({
 
 type JoSchema = InferType<typeof Schema>;
 
-export default function JOCreate(quo_no: any) {
+interface IParams extends ParsedUrlQuery {
+  id: string;
+}
+
+export const getServerSideProps: GetServerSideProps<{
+  id: string;
+}> = async (ctx) => {
+  const { id } = ctx.params as IParams;
+
+  return {
+    props: {
+      id,
+    },
+  };
+};
+
+type JoCreateProps = {
+  id: string;
+};
+const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
   const router = useRouter();
   const qc = useQueryClient();
 
@@ -118,8 +141,9 @@ export default function JOCreate(quo_no: any) {
                   <Input placeholder="Import" disabled />
                   <Input
                     name="customer_code"
-                    placeholder="PT SARANA MULYA"
                     disabled
+                    placeholder="CTM-00001"
+                    value="CTM-00001"
                   />
                 </div>
               </div>
@@ -140,9 +164,9 @@ export default function JOCreate(quo_no: any) {
                 <div className="grid">
                   <InputText
                     name="quo_no"
+                    placeholder={id}
+                    value={id}
                     disabled
-                    value={quo_no}
-                    placeholder={quo_no}
                   />
                   <Input placeholder="11-01-2023" disabled />
                   <Input placeholder="Sales" disabled />
@@ -151,18 +175,23 @@ export default function JOCreate(quo_no: any) {
             </div>
           </div>
 
-          <div className="flex gap-3 mt-4">
-            <Link href="/quotation">
-              <Button className="bg-graySecondary">Back</Button>
-            </Link>
-            <Link href="/jo/detail/${jo_no}">
-              <Button type="submit" className="bg-blueLight">
-                Save
-              </Button>
-            </Link>
+          {/* Buttons */}
+          <div className="flex items-center gap-2">
+            <Button className="bg-graySecondary">
+              <Link href="/quotation">Back</Link>
+            </Button>
+            <Button
+              type="submit"
+              disabled={addJOMutation.isLoading}
+              className="bg-blueLight"
+            >
+              {addJOMutation.isLoading ? 'Loading...' : 'Save'}
+            </Button>
           </div>
         </form>
       </FormProvider>
     </div>
   );
-}
+};
+
+export default JoCreate;

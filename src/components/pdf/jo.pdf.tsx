@@ -18,10 +18,14 @@ import { getErrMessage } from '@/lib/utils';
 import Loader from '@/components/table/loader';
 
 import React, { useEffect, useState } from 'react';
+import { parse, parseISO, format } from 'date-fns';
 
 Font.register({
   family: 'tahoma.ttf',
-  fonts: [{ src: '/fonts/tahoma.ttf' }],
+  fonts: [
+    { src: '/fonts/tahoma.ttf' },
+    { src: '/fonts/tahomaBold.ttf', fontWeight: 'bold' },
+  ],
 });
 const styles = StyleSheet.create({
   page: {
@@ -52,6 +56,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000',
   },
   textPad: {
+    fontWeight: 'bold',
     paddingVertical: 3,
     marginHorizontal: 'auto',
     textAlign: 'center',
@@ -107,6 +112,7 @@ const styles = StyleSheet.create({
   },
   tableDData: {
     fontSize: 8,
+    height: '12.6',
     paddingHorizontal: 12,
     paddingVertical: 1,
     letterSpacing: 1,
@@ -140,6 +146,8 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
         });
     }
   }, [joQuery.data?.data?.quo_no]);
+  const datenya = new Date(`${joQuery.data?.data.createdAt}`);
+  const dateString = datenya.toDateString();
 
   return joQuery.isLoading ? (
     <div className="grid place-items-center">
@@ -172,14 +180,12 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
                     <Text style={styles.tableColumnTwo}>
                       {joQuery.data.data.jo_no}
                     </Text>
+                    <Text style={styles.tableColumnTwo}>{dateString}</Text>
                     <Text style={styles.tableColumnTwo}>
-                      {joQuery.data.data.createdAt}
-                    </Text>
-                    <Text style={styles.tableColumnTwo}>
-                      {quotation ? quotation.type : 'type tidak ditemukan'}
+                      {quotation ? quotation.type : ''}
                     </Text>
                     <Text style={styles.tableColumn}>
-                      {quotation ? quotation.sales : 'sales tidak ditemukan'}
+                      {quotation ? quotation.sales : ''}
                     </Text>
                   </View>
                 </View>
@@ -210,7 +216,7 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
 
               <View style={{ fontSize: 10, width: '100%' }}>
                 <Text style={styles.tableDData}>
-                  {quotation ? quotation.customer : 'customer tidak ditemukan'}
+                  {quotation ? quotation.customer : ''}
                 </Text>
                 <Text style={styles.tableDData}>
                   {' '}

@@ -98,7 +98,6 @@ export default function QuotationAdd() {
   const [footerText, setFooterText] = useState(
     'Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention.'
   );
-
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
   const { handleSubmit, setValue, watch } = methods;

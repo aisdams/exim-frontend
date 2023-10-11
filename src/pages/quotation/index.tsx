@@ -105,9 +105,25 @@ const columnsDef = [
     header: 'SUBJECT',
     cell: (info) => info.getValue(),
   }),
+
   columnHelper.accessor('status', {
     header: 'STATUS',
     cell: (info) => (
+      // <div>
+      //   <button
+      //     className={`rounded-md px-2 ${
+      //       info.getValue() === 'InProgress'
+      //         ? 'bg-yellow-600'
+      //         : info.getValue() === 'Executed'
+      //         ? 'bg-green-500'
+      //         : info.getValue() === 'Cancel'
+      //         ? 'bg-red-600'
+      //         : ''
+      //     }`}
+      //   >
+      //     {info.getValue()}
+      //   </button>
+      // </div>
       <div>
         <button
           className={`rounded-md px-2 ${
@@ -119,6 +135,7 @@ const columnsDef = [
               ? 'bg-red-600'
               : ''
           }`}
+          onClick={() => {}}
         >
           {info.getValue()}
         </button>
@@ -234,6 +251,12 @@ const columnsDef = [
                 <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
                 Edit
               </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="p-0">
+              <button className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default">
+                <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                Executed
+              </button>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {

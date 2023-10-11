@@ -2,6 +2,7 @@ export type JOC = {
   joc_no: string;
   no_mbl: string;
   status: string;
+  agent: string;
   vessel: string;
   no_container: string;
   loading: string;

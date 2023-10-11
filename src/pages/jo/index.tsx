@@ -168,6 +168,15 @@ const columnsDef = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="font-normal">
+            <DropdownMenuItem className="p-0">
+              <Link
+                href={`/quotation/edit/${jo_no}`}
+                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+              >
+                <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                Edit
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
                 e.preventDefault();
@@ -275,7 +284,7 @@ export default function Index() {
 
   const table = useReactTable({
     columns,
-    data: JobOrdersQuery.data?.data ?? defaultData,
+    data: searchValue ? searchResults : JobOrdersQuery.data?.data ?? [],
     pageCount: JobOrdersQuery.data?.pagination.total_page ?? -1,
 
     state: {
@@ -398,8 +407,19 @@ export default function Index() {
                       type="text"
                       name=""
                       id=""
-                      placeholder="Search..."
+                      placeholder="Search...."
                       className="border border-graySecondary dark:border-white rounded-md"
+                      value={searchValue}
+                      onChange={(e) => {
+                        setSearchValue(e.target.value);
+                        const filteredData = JobOrdersQuery.data?.data.filter(
+                          (item) =>
+                            item.jo_no
+                              .toLowerCase()
+                              .includes(e.target.value.toLowerCase())
+                        );
+                        setSearchResults(filteredData || []);
+                      }}
                     />
                   </div>
 
