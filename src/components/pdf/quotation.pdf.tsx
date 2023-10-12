@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
   },
   tableL: {
     borderRight: '1px solid #000',
+    fontSize: 9,
   },
   tableColumn: {
     borderBottom: '1px solid #000',
@@ -79,6 +80,7 @@ const styles = StyleSheet.create({
   tableColumnTwo: {
     borderBottom: '1px solid #000',
     paddingHorizontal: 12,
+    fontSize: 9,
   },
   topMargin: {
     marginTop: 40,
@@ -102,7 +104,6 @@ const styles = StyleSheet.create({
   textHeadFour: {
     marginVertical: 10,
     fontSize: 9,
-    fontWeight: 'bold',
   },
   textParagrapf: {
     fontSize: 12,
@@ -159,7 +160,6 @@ const styles = StyleSheet.create({
   textTableUnder: {
     marginTop: 20,
     fontSize: 9,
-    fontWeight: 'bold',
   },
   textFinally: {
     marginTop: 80,
@@ -181,9 +181,15 @@ interface ItemCost {
 
 type QuotationPdfProps = {
   quo_no: string;
+  headerText: string;
+  footerText: string;
 };
 
-const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
+const QuotationPdf: React.FC<QuotationPdfProps> = ({
+  quo_no,
+  headerText,
+  footerText,
+}) => {
   //! get quotation
   const quotationQuery = useQuery({
     queryKey: ['quotation', quo_no],

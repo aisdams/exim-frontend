@@ -5,6 +5,16 @@ import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
+import { GetServerSideProps } from 'next';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import {
   useInfiniteQuery,
   useMutation,
@@ -23,26 +33,148 @@ import InputText from '@/components/forms/input-text';
 import { Label } from '@radix-ui/react-label';
 import { Input } from '@/components/ui/input';
 import { Command, Printer, Search } from 'lucide-react';
+import { ParsedUrlQuery } from 'querystring';
 import { Textarea } from '@/components/ui/textarea';
 import InputNumber from '@/components/forms/input-number';
+import InputDisable from '@/components/forms/input-disable';
+import { Customer, Port } from '@/types';
 
 const defaultValues = {
-  jo_date: '',
-  quo_no: '',
-  customer_code: '',
+  shipper: '',
+  consignee: '',
+  qty: '',
+  hbl: '',
+  mbl: '',
+  etd: '',
+  eta: '',
+  vessel: '',
+  gross_weight: '',
+  volume: '',
+  name_of_goods: '',
 };
 
 const Schema = yup.object({
-  jo_date: yup.string().required(),
-  quo_no: yup.string().required(),
-  customer_code: yup.string().required(),
+  shipper: yup.string().required(),
+  consignee: yup.string().required(),
+  qty: yup.string().required(),
+  hbl: yup.string().required(),
+  mbl: yup.string().required(),
+  etd: yup.string().required(),
+  eta: yup.string().required(),
+  vessel: yup.string().required(),
+  gross_weight: yup.string().required(),
+  volume: yup.string().required(),
+  name_of_goods: yup.string().required(),
 });
 
 type JoSchema = InferType<typeof Schema>;
 
-export default function JOEdit(quo_no: any) {
+interface IParams extends ParsedUrlQuery {
+  id: string;
+}
+
+export const getServerSideProps: GetServerSideProps<{
+  id: string;
+}> = async (ctx) => {
+  const { id } = ctx.params as IParams;
+
+  return {
+    props: {
+      id,
+    },
+  };
+};
+
+type JoEditProps = {
+  id: string;
+};
+
+const JoEdit: React.FC<JoEditProps> = ({ id }) => {
   const router = useRouter();
   const qc = useQueryClient();
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
+  const [customerData, setCustomerData] = useState<Customer[]>([]);
+  const [PortData, setPortData] = useState<Port[]>([]);
+  const [isPortModalOpen, setIsPortModalOpen] = useState(false);
+  const [isPortTwoModalOpen, setIsPortTwoModalOpen] = useState(false);
+  const [isPortThreeModalOpen, setIsPortThreeModalOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null
+  );
+  const [selectedPort, setSelectedPort] = useState<Port | null>(null);
+  const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
+  const [selectedPortThree, setSelectedPortThree] = useState<Port | null>(null);
+  const openCustomerModal = () => {
+    setIsCustomerModalOpen(true);
+
+    fetch('http://localhost:8089/api/customer')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data Customer:', data.data);
+        setCustomerData(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+  const closeCustomerModal = () => {
+    setIsCustomerModalOpen(false);
+  };
+
+  const openPortModal = () => {
+    setIsPortModalOpen(true);
+
+    fetch('http://localhost:8089/api/port')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data Port:', data.data);
+        setPortData(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+  const closePortModal = () => {
+    setIsPortModalOpen(false);
+  };
+
+  const openPortTwoModal = () => {
+    setIsPortTwoModalOpen(true);
+
+    fetch('http://localhost:8089/api/port')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data Port:', data.data);
+        setPortData(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+  const closePortTwoModal = () => {
+    setIsPortTwoModalOpen(false);
+  };
+
+  const openPortThreeModal = () => {
+    setIsPortThreeModalOpen(true);
+
+    fetch('http://localhost:8089/api/port')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data Port:', data.data);
+        setPortData(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+  const closePortThreeModal = () => {
+    setIsPortThreeModalOpen(false);
+  };
 
   const [dd, setDd] = useState('');
   const [mm, setMm] = useState('');
@@ -66,11 +198,11 @@ export default function JOEdit(quo_no: any) {
   });
   const { handleSubmit, setValue, watch } = methods;
 
-  const addJOMutation = useMutation({
-    mutationFn: JoService.create,
+  const updatedJOMutation = useMutation({
+    mutationFn: JoService.updateById,
     onSuccess: () => {
       qc.invalidateQueries(['jo']);
-      toast.success('Success, jo has been added.');
+      toast.success('Success, Job Order has been updated.');
       router.push('/jo');
     },
     onError: (err) => {
@@ -83,9 +215,8 @@ export default function JOEdit(quo_no: any) {
       console.log('data =>', data);
     }
 
-    addJOMutation.mutate(data);
+    updatedJOMutation.mutate({ id, data });
   };
-
   return (
     <div className="overflow-hidden ml-3">
       <FormProvider {...methods}>
@@ -94,6 +225,7 @@ export default function JOEdit(quo_no: any) {
             <div className="border border-graySecondary rounded-md">
               <div className="flex w-full bg-blueHeaderCard p-2">
                 <Command />
+                {''}
                 <h1>Data Order</h1>
               </div>
               <div className="grid grid-cols-[1fr_2fr] p-4">
@@ -110,7 +242,7 @@ export default function JOEdit(quo_no: any) {
                     disabled
                     placeholder="~AUTO~"
                   />
-                  <InputText
+                  <InputDisable
                     name="jo_date"
                     placeholder={`${dd}-${mm}-${yyyy}`}
                     disabled
@@ -139,12 +271,7 @@ export default function JOEdit(quo_no: any) {
                 </div>
 
                 <div className="grid">
-                  <InputText
-                    name="quo_no"
-                    disabled
-                    value={quo_no}
-                    placeholder={quo_no}
-                  />
+                  <Input name="quo_no" placeholder={id} value={id} />
                   <Input placeholder="11-01-2023" disabled />
                   <Input placeholder="Sales" disabled />
                 </div>
@@ -171,41 +298,57 @@ export default function JOEdit(quo_no: any) {
 
             <div className="grid">
               <div className="flex gap-2">
-                <InputText name="shipper" />
+                <InputText
+                  name="shipper"
+                  value={selectedCustomer ? selectedCustomer.partner_name : ''}
+                />
                 <button
                   className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+          dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+          rounded-md text-white"
+                  onClick={openCustomerModal}
                 >
                   <Search className="w-4" />
                 </button>
               </div>
               <div className="flex gap-2">
-                <InputText name="consignee" />
+                <InputText
+                  name="consignee"
+                  value={selectedPort ? selectedPort.port_name : ''}
+                />
                 <button
                   className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+          dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+          rounded-md text-white"
+                  onClick={openPortModal}
                 >
                   <Search className="w-4" />
                 </button>
               </div>
               <div className="flex gap-2">
-                <InputText name="loading" />
+                <InputText
+                  name="loading"
+                  value={selectedPortTwo ? selectedPortTwo.port_name : ''}
+                />
                 <button
                   className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+          dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+          rounded-md text-white"
+                  onClick={openPortTwoModal}
                 >
                   <Search className="w-4" />
                 </button>
               </div>
               <div className="flex gap-2">
-                <InputText name="discharge" />
+                <InputText
+                  name="discharge"
+                  value={selectedPortThree ? selectedPortThree.port_name : ''}
+                />
                 <button
                   className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+          dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
+          rounded-md text-white"
+                  onClick={openPortThreeModal}
                 >
                   <Search className="w-4" />
                 </button>
@@ -231,8 +374,12 @@ export default function JOEdit(quo_no: any) {
             <Button className="bg-green-500">
               <Link href="/jo">Back</Link>
             </Button>
-            <Button type="submit" className="bg-blueLight">
-              Save
+            <Button
+              type="submit"
+              disabled={updatedJOMutation.isLoading}
+              className="bg-blueLight"
+            >
+              {updatedJOMutation.isLoading ? 'Loading...' : 'Save'}
             </Button>
             <Button>
               <Link href="/" className="flex items-center gap-1">
@@ -241,8 +388,210 @@ export default function JOEdit(quo_no: any) {
               </Link>
             </Button>
           </div>
+
+          {isCustomerModalOpen && (
+            <div
+              style={{ overflow: 'hidden' }}
+              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                isCustomerModalOpen ? 'open' : 'closed'
+              }`}
+            >
+              <div className="absolute inset-0 bg-black opacity-75"></div>
+              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <Button
+                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  onClick={closeCustomerModal}
+                >
+                  <h1 className="text-xl">X</h1>
+                </Button>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="hover:!text-white">
+                        Partner Name
+                      </TableHead>
+                      <TableHead className="hover:!text-white">Unit</TableHead>
+                      <TableHead className="hover:!text-white">Add</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="text-black">
+                    {customerData.map((customer) => (
+                      <TableRow key={customer.customer_code}>
+                        <TableCell className="font-medium">
+                          {customer.partner_name}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {customer.unit}
+                        </TableCell>
+                        <TableCell className="!w-2 !h-2 rounded-md">
+                          <Button
+                            className=""
+                            onClick={() => {
+                              setSelectedCustomer(customer);
+                              closeCustomerModal();
+                            }}
+                          >
+                            add
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
+
+          {isPortModalOpen && (
+            <div
+              style={{ overflow: 'hidden' }}
+              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                isPortModalOpen ? 'open' : 'closed'
+              }`}
+            >
+              <div className="absolute inset-0 bg-black opacity-75"></div>
+              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <Button
+                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  onClick={closePortModal}
+                >
+                  <h1 className="text-xl">X</h1>
+                </Button>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="hover:!text-white">
+                        Port Name
+                      </TableHead>
+                      <TableHead className="hover:!text-white">Add</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="text-black">
+                    {PortData.map((port) => (
+                      <TableRow key={port.port_code}>
+                        <TableCell className="font-medium">
+                          {port.port_name}
+                        </TableCell>
+                        <TableCell className="!w-2 !h-2 rounded-md">
+                          <Button
+                            className=""
+                            onClick={() => {
+                              setSelectedPort(port);
+                              closePortModal();
+                            }}
+                          >
+                            add
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
+
+          {isPortTwoModalOpen && (
+            <div
+              style={{ overflow: 'hidden' }}
+              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                isPortTwoModalOpen ? 'open' : 'closed'
+              }`}
+            >
+              <div className="absolute inset-0 bg-black opacity-75"></div>
+              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <Button
+                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  onClick={closePortTwoModal}
+                >
+                  <h1 className="text-xl">X</h1>
+                </Button>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="hover:!text-white">
+                        Port Name
+                      </TableHead>
+                      <TableHead className="hover:!text-white">Add</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="text-black">
+                    {PortData.map((port) => (
+                      <TableRow key={port.port_code}>
+                        <TableCell className="font-medium">
+                          {port.port_name}
+                        </TableCell>
+                        <TableCell className="!w-2 !h-2 rounded-md">
+                          <Button
+                            className=""
+                            onClick={() => {
+                              setSelectedPortTwo(port);
+                              closePortTwoModal();
+                            }}
+                          >
+                            add
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
+
+          {isPortThreeModalOpen && (
+            <div
+              style={{ overflow: 'hidden' }}
+              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                isPortThreeModalOpen ? 'open' : 'closed'
+              }`}
+            >
+              <div className="absolute inset-0 bg-black opacity-75"></div>
+              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <Button
+                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  onClick={closePortThreeModal}
+                >
+                  <h1 className="text-xl">X</h1>
+                </Button>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="hover:!text-white">
+                        Port Name
+                      </TableHead>
+                      <TableHead className="hover:!text-white">Add</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="text-black">
+                    {PortData.map((port) => (
+                      <TableRow key={port.port_code}>
+                        <TableCell className="font-medium">
+                          {port.port_name}
+                        </TableCell>
+                        <TableCell className="!w-2 !h-2 rounded-md">
+                          <Button
+                            className=""
+                            onClick={() => {
+                              setSelectedPortThree(port);
+                              closePortThreeModal();
+                            }}
+                          >
+                            add
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
         </form>
       </FormProvider>
     </div>
   );
-}
+};
+
+export default JoEdit;

@@ -62,7 +62,7 @@ const InputDisable: React.FC<InputDisableProps> = ({
     <div className={cn('relative', containerCN)}>
       <div
         className={cn(
-          'relative flex items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary w-[300px]',
+          'relative flex items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary w-full',
           inputWrapperCN
         )}
       >
@@ -72,7 +72,7 @@ const InputDisable: React.FC<InputDisableProps> = ({
           value={inputValue}
           id={id || name}
           className={cn(
-            'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted cursor-not-allowed',
+            'h-9 w-full bg-[#111522] px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted cursor-not-allowed',
             inputCN
           )}
           placeholder={

@@ -245,7 +245,7 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
                 </Text>
                 <Text style={styles.tableDData}>
                   {' '}
-                  {joQuery.data.data.qty} Cartoon BOx
+                  {joQuery.data.data.qty} Cartoon BOX
                 </Text>
                 <Text style={styles.tableDData}>
                   {' '}

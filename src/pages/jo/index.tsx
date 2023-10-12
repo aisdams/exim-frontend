@@ -179,14 +179,41 @@ const columnsDef = [
     ),
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('jo_no', {
+  columnHelper.accessor('quo_no', {
+    enableSorting: false,
     header: () => (
       <div>
         <div>LOADING</div>
         <div>DISCHARGE</div>
       </div>
     ),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const [loading, setLoading] = useState('');
+      const [discharge, setDischarge] = useState('');
+
+      useEffect(() => {
+        const quoNo = info.row.original.quo_no.toString();
+
+        quotationService.getById(quoNo).then((quotation) => {
+          if (quotation && quotation.data && quotation.data.loading) {
+            setLoading(quotation.data.loading);
+          }
+        });
+
+        quotationService.getById(quoNo).then((quotation) => {
+          if (quotation && quotation.data && quotation.data.discharge) {
+            setDischarge(quotation.data.discharge);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{loading}</div>
+          <div>{discharge}</div>
+        </div>
+      );
+    },
   }),
   columnHelper.accessor('etd', {
     header: () => (
@@ -241,7 +268,7 @@ const columnsDef = [
           <DropdownMenuContent align="end" className="font-normal">
             <DropdownMenuItem className="p-0">
               <Link
-                href={`/quotation/edit/${jo_no}`}
+                href={`/jo/edit/${jo_no}`}
                 className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
               >
                 <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />

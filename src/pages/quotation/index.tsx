@@ -72,7 +72,7 @@ import { Input } from '@/components/ui/input';
 import { Quotation } from '@/types';
 import ActionLink from '@/components/table/action-link';
 
-const handleExecuteButtonClick = (info, setStatusInDatabase: any) => {
+const handleExecuteButtonClick = (info: any, setStatusInDatabase: any) => {
   const currentStatus = info.getValue();
   if (currentStatus !== 'Executed') {
     setStatusInDatabase('Executed');
@@ -132,34 +132,24 @@ const columnsDef = [
   }),
   columnHelper.accessor('status', {
     header: 'STATUS',
-    cell: (info) => {
-      const [status, setStatus] = useState(info.getValue());
-  
-      const handleExecuteButtonClick = () => {
-        if (status !== 'Executed') {
-          setStatus('Executed');
-        };
-  
-      return (
-        <div>
-          <div
-            className={`rounded-md px-2 ${
-              status === 'InProgress'
-                ? 'bg-yellow-600'
-                : status === 'Executed'
-                ? 'bg-green-500'
-                : status === 'Cancel'
-                ? 'bg-red-600'
-                : ''
-            }`}
-            onClick={handleExecuteButtonClick}
-          >
-            {status}
-          </div>
+    cell: (info) => (
+      <div>
+        <div
+          className={`rounded-md px-2 ${
+            info.getValue() === 'InProgress'
+              ? 'bg-yellow-600'
+              : info.getValue() === 'Executed'
+              ? 'bg-green-500'
+              : info.getValue() === 'Cancel'
+              ? 'bg-red-600'
+              : ''
+          }`}
+        >
+          {info.getValue()}
         </div>
-      );
-    },
-  }),  
+      </div>
+    ),
+  }),
   columnHelper.accessor('sales', {
     header: 'SALES',
     cell: (info) => info.getValue(),
@@ -568,10 +558,14 @@ export default function Index() {
           <h3>Create Quotation</h3>
         </Button>
       </Link>
-      <ReactTable
-        tableInstance={table}
-        isLoading={quotationsQuery.isFetching}
-      />
+      <div className="grid">
+        <div className="overflow-x-scroll">
+          <ReactTable
+            tableInstance={table}
+            isLoading={quotationsQuery.isFetching}
+          />
+        </div>
+      </div>
     </>
   );
 }

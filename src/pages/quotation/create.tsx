@@ -101,13 +101,14 @@ export default function QuotationAdd() {
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
   const { handleSubmit, setValue, watch } = methods;
+
   const openCustomerModal = () => {
     setIsCustomerModalOpen(true);
 
     fetch('http://localhost:8089/api/customer')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Pelanggan:', data.data);
+        console.log('Data Customer:', data.data);
         setCustomerData(data.data);
       })
       .catch((error) => {

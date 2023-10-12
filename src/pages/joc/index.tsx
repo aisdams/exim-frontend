@@ -8,6 +8,7 @@ import {
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
+import * as quotationService from '@/apis/quotation.api';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -59,7 +60,7 @@ import { useRouter } from 'next/router';
 import { cn, getErrMessage } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import * as JOCService from '../../apis/joc.api';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import ReactTable from '@/components/table/react-table';
 import InputSearch from '@/components/forms/input-search';
@@ -95,18 +96,31 @@ const columnsDef = [
       );
     },
   }),
-  columnHelper.accessor('jo_no', {
-    header: () => (
-      <div>
-        <div>QUO NO</div>
-        <div>SALES</div>
-      </div>
-    ),
-    cell: (info) => info.getValue(),
-  }),
   columnHelper.accessor('quo_no', {
     header: 'TYPE',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const [type, setType] = useState('');
+
+      useEffect(() => {
+        const quoNo = info.row.original.quo_no
+          ? info.row.original.quo_no.toString()
+          : null;
+
+        if (quoNo) {
+          quotationService.getById(quoNo).then((quotation) => {
+            if (quotation && quotation.data && quotation.data.type) {
+              setType(quotation.data.type);
+            }
+          });
+        }
+      }, []);
+
+      return (
+        <div>
+          <div>{type}</div>
+        </div>
+      );
+    },
   }),
   columnHelper.accessor('agent', {
     header: 'AGENT',
@@ -116,14 +130,43 @@ const columnsDef = [
     header: 'NO MBL',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('loading', {
+  columnHelper.accessor('quo_no', {
+    enableSorting: false,
     header: () => (
       <div>
         <div>LOADING</div>
         <div>DISCHARGE</div>
       </div>
     ),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const [loading, setLoading] = useState('');
+      const [discharge, setDischarge] = useState('');
+
+      useEffect(() => {
+        // const quoNo = info.row.original.quo_no?.toString();
+        const quoNo = info.row.original.quo_no
+          ? info.row.original.quo_no.toString()
+          : '';
+        quotationService.getById(quoNo).then((quotation) => {
+          if (quotation && quotation.data && quotation.data.loading) {
+            setLoading(quotation.data.loading);
+          }
+        });
+
+        quotationService.getById(quoNo).then((quotation) => {
+          if (quotation && quotation.data && quotation.data.discharge) {
+            setDischarge(quotation.data.discharge);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{loading}</div>
+          <div>{discharge}</div>
+        </div>
+      );
+    },
   }),
   columnHelper.accessor('eta', {
     header: () => (
@@ -134,9 +177,19 @@ const columnsDef = [
     ),
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('no_mbl', {
-    header: 'JML JO',
+  columnHelper.accessor('no_count', {
+    header: 'NO COUNT',
     cell: (info) => info.getValue(),
+  }),
+
+  columnHelper.display({
+    id: 'jml',
+    header: 'JML JO',
+    cell: (info) => {
+      const { jo_no } = info.row.original;
+
+      return <h1>1</h1>;
+    },
   }),
   columnHelper.accessor('createdBy', {
     header: 'CREATED',
@@ -146,7 +199,7 @@ const columnsDef = [
     header: 'STATUS',
     cell: (info) => (
       <div>
-        <button
+        <div
           className={`rounded-md px-2 ${
             info.getValue() === 'InProgress'
               ? 'bg-yellow-600'
@@ -158,7 +211,7 @@ const columnsDef = [
           }`}
         >
           {info.getValue()}
-        </button>
+        </div>
       </div>
     ),
   }),
@@ -330,7 +383,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="mb-4 z-[100] overflow-hidden">
+      <div className="mb-4 z-[100] !overflow-hidden">
         <div className="flex gap-3 font-semibold">
           <Command className="text-blueLight" />
           <h1> Job Order</h1>
@@ -444,7 +497,7 @@ export default function Index() {
                         setSearchValue(e.target.value);
                         const filteredData = jocQuery.data?.data.filter(
                           (item) =>
-                            item.jo_no
+                            item.joc_no
                               .toLowerCase()
                               .includes(e.target.value.toLowerCase())
                         );
@@ -469,7 +522,11 @@ export default function Index() {
         </Link>
       </div>
 
-      <ReactTable tableInstance={table} isLoading={jocQuery.isFetching} />
+      <div className="grid">
+        <div className="!overflow-hidden">
+          <ReactTable tableInstance={table} isLoading={jocQuery.isFetching} />
+        </div>
+      </div>
     </>
   );
 }

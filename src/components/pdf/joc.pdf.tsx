@@ -162,6 +162,9 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
     }
   }, [jocQuery.data?.data?.jo_no]);
 
+  const datenya = new Date(`${jocQuery.data?.data.createdAt}`);
+  const dateString = datenya.toDateString();
+
   return jocQuery.isLoading ? (
     <div className="grid place-items-center">
       <Loader />
@@ -192,7 +195,7 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                     <Text style={styles.tableColumnTwo}>
                       {jocQuery.data.data.joc_no}
                     </Text>
-                    <Text style={styles.tableColumnTwo}>customer_code</Text>
+                    <Text style={styles.tableColumnTwo}>{dateString}</Text>
                     <Text style={styles.tableColumnTwo}>
                       {jocQuery.data.data.quo_no}
                     </Text>
