@@ -19,6 +19,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import * as quotationService from '@/apis/quotation.api';
+import * as customerService from '@/apis/customer.api';
 import {
   Select,
   SelectContent,
@@ -59,7 +61,7 @@ import { useRouter } from 'next/router';
 import { cn, getErrMessage } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import * as JobOrderService from '../../apis/jo.api';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import ReactTable from '@/components/table/react-table';
 import InputSearch from '@/components/forms/input-search';
@@ -74,30 +76,99 @@ const columnHelper = createColumnHelper<JobOrder>();
 
 const columnsDef = [
   columnHelper.accessor('jo_no', {
+    enableSorting: false,
     header: () => (
       <div>
         <div>#JO NO</div>
         <div>DATE</div>
       </div>
     ),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const date = new Date(info.row.original.createdAt);
+      const formattedDate = `${date.getDate()}/${
+        date.getMonth() + 1
+      }/${date.getFullYear()}`;
+
+      return (
+        <div>
+          <div>{info.row.original.jo_no}</div>
+          <div>{formattedDate}</div>
+        </div>
+      );
+    },
   }),
-  columnHelper.accessor('jo_no', {
+  columnHelper.accessor('quo_no', {
+    enableSorting: false,
     header: () => (
       <div>
         <div>QUO NO</div>
         <div>SALES</div>
       </div>
     ),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const [sales, setSales] = useState('');
+
+      useEffect(() => {
+        const quoNo = info.row.original.quo_no.toString();
+
+        quotationService.getById(quoNo).then((quotation) => {
+          if (quotation && quotation.data && quotation.data.sales) {
+            setSales(quotation.data.sales);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{info.row.original.quo_no}</div>
+          <div>{sales}</div>
+        </div>
+      );
+    },
   }),
-  columnHelper.accessor('jo_no', {
+  columnHelper.accessor('quo_no', {
     header: 'TYPE',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const [type, setType] = useState('');
+
+      useEffect(() => {
+        const quoNo = info.row.original.quo_no.toString();
+
+        quotationService.getById(quoNo).then((quotation) => {
+          if (quotation && quotation.data && quotation.data.type) {
+            setType(quotation.data.type);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{type}</div>
+        </div>
+      );
+    },
   }),
   columnHelper.accessor('customer_code', {
     header: 'CUSTOMER',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const [partner_name, setPartnerName] = useState('');
+
+      useEffect(() => {
+        const customer_code = info.row.original.customer_code.toString();
+
+        customerService.getById(customer_code).then((customer) => {
+          if (customer && customer.data && customer.data.partner_name) {
+            setPartnerName(customer.data.partner_name);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{partner_name}</div>
+        </div>
+      );
+    },
   }),
   columnHelper.accessor('hbl', {
     header: () => (

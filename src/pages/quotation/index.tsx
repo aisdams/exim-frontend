@@ -72,6 +72,13 @@ import { Input } from '@/components/ui/input';
 import { Quotation } from '@/types';
 import ActionLink from '@/components/table/action-link';
 
+const handleExecuteButtonClick = (info, setStatusInDatabase: any) => {
+  const currentStatus = info.getValue();
+  if (currentStatus !== 'Executed') {
+    setStatusInDatabase('Executed');
+  }
+};
+
 const columnHelper = createColumnHelper<Quotation>();
 const columnsDef = [
   columnHelper.accessor('quo_no', {
@@ -82,7 +89,19 @@ const columnsDef = [
         <div>QUO DATE</div>
       </div>
     ),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const date = new Date(info.row.original.createdAt);
+      const formattedDate = `${date.getDate()}/${
+        date.getMonth() + 1
+      }/${date.getFullYear()}`;
+
+      return (
+        <div>
+          <div>{info.row.original.quo_no}</div>
+          <div>{formattedDate}</div>
+        </div>
+      );
+    },
   }),
   columnHelper.accessor('type', {
     header: 'TYPE',
@@ -93,55 +112,54 @@ const columnsDef = [
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('loading', {
+    enableSorting: false,
     header: () => (
       <div>
         <div>LOADING</div>
         <div>DISCHARGE</div>
       </div>
     ),
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <div>
+        <div>{info.row.original.loading}</div>
+        <div>{info.row.original.discharge}</div>
+      </div>
+    ),
   }),
   columnHelper.accessor('subject', {
     header: 'SUBJECT',
     cell: (info) => info.getValue(),
   }),
-
   columnHelper.accessor('status', {
     header: 'STATUS',
-    cell: (info) => (
-      // <div>
-      //   <button
-      //     className={`rounded-md px-2 ${
-      //       info.getValue() === 'InProgress'
-      //         ? 'bg-yellow-600'
-      //         : info.getValue() === 'Executed'
-      //         ? 'bg-green-500'
-      //         : info.getValue() === 'Cancel'
-      //         ? 'bg-red-600'
-      //         : ''
-      //     }`}
-      //   >
-      //     {info.getValue()}
-      //   </button>
-      // </div>
-      <div>
-        <button
-          className={`rounded-md px-2 ${
-            info.getValue() === 'InProgress'
-              ? 'bg-yellow-600'
-              : info.getValue() === 'Executed'
-              ? 'bg-green-500'
-              : info.getValue() === 'Cancel'
-              ? 'bg-red-600'
-              : ''
-          }`}
-          onClick={() => {}}
-        >
-          {info.getValue()}
-        </button>
-      </div>
-    ),
-  }),
+    cell: (info) => {
+      const [status, setStatus] = useState(info.getValue());
+  
+      const handleExecuteButtonClick = () => {
+        if (status !== 'Executed') {
+          setStatus('Executed');
+        };
+  
+      return (
+        <div>
+          <div
+            className={`rounded-md px-2 ${
+              status === 'InProgress'
+                ? 'bg-yellow-600'
+                : status === 'Executed'
+                ? 'bg-green-500'
+                : status === 'Cancel'
+                ? 'bg-red-600'
+                : ''
+            }`}
+            onClick={handleExecuteButtonClick}
+          >
+            {status}
+          </div>
+        </div>
+      );
+    },
+  }),  
   columnHelper.accessor('sales', {
     header: 'SALES',
     cell: (info) => info.getValue(),

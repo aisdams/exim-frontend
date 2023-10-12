@@ -29,6 +29,7 @@ import { Input } from '@/components/ui/input';
 import { Command, Search } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { axios } from '@/lib/axios';
+import InputDisable from '@/components/forms/input-disable';
 
 const defaultValues = {
   jo_date: '',
@@ -132,14 +133,14 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
                     disabled
                     placeholder="~AUTO~"
                   />
-                  <InputText
+                  <InputDisable
                     name="jo_date"
                     placeholder={`${dd}-${mm}-${yyyy}`}
                     disabled
                     value={`${dd}-${mm}-${yyyy}`}
                   />
                   <Input placeholder="Import" disabled />
-                  <Input
+                  <InputDisable
                     name="customer_code"
                     disabled
                     placeholder="CTM-00001"
@@ -162,7 +163,7 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
                 </div>
 
                 <div className="grid">
-                  <InputText
+                  <InputDisable
                     name="quo_no"
                     placeholder={id}
                     value={id}

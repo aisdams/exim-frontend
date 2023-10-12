@@ -74,13 +74,26 @@ const columnHelper = createColumnHelper<JOC>();
 
 const columnsDef = [
   columnHelper.accessor('joc_no', {
+    enableSorting: false,
     header: () => (
       <div>
         <div>#JOC NO</div>
         <div>DATE</div>
       </div>
     ),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const date = new Date(info.row.original.createdAt);
+      const formattedDate = `${date.getDate()}/${
+        date.getMonth() + 1
+      }/${date.getFullYear()}`;
+
+      return (
+        <div>
+          <div>{info.row.original.joc_no}</div>
+          <div>{formattedDate}</div>
+        </div>
+      );
+    },
   }),
   columnHelper.accessor('jo_no', {
     header: () => (

@@ -13,7 +13,7 @@ export type JOC = {
   jo_no: string;
   customer_code: string;
   createdBy: string;
-  createdAt: Date | null;
+  createdAt: Date;
   updatedAt: Date | null;
   deletedAt: Date | null;
 };

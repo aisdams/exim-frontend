@@ -84,73 +84,51 @@ export default function create() {
       </div>
 
       <FormProvider {...methods}>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-sm dark:bg-graySecondary/70">
-            <div className="bg-blueHeaderCard w-full">
-              <div className="flex">
-                <Command />
-                <h1>Data JOC</h1>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="card grid grid-cols-2 gap-5">
+            <div className="grid">
+              <div className="grid">
+                <div className="grid grid-cols-2">
+                  <div className="">
+                    <Label>No MBL</Label>
+                    <Label>Vessel</Label>
+                    <Label>Agent</Label>
+                    <Label>No Container</Label>
+                    <Label>Loading</Label>
+                  </div>
+                  <div className="">
+                    <InputText name="no_mbl" />
+                    <InputText name="vessel" />
+                    <InputText name="agent" />
+                    <InputText name="no_container" />
+                    <InputText name="loading" />
+                  </div>
+                </div>
               </div>
+            </div>
 
+            <div className="grid">
               <div className="grid">
-                <div className="flex">
-                  <Label>#No JOC</Label>
-                  <InputText name="" />
-                </div>
-                <div className="flex">
-                  <Label>JOC Date</Label>
-                  <InputText name="" />
-                </div>
-                <div className="flex">
-                  <Label>Type</Label>
-                  <InputText name="" />
-                </div>
-                <div className="flex">
-                  <Label>No. MBL</Label>
-                  <InputText name="" />
-                </div>
-                <div className="flex">
-                  <Label>Vessel</Label>
-                  <InputText name="vessel" />
+                <div className="grid grid-cols-2">
+                  <div className="">
+                    <Label>Discharge</Label>
+                    <Label>ETD</Label>
+                    <Label>ETA</Label>
+                    <Label>Quo No</Label>
+                    <Label>Customer Code</Label>
+                  </div>
+                  <div className="">
+                    <InputText name="discharge" />
+                    <InputText name="etd" />
+                    <InputText name="eta" />
+                    <InputText name="quo_no" />
+                    <InputText name="customer_code" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="rounded-sm dark:bg-graySecondary/70">
-            <div className="bg-blueHeaderCard w-full">
-              <div className="flex">
-                <Command />
-                <h1>Data Consolidation</h1>
-              </div>
-              <div className="grid">
-                <div className="flex">
-                  <Label>Agent :</Label>
-                  <InputText name="agent" />
-                </div>
-                <div className="flex">
-                  <Label>Loading :</Label>
-                  <InputText name="joc_no" />
-                </div>
-                <div className="flex">
-                  <Label>Discharge :</Label>
-                  <InputText name="type" />
-                </div>
-                <div className="flex">
-                  <Label>ETD :</Label>
-                  <InputText name="etd" />
-                </div>
-                <div className="flex">
-                  <Label>ETA</Label>
-                  <InputText name="eta" />
-                </div>
-                <div className="flex">
-                  <Label>No. Container</Label>
-                  <InputText name="eta" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </form>
       </FormProvider>
       <Button className="bg-green-600">Save</Button>
       <Button>Back</Button>

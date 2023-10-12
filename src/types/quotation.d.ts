@@ -14,7 +14,7 @@ export type Quotation = {
   customer_code: string | null;
   item_cost: string;
   port_code: string | null;
-  createdAt: Date | null;
+  createdAt: Date;
   updatedAt: Date | null;
   deletedAt: Date | null;
 };
