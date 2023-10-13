@@ -7,9 +7,12 @@ import type { AppProps } from 'next/app';
 import Layout from '@/components/layouts/layout';
 import type { ReactElement, ReactNode } from 'react';
 import { PersistGate } from 'redux-persist/integration/react';
+import { ThemeProvider } from 'next-themes';
 import AppProvider from '@/components/providers/app-provider';
+import { SessionProvider } from 'next-auth/react';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+// import SessionLoader from '@/components/providers/session-loader';
 
 const { persistor, store } = reduxStore();
 
@@ -39,6 +42,13 @@ export default function App({
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <QueryClientProvider client={qc}>
+          {/* <ThemeProvider
+            themes={['light', 'dark']}
+            enableSystem={false}
+            defaultTheme="dark"
+            forcedTheme={Component.theme || undefined}
+            attribute="class"
+          > */}
           <Head>
             <title>EXIM | NELLO</title>
             <meta name="keywords" key="keywords" content="EXIM NELLO" />
@@ -47,10 +57,14 @@ export default function App({
               href="https://i.postimg.cc/cCXVYXkC/favicon.png"
             />
           </Head>
-          {/* Menggunakan AppProvider di sini dengan prop initialLoading */}
-          <AppProvider initialLoading={false}>
-            {getLayout(<Component {...pageProps} />)}
-          </AppProvider>
+          <SessionProvider session={pageProps.session}>
+            {/* <SessionLoader> */}
+            <AppProvider initialLoading={false}>
+              {getLayout(<Component {...pageProps} />)}
+            </AppProvider>
+            {/* </SessionLoader>/ */}
+          </SessionProvider>
+          {/* </ThemeProvider> */}
           <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
         </QueryClientProvider>
       </PersistGate>

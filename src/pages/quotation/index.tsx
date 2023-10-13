@@ -239,6 +239,15 @@ const columnsDef = [
       const deleteQuotationMutation = info.table.options.meta?.deleteMutation;
       const [open, setOpen] = useState(false);
       const [newStatus, setNewStatus] = useState('InProgress');
+      const currentStatus = info.getValue();
+      const quotationQuery = useQuery({
+        queryKey: ['quotation', quo_no],
+        queryFn: () => QuotationService.getById(quo_no),
+        onError: (err) => {
+          toast.error(`Error, ${getErrMessage(err)}`);
+        },
+      });
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -261,7 +270,15 @@ const columnsDef = [
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="p-0">
-              <button className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default">
+              <button
+                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+                onClick={() => {
+                  const currentStatus = quotationQuery.data?.data.status;
+
+                  if (currentStatus === 'InProgress') {
+                  }
+                }}
+              >
                 <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
                 Executed
               </button>
@@ -364,6 +381,17 @@ export default function Index() {
     setSearchResults(filteredData || []);
   };
 
+  const filterDataByStatus = (selectedStatus: any) => {
+    if (selectedStatus === 'All') {
+      setSearchResults(quotationsQuery.data?.data || []);
+    } else {
+      const filteredData = quotationsQuery.data?.data.filter((item) => {
+        return item.status === selectedStatus;
+      });
+      setSearchResults(filteredData || []);
+    }
+  };
+
   const quotationsQuery = useQuery({
     queryKey: ['quotations', { fetchDataOptions, searchValue }],
     queryFn: () => fetchData(fetchDataOptions, searchValue),
@@ -392,19 +420,6 @@ export default function Index() {
     },
   });
 
-  // const table = useReactTable({
-  //   columns,
-  //   data: quotationsQuery.data?.data ?? [],
-  //   pageCount: quotationsQuery.data?.pagination.total_page ?? -1,
-  //   state: {
-  //     pagination,
-  //   },
-  //   getCoreRowModel: getCoreRowModel(),
-  //   manualPagination: true,
-  //   meta: {
-  //     deleteMutation: deleteQuotationMutation,
-  //   },
-  // });
   const table = useReactTable({
     columns,
     data: searchValue ? searchResults : quotationsQuery.data?.data ?? [],
@@ -418,6 +433,7 @@ export default function Index() {
       deleteMutation: deleteQuotationMutation,
     },
   });
+  console.log(selectedStatus);
 
   return (
     <>
@@ -447,8 +463,9 @@ export default function Index() {
               </div>
               <Select
                 value={orderBy}
-                onValueChange={(value) => {
-                  setSelectedStatus(value);
+                onValueChange={(selectedStatus) => {
+                  setOrderBy(selectedStatus);
+                  filterDataByStatus(selectedStatus);
                 }}
               >
                 <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">

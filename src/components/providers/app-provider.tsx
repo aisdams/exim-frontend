@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { NProgress } from '@tanem/react-nprogress';
-import { MantineProvider } from '@mantine/core';
+// import { MantineProvider } from '@mantine/core';
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -33,7 +33,8 @@ const AppProvider = ({ children, initialLoading }: AppProviderProps) => {
   }, [router]);
 
   return (
-    <MantineProvider>
+    // <MantineProvider>
+    <>
       <NProgress isAnimating={isLoading}>
         {({ isFinished }) => (
           <div
@@ -56,7 +57,8 @@ const AppProvider = ({ children, initialLoading }: AppProviderProps) => {
         pauseOnHover
         theme="dark"
       />
-    </MantineProvider>
+    </>
+    // </MantineProvider>
   );
 };
 

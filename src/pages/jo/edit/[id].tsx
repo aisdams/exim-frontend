@@ -203,7 +203,8 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
     onSuccess: () => {
       qc.invalidateQueries(['jo']);
       toast.success('Success, Job Order has been updated.');
-      router.push('/jo');
+      const { jo_no } = router.query;
+      router.push(`/jo/edit/${id}`);
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -382,7 +383,11 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
               {updatedJOMutation.isLoading ? 'Loading...' : 'Save'}
             </Button>
             <Button>
-              <Link href="/" className="flex items-center gap-1">
+              <Link
+                href={`/jo/print/${id}`}
+                target="_blank"
+                className="flex items-center gap-1"
+              >
                 <Printer size={15} className="dark:text-white" />
                 Print Job Order
               </Link>

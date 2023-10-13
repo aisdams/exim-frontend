@@ -4,11 +4,11 @@ import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
-import { KeyIcon } from 'lucide-react';
+import { LucideKeyRound } from 'lucide-react';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import bgLogin from 'public/img/bg-log.jpg';
-import ImageLogo from 'public/img/logo.png';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import bgLogis from 'public/img/bg-log.jpg';
+import bgLogo from 'public/img/logo.png';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
 
@@ -94,43 +94,61 @@ const Login: NextPageCustomLayout = () => {
   }, [router?.query?.error]);
 
   return (
-    <div className="grid min-h-screen bg-[url('/public/img/bg-log.jpg')] z-0">
-      <div className="bg-blue-400 rounded-md">
-        <Image src={ImageLogo} alt="" />
-        <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="">
-            <InputText
-              name="email"
-              labelCN="text-sm"
-              inputCN="text-sm text-white"
-              containerCN="mb-4"
-              defaultCase
-              withLabel={false}
-            />
-            <InputPassword
-              name="password"
-              labelCN="text-sm"
-              inputCN="text-sm text-white"
-              containerCN="mb-4"
-              withLabel={false}
-            />
-            <Button
-              type="submit"
-              className="w-full text-[#fafafa]"
-              disabled={isLoading}
-            >
-              <KeyIcon />
-              {isLoading ? 'Loading...' : 'Login'}
-            </Button>
-            {errMsgQS && (
-              <div className="mt-2 text-center text-sm leading-none text-red-600">
-                {errMsgQS && <p>{errMsgQS}</p>}
-              </div>
-            )}
-          </form>
-        </FormProvider>
+    <>
+      <div className="grid min-h-screen bg-[url('https://aplikasisaya.net/fw/css/img/back.jpg')] bg-no-repeat bg-cover bg-center z-0 relative">
+        <Image
+          src={bgLogis}
+          alt=""
+          width={0}
+          height={0}
+          className="mx-auto grid w-[800px] h-52 bg-cover bg-center my-auto border-white border-2"
+        />
+
+        <div className="card w-[335px] bg-white shadow-md mx-auto grid my-auto absolute left-[28%] top-[25%]">
+          <div className="px-5 py-10">
+            <Image src={bgLogo} alt="" />
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(onSubmit)} className="">
+                <InputText
+                  name="email"
+                  labelCN="text-sm"
+                  inputCN="text-sm text-black"
+                  containerCN="mb-4"
+                  defaultCase
+                  withLabel={false}
+                />
+                <InputPassword
+                  name="password"
+                  labelCN="text-sm"
+                  inputCN="text-sm text-black"
+                  containerCN="mb-4"
+                  withLabel={false}
+                />
+                <Button
+                  type="submit"
+                  className="w-full text-[#fafafa] bg-blueHeaderCard"
+                  disabled={isLoading}
+                >
+                  <LucideKeyRound className="rotate-[-80deg] w-5" />
+                  {isLoading ? 'Loading...' : 'Login'}
+                </Button>
+                {errMsgQS && (
+                  <div className="mt-2 text-center text-sm leading-none text-red-600">
+                    {errMsgQS && <p>{errMsgQS}</p>}
+                  </div>
+                )}
+              </form>
+            </FormProvider>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
+
+Login.theme = 'dark';
+Login.getLayout = function getLayout(page: React.ReactElement) {
+  return page;
+};
+
 export default Login;
