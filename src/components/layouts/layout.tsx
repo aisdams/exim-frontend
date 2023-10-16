@@ -7,6 +7,8 @@ import Sidebar from '@/components/layouts/sidebar';
 import { setAutoWidthMode } from '@/redux/slices/appSlice';
 import { ThemeProvider } from '@/components/theme-provider';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -16,7 +18,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const { isMediumScreen } = useIsMediumScreen();
   const { autoWidthMode, isSidebarOpen } = useAppSelector((state) => state.app);
+  const { data: session } = useSession();
+  const router = useRouter();
 
+  // Periksa apakah pengguna belum masuk
+  useEffect(() => {
+    if (!session) {
+      // Jika pengguna belum masuk, arahkan mereka ke halaman login
+      router.push('/auth/login');
+    }
+  }, [session]);
+
+  // Jika pengguna belum masuk, tidak akan memuat konten layout
+  if (!session) {
+    return null;
+  }
   useEffect(() => {
     if (isMediumScreen) {
       if (!isSidebarOpen) {

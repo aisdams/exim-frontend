@@ -25,6 +25,16 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
   });
 
   useEffect(() => {
+    // Periksa apakah pengguna sudah masuk
+    if (!session?.user) {
+      // Jika pengguna belum masuk, alihkan ke halaman login
+      router.push('/auth/login');
+    } else {
+      // Jika pengguna sudah masuk, ambil data sesi pengguna
+      getAuthUserMutation.mutate();
+    }
+  }, [router, session]);
+  useEffect(() => {
     if (
       !router.pathname.startsWith('/auth') &&
       !router.pathname.startsWith('/403') &&
@@ -37,7 +47,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
 
   if (getAuthUserMutation.isLoading) {
     return (
-      <div className='grid min-h-screen place-items-center bg-background'>
+      <div className="grid min-h-screen place-items-center bg-background">
         Checking Authentication...
       </div>
     );
@@ -52,12 +62,12 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
 
 function ErrorComp() {
   return (
-    <div className='grid min-h-screen place-items-center font-normal'>
-      <div className='text-center'>
-        <p className='mb-2 text-lg font-medium text-red-600'>
+    <div className="grid min-h-screen place-items-center font-normal">
+      <div className="text-center">
+        <p className="mb-2 text-lg font-medium text-red-600">
           Something Went Wrong...
         </p>
-        <div className='text-sm'>
+        <div className="text-sm">
           <p>You can try to refresh this page,</p>
           <p>or contact the developers.</p>
         </div>

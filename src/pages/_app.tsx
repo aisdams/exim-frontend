@@ -12,7 +12,7 @@ import AppProvider from '@/components/providers/app-provider';
 import { SessionProvider } from 'next-auth/react';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-// import SessionLoader from '@/components/providers/session-loader';
+import SessionLoader from '@/components/providers/session-loader';
 
 const { persistor, store } = reduxStore();
 
@@ -58,11 +58,12 @@ export default function App({
             />
           </Head>
           <SessionProvider session={pageProps.session}>
-            {/* <SessionLoader> */}
-            <AppProvider initialLoading={false}>
-              {getLayout(<Component {...pageProps} />)}
-            </AppProvider>
-            {/* </SessionLoader>/ */}
+            <SessionLoader>
+              <AppProvider initialLoading={false}>
+                {getLayout(<Component {...pageProps} />)}
+              </AppProvider>
+            </SessionLoader>
+            /
           </SessionProvider>
           {/* </ThemeProvider> */}
           <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />

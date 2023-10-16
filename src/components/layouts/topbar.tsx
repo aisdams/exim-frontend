@@ -21,9 +21,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 export default function Topbar() {
   const { setTheme } = useTheme();
+  const router = useRouter();
 
   function toggleFullScreen() {
     const elem = document.documentElement as HTMLElement;
@@ -47,6 +50,13 @@ export default function Topbar() {
       maximizeButton?.removeEventListener('click', toggleFullScreen);
     };
   });
+
+  const handleLogout = () =>
+    signOut({ redirect: false }).then(() => {
+      localStorage.removeItem(process.env.NEXT_PUBLIC_PERMISSIONS_NAME);
+      router.replace('/auth/login');
+    });
+
   return (
     <div className="p-4 flex justify-between items-center shadow-2xl">
       <div className="flex items-center relative">
@@ -119,10 +129,7 @@ export default function Topbar() {
             <DropdownMenuContent className="shadow-lg rounded-lg w-40 mr-5 dark:text-black">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Team</DropdownMenuItem>
-              <DropdownMenuItem>Subscription</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
