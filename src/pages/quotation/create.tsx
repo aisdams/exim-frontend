@@ -209,10 +209,10 @@ export default function QuotationAdd() {
                   <div className="grid gap-2">
                     <Input
                       name="createdAt"
-                      className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted  w-[300px] border-none"
+                      className="border border-black dark:!bg-black bg-transparent px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-black dark:placeholder:text-muted-foreground disabled:select-none disabled:bg-muted w-[300px] dark:border-none"
                       disabled
                       placeholder="~AUTO~"
-                      value="2023-10-05T03:17:44.892Z"
+                      // value="2023-10-05T03:17:44.892Z"
                     />
                     <InputText name="sales" mandatory />
                     <InputText name="subject" mandatory />

@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
-import { Crown, LucideKeyRound } from 'lucide-react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import bgLogis from 'public/img/bg-log.jpg';
 import bgLogo from 'public/img/logo.png';
@@ -79,9 +78,12 @@ const Login: NextPageCustomLayout = () => {
         if (res?.error) {
           setIsLoading(false);
           setErrMsgQS("Email or Password that you've entered are incorrect!");
+          toast.error('Something went wrong, please retry later.');
         }
         router.replace('/');
-        toast.success('Successfully Login');
+        if (res?.ok) {
+          toast.success('Successfully Login');
+        }
       })
       .finally(() => setIsLoading(false));
   };
@@ -134,7 +136,6 @@ const Login: NextPageCustomLayout = () => {
                 className="w-full text-[#fafafa] bg-blueHeaderCard"
                 disabled={isLoading}
               >
-                <LucideKeyRound className="rotate-[-80deg] w-5" />
                 {isLoading ? 'Loading...' : 'Login'}
               </Button>
               {errMsgQS && (

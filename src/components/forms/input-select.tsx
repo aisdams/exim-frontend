@@ -98,14 +98,14 @@ const InputSelect: React.FC<InputSelectProps> = ({
                   : null
               }
               components={animatedComponents}
-              className="!w-[300px] bg-black rounded-md"
+              className="!w-[300px] dark:bg-black bg-transparent border border-muted-foreground dark:border-none rounded-md"
               classNamePrefix="select"
               theme={(theme) => ({
                 ...theme,
                 colors: {
                   ...theme.colors,
                   primary: 'hsl(var(--primary))',
-                  primary25: 'hsl(var(--primary))',
+                  primary25: '#4783b7',
                   neutral0: 'transparent',
                   neutral20: '#525255',
                   neutral80: 'white',
@@ -157,7 +157,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
                       ? 'white'
                       : `${isDark ? '#fff' : 'black'}`,
                   '&:hover': {
-                    backgroundColor: '#000',
+                    backgroundColor: 'dark:#000',
                     color: 'white',
                   },
                 }),

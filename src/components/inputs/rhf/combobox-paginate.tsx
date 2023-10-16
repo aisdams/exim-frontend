@@ -179,7 +179,7 @@ export default function ComboboxPaginate({
             onValueChange={(search) => setInputValue(search)}
             onBlur={handleBlur}
             disabled={field.value}
-            containerCN={cn(field.value && 'hidden')}
+            // containerCN={cn(field.value && 'hidden')}
             className={cn('font-normal')}
           />
           <CommandList className="max-h-60 w-full overflow-y-auto p-1">

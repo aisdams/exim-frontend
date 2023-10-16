@@ -3,7 +3,7 @@ import React from 'react';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 
-import { NextPageCustomLayout } from '@/pages/_app';
+import { NextPageCustomLayout } from '@/types/_app.type';
 
 const JOCPdf = dynamic(() => import('@/components/pdf/joc.pdf'), {
   ssr: false,
@@ -26,10 +26,10 @@ export const getServerSideProps: GetServerSideProps<{
 };
 
 type JOCPrintProps = {
-  id: string;
+  joc_no: string;
 };
 
-const JOCPrint: NextPageCustomLayout<JOCPrintProps> = ({ id: joc_no }) => {
+const JOCPrint: NextPageCustomLayout<JOCPrintProps> = ({ joc_no }) => {
   return <JOCPdf joc_no={joc_no} />;
 };
 

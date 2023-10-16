@@ -132,10 +132,10 @@ const columnsDef = [
     ),
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('amount', {
-    header: 'AMOUNT',
-    cell: (info) => info.getValue(),
-  }),
+  // columnHelper.accessor('amount', {
+  //   header: 'AMOUNT',
+  //   cell: (info) => info.getValue(),
+  // }),
   columnHelper.accessor('note', {
     header: 'NOTE',
     cell: (info) => info.getValue(),

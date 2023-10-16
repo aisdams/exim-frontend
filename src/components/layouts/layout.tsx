@@ -22,19 +22,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // Periksa apakah pengguna belum masuk
-  useEffect(() => {
-    if (!session) {
-      // Jika pengguna belum masuk, arahkan mereka ke halaman login
-      router.push('/auth/login');
-    }
-  }, [session]);
-
-  // Jika pengguna belum masuk, tidak akan memuat konten layout
-  if (!session) {
-    return null;
-  }
-
   useEffect(() => {
     if (isMediumScreen) {
       if (!showSidebar) {

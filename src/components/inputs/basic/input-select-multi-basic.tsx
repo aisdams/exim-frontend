@@ -3,7 +3,7 @@ import { Command as CommandPrimitive } from 'cmdk';
 import { X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
+// import { Badge } from '@/components/ui/badge';
 import { Command, CommandGroup, CommandItem } from '@/components/ui/command';
 
 type AnyKeyObj = { [key: string]: any };
@@ -81,14 +81,15 @@ export const InputSelectMultiBasic: React.FC<InputSelectMultiBasicProps> = ({
           inputRef.current?.focus();
         }}
       >
-        <div className='flex h-full flex-wrap gap-1 px-3 py-2'>
+        <div className="flex h-full flex-wrap gap-1 px-3 py-2">
           {selected.map((option) => {
             return (
-              <Badge key={option[optionValue]} variant='secondary'>
+              // Badge Variant {variant="secondary"}
+              <div key={option[optionValue]}>
                 {customLabel ? customLabel(option) : option[optionLabel]}
                 <button
-                  type='button'
-                  className='ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2'
+                  type="button"
+                  className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       handleUnselect(option);
@@ -100,9 +101,9 @@ export const InputSelectMultiBasic: React.FC<InputSelectMultiBasicProps> = ({
                   }}
                   onClick={() => handleUnselect(option)}
                 >
-                  <X className='h-3 w-3 text-muted-foreground hover:text-foreground' />
+                  <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                 </button>
-              </Badge>
+              </div>
             );
           })}
           {/* Avoid having the "Search" Icon */}
@@ -123,10 +124,10 @@ export const InputSelectMultiBasic: React.FC<InputSelectMultiBasicProps> = ({
           />
         </div>
       </div>
-      <div className='relative'>
+      <div className="relative">
         {open && selectables.length > 0 ? (
-          <div className='absolute top-0 z-10 mt-2 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in'>
-            <CommandGroup className='h-full overflow-auto'>
+          <div className="absolute top-0 z-10 mt-2 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
+            <CommandGroup className="h-full overflow-auto">
               {selectables.map((option) => {
                 return (
                   <CommandItem
@@ -139,7 +140,7 @@ export const InputSelectMultiBasic: React.FC<InputSelectMultiBasicProps> = ({
                       setInputValue('');
                       setSelected((prev: AnyKeyObj[]) => [...prev, option]);
                     }}
-                    className='cursor-pointer'
+                    className="cursor-pointer"
                   >
                     {option[optionLabel]}
                   </CommandItem>

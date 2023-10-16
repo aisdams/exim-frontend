@@ -44,18 +44,18 @@ const InputTime: React.FC<InputTimeProps> = ({
   };
 
   return (
-    <div className=''>
+    <div className="">
       {withLabel && (
         <label
           htmlFor={id || name}
           className={cn('mb-1 inline-block', labelCN)}
         >
           {label || startCase(name)}
-          {mandatory && <span className='text-[#f00]'>*</span>}
+          {mandatory && <span className="text-[#f00]">*</span>}
         </label>
       )}
 
-      <div className='relative'>
+      <div className="relative">
         <Flatpickr
           ref={field.ref}
           name={field.name}
@@ -87,15 +87,15 @@ const InputTime: React.FC<InputTimeProps> = ({
         {/* TIME ICON */}
         <Clock
           size={14}
-          className='absolute left-[.6rem] top-[50%] translate-y-[-50%] text-muted-foreground'
+          className="absolute left-[.6rem] top-[50%] translate-y-[-50%] text-muted-foreground"
         />
 
         {/* CLEAR ICON */}
         {field.value && !disabled && (
-          <div className='absolute right-[.3rem] top-[50%] grid h-full shrink-0 translate-y-[-50%] place-items-center'>
+          <div className="absolute right-[.3rem] top-[50%] grid h-full shrink-0 translate-y-[-50%] place-items-center">
             <button
-              type='button'
-              className='rounded-md p-1 opacity-50 hover:bg-grayish/50'
+              type="button"
+              className="rounded-md p-1 opacity-50 hover:bg-grayish/50"
               onClick={() => {
                 setValue(name, '', {
                   shouldValidate: true,
@@ -103,14 +103,14 @@ const InputTime: React.FC<InputTimeProps> = ({
                 additionalOnClear();
               }}
             >
-              <X size={16} className=' ' />
+              <X size={16} className=" " />
             </button>
           </div>
         )}
       </div>
 
       {error?.message && (
-        <p className='text-xs text-red-600'>{error.message}</p>
+        <p className="text-xs text-red-600">{error.message}</p>
       )}
     </div>
   );

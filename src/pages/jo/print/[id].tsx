@@ -3,7 +3,7 @@ import React from 'react';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 
-import { NextPageCustomLayout } from '@/pages/_app';
+import { NextPageCustomLayout } from '@/types/_app.type';
 
 const JOPdf = dynamic(() => import('@/components/pdf/jo.pdf'), {
   ssr: false,
