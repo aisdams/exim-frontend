@@ -34,7 +34,6 @@ const DateInput: React.FC<DateInputProps> = ({ value, onChange }) => {
     });
   }, [value]);
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   const validateDate = (field: keyof DateParts, value: number): boolean => {
     if (
       (field === 'day' && (value < 1 || value > 31)) ||

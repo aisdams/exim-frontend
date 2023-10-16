@@ -1,9 +1,10 @@
 import {
-  Quotation,
   createQuotationInput,
-  updateQuotationInput,
   Pagination,
+  Quotation,
   Res,
+  updateQuotationInput,
+  UpdateStatusInput,
 } from '@/types';
 
 import { axios } from '@/lib/axios';
@@ -48,6 +49,18 @@ export const updateById = async ({
   data: updateQuotationInput;
 }) => {
   const res = await axios.put(`/quotation/${id}`, data);
+
+  return res.data;
+};
+
+export const updateStatusById = async ({
+  quo_no,
+  data,
+}: {
+  quo_no: string;
+  data: UpdateStatusInput;
+}) => {
+  const res = await axios.put(`/quotation/${quo_no}/update-status`, data);
 
   return res.data;
 };

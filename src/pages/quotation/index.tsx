@@ -1,22 +1,40 @@
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { format } from 'date-fns';
-import { toast } from 'react-toastify';
+import { Quotation } from '@/types';
+import { useDebouncedValue } from '@mantine/hooks';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createColumnHelper,
   getCoreRowModel,
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-import { Label } from '@/components/ui/label';
+import { format } from 'date-fns';
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  Calendar,
+  CheckCircle2,
+  CheckIcon,
+  Command,
+  Copy,
+  Edit2,
+  MoreHorizontal,
+  MoreVertical,
+  PackageSearch,
+  PlusCircle,
+  PlusSquare,
+  Printer,
+  Search,
+  Trash,
+  XCircle,
+} from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { toast } from 'react-toastify';
+
+import { cn, getErrMessage } from '@/lib/utils';
+import { DateRangePicker } from '@/components/forms/data-range-picker';
+import InputSearch from '@/components/forms/input-search';
+import ActionLink from '@/components/table/action-link';
+import ReactTable from '@/components/table/react-table';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,28 +46,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  CheckCircle2,
-  PlusCircle,
-  XCircle,
-  Calendar,
-  MoreHorizontal,
-  PlusSquare,
-  Search,
-  Command,
-  PackageSearch,
-  Trash,
-  Edit2,
-  Printer,
-  Copy,
-  MoreVertical,
-  CheckIcon,
-} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,20 +55,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useDebouncedValue } from '@mantine/hooks';
-import { cn, getErrMessage } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import * as QuotationService from '../../apis/quotation.api';
-import React, { useMemo, useState } from 'react';
-import ReactTable from '@/components/table/react-table';
-import InputSearch from '@/components/forms/input-search';
-import { DateRangePicker } from '@/components/forms/data-range-picker';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
-
-import { Quotation } from '@/types';
-import ActionLink from '@/components/table/action-link';
-import { useSession } from 'next-auth/react';
+import { Label } from '@/components/ui/label';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import * as QuotationService from '../../apis/quotation.api';
 
 const handleExecuteButtonClick = (info: any, setStatusInDatabase: any) => {
   const currentStatus = info.getValue();
@@ -191,7 +191,7 @@ const columnsDef = [
           ) : (
             <Copy
               size={15}
-              className="dark:text-white grid mx-auto justify-center items-center"
+              className="mx-auto grid items-center justify-center dark:text-white"
             />
           )}
         </button>
@@ -208,7 +208,7 @@ const columnsDef = [
         <Link href={`/jo/create/${quo_no}`}>
           <PlusSquare
             size={15}
-            className="dark:text-white items-center grid mx-auto justify-center"
+            className="mx-auto grid items-center justify-center dark:text-white"
           />
         </Link>
       );
@@ -225,7 +225,7 @@ const columnsDef = [
           <Link href={`/quotation/print/${quo_no}`} target="_blank">
             <Printer
               size={15}
-              className="dark:text-white items-center grid mx-auto justify-center"
+              className="mx-auto grid items-center justify-center dark:text-white"
             />
           </Link>
         </Button>
@@ -254,10 +254,10 @@ const columnsDef = [
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="h-8 w-8 p-0 data-[state=open]:bg-muted grid mx-auto justify-center items-center"
+              className="mx-auto grid h-8 w-8 items-center justify-center p-0 data-[state=open]:bg-muted"
             >
               <span className="sr-only">Open menu</span>
-              <MoreVertical className="h-4 w-4 grid mx-auto justify-center items-center" />
+              <MoreVertical className="mx-auto grid h-4 w-4 items-center justify-center" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="font-normal">
@@ -438,12 +438,12 @@ export default function Index() {
 
   return (
     <>
-      <div className="mb-4 z-[100]">
+      <div className="z-[100] mb-4">
         <div className="flex gap-3 font-semibold">
           <Command className="text-blueLight" />
           <h1>Quotation</h1>
         </div>
-        <div className="w-full rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3 dark:bg-secondDarkBlue">
+        <div className="mt-5 w-full rounded-xl border-2 border-graySecondary/50 px-3 py-3 dark:bg-secondDarkBlue">
           <div className="flex gap-20">
             <div className="grid gap-1">
               <Label className="mt-4">Date TO</Label>
@@ -469,7 +469,7 @@ export default function Index() {
                   filterDataByStatus(selectedStatus);
                 }}
               >
-                <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
+                <SelectTrigger className="h-7 w-max bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                   <SelectValue placeholder="Order by" className="" />
                 </SelectTrigger>
                 <SelectContent align="end" className="dark:text-black">
@@ -484,7 +484,7 @@ export default function Index() {
               <div className="grid gap-1">
                 <div className="flex gap-1">
                   <Select value={orderByTwo} onValueChange={setOrderByTwo}>
-                    <SelectTrigger className="h-7 w-1/2 [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
+                    <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>
                     <SelectContent align="end" className="dark:text-black">
@@ -502,7 +502,7 @@ export default function Index() {
                     name=""
                     id=""
                     placeholder="Search...."
-                    className="border border-graySecondary dark:border-white rounded-md"
+                    className="rounded-md border border-graySecondary dark:border-white"
                     value={searchValue}
                     onChange={(e) => {
                       setSearchValue(e.target.value);
@@ -517,13 +517,13 @@ export default function Index() {
                   />
                 </div>
 
-                <div className="flex relative">
+                <div className="relative flex">
                   <div className="flex gap-1">
                     <Select
                       value={orderByThree}
                       onValueChange={setOrderByThree}
                     >
-                      <SelectTrigger className="h-7 w-1/2 [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
+                      <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                         <SelectValue placeholder="Order by" className="" />
                       </SelectTrigger>
                       <SelectContent align="end" className="dark:text-black">
@@ -540,7 +540,7 @@ export default function Index() {
                       name=""
                       id=""
                       placeholder="Search...."
-                      className="border border-graySecondary dark:border-white rounded-md"
+                      className="rounded-md border border-graySecondary dark:border-white"
                       value={searchValue}
                       onChange={(e) => {
                         setSearchValue(e.target.value);
@@ -556,12 +556,12 @@ export default function Index() {
                   </div>
 
                   <button
-                    className="bg-[#3c8dbc] rounded-md absolute -right-10 px-2 py-1"
+                    className="absolute -right-10 rounded-md bg-[#3c8dbc] px-2 py-1"
                     onClick={() => {
                       console.log('Pencarian:', searchValue);
                     }}
                   >
-                    <Search className="text-white w-4" />
+                    <Search className="w-4 text-white" />
                   </button>
                 </div>
               </div>
@@ -571,7 +571,7 @@ export default function Index() {
       </div>
 
       <Link href="/quotation/create">
-        <Button className="mb-5 bg-green-600 text-white w-max px-2 py-4 gap-2">
+        <Button className="mb-5 w-max gap-2 bg-green-600 px-2 py-4 text-white">
           <PlusSquare className="h-5" />
           <h3>Create Quotation</h3>
         </Button>

@@ -1,10 +1,10 @@
 {
   "extends": [
-    "next/core-web-vitals",
-    "airbnb",
-    "airbnb-typescript",
-    "plugin:tailwindcss/recommended",
-    "plugin:prettier/recommended"
+    "next/core-web-vitals"
+    // "airbnb",
+    // "airbnb-typescript",
+    // "plugin:tailwindcss/recommended",
+    // "plugin:prettier/recommended"
   ],
   "parserOptions": {
     "project": "./tsconfig.json",
@@ -13,14 +13,14 @@
   "rules": {
     "import/order": "off",
     //! TS
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
-      {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_"
-      }
-    ],
+    // "@typescript-eslint/no-unused-vars": [
+    //   "warn",
+    //   {
+    //     "argsIgnorePattern": "^_",
+    //     "varsIgnorePattern": "^_",
+    //     "caughtErrorsIgnorePattern": "^_"
+    //   }
+    // ],
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/no-unused-expressions": "off",
@@ -45,11 +45,9 @@
       }
     ],
     "react-hooks/rules-of-hooks": "off",
-    //! jsx-a11y
-    "jsx-a11y/label-has-associated-control": "off",
     //! tailwindcss
-    "tailwindcss/no-custom-classname": "off",
-    "tailwindcss/classnames-order": "error",
+    // "tailwindcss/no-custom-classname": "off",
+    // "tailwindcss/classnames-order": "error",
     //! import
     "import/prefer-default-export": "off",
     //! no

@@ -150,7 +150,6 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
   }, []);
 
   const getPresetRange = (presetName: string): DateRange => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     const preset = PRESETS.find(({ name }) => name === presetName);
     if (!preset) throw new Error(`Unknown date range preset: ${presetName}`);
     const from = new Date();
@@ -213,11 +212,9 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
   };
 
   const setPreset = (preset: string): void => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     const range = getPresetRange(preset);
     setRange(range);
     if (rangeCompare) {
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       const rangeCompare = {
         from: new Date(
           range.from.getFullYear() - 1,
@@ -302,7 +299,6 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
 
   const PresetButton = ({
     preset,
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     label,
     isSelected,
   }: {

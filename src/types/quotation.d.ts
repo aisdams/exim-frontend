@@ -39,6 +39,10 @@ export type updateQuotationInput = Omit<
   'port_code'
 >;
 
+export type UpdateStatusInput = {
+  status?: string | null;
+};
+
 export type QuotationWithItem = Quotation & {
   item: {
     item_name: string;
