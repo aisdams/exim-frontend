@@ -3,7 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import ApexCharts from 'apexcharts';
 import { ApexOptions } from 'apexcharts';
-import { Home, Menu } from 'lucide-react';
+import { Home, Menu, Plane, Truck } from 'lucide-react';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -59,13 +59,10 @@ export default function Content() {
         <h1>Dashboard</h1>
       </div>
       <div className="grid grid-cols-[1fr_2fr_1fr] gap-5 mb-5">
-        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-white font-bold dark:bg-secondDarkBlue flex">
-          <div className="">
-            <h1>AR</h1>
-            <h3>Rp. 3000000</h3>
-          </div>
-
-          <Menu />
+        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-darkBlue dark:text-white font-bold dark:bg-secondDarkBlue text-center pt-10">
+          <Truck className="mx-auto grid " size={34} />
+          <h2>RP. 31.0000</h2>
+          <h2>Lorem, ipsum dolor.</h2>
         </div>
 
         <div className="w-full px-5 py-1 border-graySecondary/50 rounded-md border-2 dark:bg-secondDarkBlue">
@@ -77,13 +74,10 @@ export default function Content() {
           />
         </div>
 
-        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-white font-bold dark:bg-secondDarkBlue flex">
-          <div className="">
-            <h1>HR</h1>
-            <h3>Rp. 3000000</h3>
-          </div>
-
-          <Menu />
+        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-darkBlue dark:text-white font-bold dark:bg-secondDarkBlue text-center pt-10">
+          <Plane className="mx-auto grid " size={34} />
+          <h2>310 Total Export/Import</h2>
+          <h2>Lorem ipsum dolor sit amet..</h2>
         </div>
       </div>
 

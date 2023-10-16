@@ -1,11 +1,12 @@
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useIsBelowSmallScreen, useMounted } from '@/hooks';
 import { MantineProvider } from '@mantine/core';
 import { useTheme } from 'next-themes';
 import { ToastContainer } from 'react-toastify';
+import { NProgress } from '@tanem/react-nprogress';
 
 import useProgressBarStore from '@/zustand/use-progress-bar';
 import useSidebarStore from '@/zustand/use-sidebar';
@@ -16,11 +17,16 @@ import SessionLoader from './session-loader';
 
 type AppProviderProps = {
   children: React.ReactNode;
+  initialLoading: boolean;
 };
 
-export default function AppProvider({ children }: AppProviderProps) {
+export default function AppProvider({
+  children,
+  initialLoading,
+}: AppProviderProps) {
   const router = useRouter();
   const isMounted = useMounted();
+  const [isLoading, setIsLoading] = useState(initialLoading);
   const { isBelowSmallScreen } = useIsBelowSmallScreen();
   const { theme: mode, forcedTheme } = useTheme();
   const isAnimating = useProgressBarStore((state: any) => state.isAnimating);
@@ -45,17 +51,25 @@ export default function AppProvider({ children }: AppProviderProps) {
 
   //! Loading Bar Logic
   useEffect(() => {
-    const handleStart = () => setIsAnimating(true);
-    const handleStop = () => setIsAnimating(false);
+    const handleRouteChangeStart = () => {
+      setIsLoading(true);
+    };
 
-    router.events.on('routeChangeStart', () => handleStart());
-    router.events.on('routeChangeComplete', () => handleStop());
-    router.events.on('routeChangeError', () => handleStop());
+    const handleRouteChangeComplete = () => {
+      setIsLoading(false);
+    };
+    const handleRouteStop = () => {
+      setIsLoading(false);
+    };
+
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+    router.events.on('routeChangeError', () => handleRouteStop());
 
     return () => {
-      router.events.off('routeChangeStart', () => handleStart());
-      router.events.off('routeChangeComplete', () => handleStop());
-      router.events.off('routeChangeError', () => handleStop());
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+      router.events.off('routeChangeError', handleRouteStop);
     };
   }, [router]);
 
@@ -71,6 +85,16 @@ export default function AppProvider({ children }: AppProviderProps) {
         {/* <Progress isAnimating={isAnimating} /> */}
 
         {/* THE COMPONENT */}
+        <NProgress isAnimating={isLoading}>
+          {({ isFinished }) => (
+            <div
+              className={`fixed top-0 left-0 w-full h-[6px] bg-purple-500 rounded-full z-50 transition-opacity ${
+                isFinished ? 'opacity-0' : 'opacity-100'
+              }`}
+            />
+          )}
+        </NProgress>
+
         {children}
 
         {isMounted && (

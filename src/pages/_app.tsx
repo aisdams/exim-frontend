@@ -50,7 +50,9 @@ const App = ({
             forcedTheme={Component.theme || undefined}
             disableTransitionOnChange
           >
-            <AppProvider>{getLayout(<Component {...pageProps} />)}</AppProvider>
+            <AppProvider initialLoading={false}>
+              {getLayout(<Component {...pageProps} />)}
+            </AppProvider>
           </ThemeProvider>
         </SessionProvider>
 

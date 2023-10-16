@@ -50,7 +50,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, [isMediumScreen]);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen dark:bg-[#262e4b]">
       <Sidebar />
       <div className="flex-1 flex flex-col z-50">
         <Topbar />
