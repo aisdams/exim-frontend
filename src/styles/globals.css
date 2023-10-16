@@ -104,12 +104,12 @@ body {
 
 .dark .childOne .childTwo .childThree .childFour.hovered .Link::before,
 .dark .childOne .childTwo .childThree .childFour.hovered .Link::before {
-  box-shadow: 35px 35px 0 10px #262e4b !important;
+  box-shadow: 35px 35px 0 10px #111522 !important;
 }
 
 .dark .childOne .childTwo .childThree .childFour.hovered .Link::after,
 .dark .childOne .childTwo .childThree .childFour.hovered .Link::after {
-  box-shadow: 35px -35px 0 10px #262e4b !important;
+  box-shadow: 35px -35px 0 10px #111522 !important;
 }
 
 .rdp-vhidden {

@@ -1,65 +1,98 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useIsBelowSmallScreen, useMounted } from '@/hooks';
+import { MantineProvider } from '@mantine/core';
+import { useTheme } from 'next-themes';
 import { ToastContainer } from 'react-toastify';
-import { NProgress } from '@tanem/react-nprogress';
-// import { MantineProvider } from '@mantine/core';
+
+import useProgressBarStore from '@/zustand/use-progress-bar';
+import useSidebarStore from '@/zustand/use-sidebar';
+// import Progress from '@/components/progress/progress';
+import { ThemeSwitcher } from '@/components/shared/theme-switcher';
+import { Toaster } from '@/components/ui/toaster';
+import SessionLoader from './session-loader';
 
 type AppProviderProps = {
   children: React.ReactNode;
-  initialLoading: boolean;
 };
 
-const AppProvider = ({ children, initialLoading }: AppProviderProps) => {
+export default function AppProvider({ children }: AppProviderProps) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(initialLoading);
+  const isMounted = useMounted();
+  const { isBelowSmallScreen } = useIsBelowSmallScreen();
+  const { theme: mode, forcedTheme } = useTheme();
+  const isAnimating = useProgressBarStore((state: any) => state.isAnimating);
+  const setIsAnimating = useProgressBarStore(
+    (state: any) => state.setIsAnimating
+  );
+  const sidebarType = useSidebarStore((state: any) => state.sidebarType);
+  const setSidebarType = useSidebarStore((state: any) => state.setSidebarType);
+  const setShowSidebar = useSidebarStore((state: any) => state.setShowSidebar);
 
   useEffect(() => {
-    const handleRouteChangeStart = () => {
-      setIsLoading(true);
-    };
+    if (window.innerWidth < 576 && sidebarType === 'horizontal') {
+      setSidebarType('vertical');
+    }
+  }, [isBelowSmallScreen, sidebarType]);
 
-    const handleRouteChangeComplete = () => {
-      setIsLoading(false);
-    };
+  useEffect(() => {
+    if (window.innerWidth < 576) {
+      setShowSidebar(false);
+    }
+  }, []);
 
-    router.events.on('routeChangeStart', handleRouteChangeStart);
-    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+  //! Loading Bar Logic
+  useEffect(() => {
+    const handleStart = () => setIsAnimating(true);
+    const handleStop = () => setIsAnimating(false);
+
+    router.events.on('routeChangeStart', () => handleStart());
+    router.events.on('routeChangeComplete', () => handleStop());
+    router.events.on('routeChangeError', () => handleStop());
 
     return () => {
-      router.events.off('routeChangeStart', handleRouteChangeStart);
-      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+      router.events.off('routeChangeStart', () => handleStart());
+      router.events.off('routeChangeComplete', () => handleStop());
+      router.events.off('routeChangeError', () => handleStop());
     };
   }, [router]);
 
   return (
-    // <MantineProvider>
-    <>
-      <NProgress isAnimating={isLoading}>
-        {({ isFinished }) => (
-          <div
-            className={`fixed top-0 left-0 w-full h-[6px] bg-purple-500 rounded-full z-50 transition-opacity ${
-              isFinished ? 'opacity-0' : 'opacity-100'
-            }`}
+    <MantineProvider
+      theme={{
+        fontFamily: 'var(--font-sans)',
+        // primaryColor: 'violet',
+      }}
+      forceColorScheme={(forcedTheme as any) || (mode as any)}
+    >
+      <SessionLoader>
+        {/* <Progress isAnimating={isAnimating} /> */}
+
+        {/* THE COMPONENT */}
+        {children}
+
+        {isMounted && (
+          <ToastContainer
+            position="top-right"
+            autoClose={4000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme={(forcedTheme as any) || (mode as any)}
           />
         )}
-      </NProgress>
 
-      {children}
+        {/* shadcn/ui TOASTER */}
+        <Toaster />
+      </SessionLoader>
 
-      <ToastContainer
-        position="top-right"
-        autoClose={4000}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
-    </>
-    // </MantineProvider>
+      <ThemeSwitcher />
+    </MantineProvider>
   );
-};
-
-export default AppProvider;
+}

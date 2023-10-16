@@ -7,3 +7,4 @@ export * from './customer';
 export * from './cost';
 export * from './port';
 export * from './joc';
+export * from './user';

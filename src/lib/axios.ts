@@ -1,59 +1,44 @@
 import Axios from 'axios';
-import { SearchQuery } from '@/types';
+
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const axios = Axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL,
+  withCredentials: true,
 });
 
-// Menambahkan interceptor untuk permintaan
-axios.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-axios.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-export { axios };
-
-export const generateSearchQuery = ({
-  searchQueries,
-}: {
-  searchQueries?: SearchQuery[] | SearchQuery;
-}) => {
-  let strings = '';
-
-  if (!searchQueries) return { strings };
-
-  if (
-    !Array.isArray(searchQueries) &&
-    !!searchQueries.by &&
-    !!searchQueries.key
-  ) {
-    strings = `&${searchQueries.by}=${searchQueries.key}`;
-    return { strings };
-  }
-
-  if (Array.isArray(searchQueries)) {
-    searchQueries.forEach((q: any, idx: number) => {
-      if (!q?.by || !q?.key) return;
-
-      //! generate the query params
-      strings += `&${q.by}=${q.key}${
-        idx + 1 < searchQueries.length ? '&' : ''
-      }`;
-    });
-  }
-
-  return { strings };
+const setToken = (token: string) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
+
+//! e.g set Authorization header with "getSession()"
+// let lastSession: Session | null = null;
+
+//! Request interceptor
+axios.interceptors.request.use(async (request) => {
+  //! e.g set Authorization header with "getSession()"
+  // if (lastSession == null || Date.now() > lastSession.accessTokenExpires!) {
+  // const session = await getSession();
+  //   lastSession = session;
+  // }
+
+  // if (lastSession) {
+  //   request.headers.Authorization = `Bearer ${lastSession.accessToken}`;
+  // } else {
+  //   request.headers.Authorization = undefined;
+  // }
+
+  return request;
+});
+
+//! Response interceptor
+axios.interceptors.response.use(
+  // Any status code that lie within the range of 2xx cause this function to trigger
+  // Do something with response data
+  (response) => response,
+  // Any status codes that falls outside the range of 2xx cause this function to trigger
+  // Do something with response error
+  (error) => Promise.reject(error)
+);
+
+export { axios, setToken };

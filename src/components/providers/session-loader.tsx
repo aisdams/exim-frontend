@@ -1,10 +1,13 @@
 import { useSession } from 'next-auth/react';
 
-// import { setToken } from '@/lib/axios';
+import { usePage } from '@/hooks/use-page';
+import { setToken } from '@/lib/axios';
 import CheckAuthSplash from '../shared/check-auth-splash';
 
 const SessionLoader = ({ children }: { children: React.ReactNode }) => {
   const { data: session, status } = useSession();
+
+  const { privatePage } = usePage();
 
   //! alternative: redirect to auth page if accessToken expired (client side)
   // useEffect(() => {
@@ -16,12 +19,12 @@ const SessionLoader = ({ children }: { children: React.ReactNode }) => {
   //   }
   // }, [router.pathname]);
 
-  if (status === 'loading') {
+  if (privatePage && status === 'loading') {
     return <CheckAuthSplash />;
   }
 
   if (status === 'authenticated') {
-    // setToken(session?.accessToken!);
+    setToken(session?.accessToken!);
   }
 
   return children;

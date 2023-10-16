@@ -28,6 +28,8 @@ export default function Topbar() {
   const { setTheme } = useTheme();
   const router = useRouter();
 
+  const { data: session } = useSession();
+
   function toggleFullScreen() {
     const elem = document.documentElement as HTMLElement;
     if (elem.requestFullscreen) {
@@ -54,7 +56,7 @@ export default function Topbar() {
   const handleLogout = () =>
     signOut({ redirect: false }).then(() => {
       localStorage.removeItem(process.env.NEXT_PUBLIC_PERMISSIONS_NAME);
-      router.replace('/auth/login');
+      router.push('/auth/login');
     });
 
   return (
@@ -124,7 +126,8 @@ export default function Topbar() {
                 width={36}
                 height={36}
               />
-              Admin
+
+              {session?.user?.name}
             </DropdownMenuTrigger>
             <DropdownMenuContent className="shadow-lg rounded-lg w-40 mr-5 dark:text-black">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>

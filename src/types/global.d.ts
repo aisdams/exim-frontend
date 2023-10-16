@@ -7,7 +7,7 @@ export type Option = {
 
 export type SidebarType = 'vertical' | 'horizontal';
 
-export type Theme = 'light' | 'dark';
+export type Mode = 'light' | 'dark';
 
 export type UserSession = {
   id: string;
@@ -36,3 +36,5 @@ export type Pagination = {
 export type FileEvent = ChangeEvent<HTMLInputElement> & {
   target: EventTarget & { files: FileList };
 };
+
+export type ValueOf<T> = T[keyof T];

@@ -44,8 +44,8 @@ const InputSelectSearch: React.FC<InputSelectSearchProps> = ({
   );
 
   return (
-    <div className='rounded-r-lg border border-slate-200 transition-[background-color] hover:bg-slate-400/10 peer-focus:border-purple-600 dark:border-slate-800'>
-      <div className='relative h-full'>
+    <div className="rounded-r-lg border border-slate-200 transition-[background-color] hover:bg-slate-400/10 peer-focus:border-purple-600 dark:border-slate-800">
+      <div className="relative h-full">
         {mounted && (
           <Select
             options={options || []}
@@ -61,8 +61,8 @@ const InputSelectSearch: React.FC<InputSelectSearchProps> = ({
             instanceId={id || name}
             placeholder={!disabled ? placeholder || label || 'Choose...' : null}
             components={animatedComponents}
-            className=''
-            classNamePrefix='select'
+            className=""
+            classNamePrefix="select"
             theme={(theme) => ({
               ...theme,
               colors: {

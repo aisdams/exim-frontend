@@ -13,7 +13,9 @@ export async function middleware(req: NextRequest) {
   });
 
   const privatePage = !pathname.startsWith('/auth');
-  const isTokenExpired = !(Date.now() / 1000 < token?.accessTokenExpires!);
+  const isTokenExpired =
+    !token?.accessTokenExpires ||
+    !(Date.now() / 1000 < token?.accessTokenExpires!);
 
   //! token expired logic
   if (isTokenExpired) {
@@ -62,5 +64,6 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     '/((?!api|_next/static|_next/image|favicon.ico|403).*)',
+    '/',
   ],
 };
