@@ -418,6 +418,7 @@ export default function Index() {
       );
       setTableData(filteredData || []);
     }
+    quotationsQuery.data?.data || [];
   };
 
   useEffect(() => {
@@ -458,7 +459,7 @@ export default function Index() {
       deleteMutation: deleteQuotationMutation,
     },
   });
-  console.log(selectedStatus);
+  // console.log(selectedStatus);
 
   return (
     <>

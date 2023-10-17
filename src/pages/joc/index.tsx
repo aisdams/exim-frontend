@@ -26,6 +26,7 @@ import {
   Trash,
   XCircle,
 } from 'lucide-react';
+import { fetchData } from 'next-auth/client/_utils';
 import { toast } from 'react-toastify';
 
 import * as quotationService from '@/apis/quotation.api';
@@ -361,6 +362,7 @@ export default function Index() {
   const [orderByTwo, setOrderByTwo] = useState('JOC No');
   const [orderByThree, setOrderByThree] = useState('JOC No');
   const [isActive, SetIsActive] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('All');
 
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
@@ -384,6 +386,24 @@ export default function Index() {
     },
   });
 
+  const [tableData, setTableData] = useState(jocQuery.data?.data || []);
+
+  const filterDataByStatus = (status: string) => {
+    if (status === 'All') {
+      setTableData(jocQuery.data?.data || []);
+    } else {
+      const filteredData = jocQuery.data?.data.filter(
+        (item) => item.status === status
+      );
+      setTableData(filteredData || []);
+    }
+    jocQuery.data?.data || [];
+  };
+
+  useEffect(() => {
+    filterDataByStatus(selectedStatus);
+  }, [selectedStatus]);
+
   const pagination = useMemo(
     () => ({
       pageIndex,
@@ -405,13 +425,11 @@ export default function Index() {
 
   const table = useReactTable({
     columns,
-    data: searchValue ? searchResults : jocQuery.data?.data ?? [],
+    data: searchValue ? searchResults : tableData || jocQuery.data?.data || [],
     pageCount: jocQuery.data?.pagination.total_page ?? -1,
-
     state: {
       pagination,
     },
-    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     meta: {
@@ -467,14 +485,20 @@ export default function Index() {
                   showCompare={false}
                 />
               </div>
-              <Select value={orderBy} onValueChange={setOrderBy}>
+              <Select
+                value={selectedStatus}
+                onValueChange={(selectedStatus) => {
+                  setSelectedStatus(selectedStatus);
+                  filterDataByStatus(selectedStatus);
+                }}
+              >
                 <SelectTrigger className="h-7 w-max bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                   <SelectValue placeholder="Order by" className="" />
                 </SelectTrigger>
                 <SelectContent align="end" className="dark:text-black">
                   <SelectGroup>
                     <SelectItem value="All">All</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
+                    <SelectItem value="InProgress">InProgress</SelectItem>
                     <SelectItem value="Executed">Executed</SelectItem>
                   </SelectGroup>
                 </SelectContent>

@@ -1,8 +1,8 @@
 'use client';
+
 import React from 'react';
 import dynamic from 'next/dynamic';
-import ApexCharts from 'apexcharts';
-import { ApexOptions } from 'apexcharts';
+import ApexCharts, { ApexOptions } from 'apexcharts';
 import { Home, Menu, Plane, Truck } from 'lucide-react';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
@@ -54,18 +54,18 @@ export default function Content() {
 
   return (
     <div className="grid">
-      <div className="flex gap-3 items-center font-semibold mb-10 mt-5">
+      <div className="mb-10 mt-5 flex items-center gap-3 font-semibold">
         <Home className="text-blueLight" />
         <h1>Dashboard</h1>
       </div>
-      <div className="grid grid-cols-[1fr_2fr_1fr] gap-5 mb-5">
-        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-darkBlue dark:text-white font-bold dark:bg-secondDarkBlue text-center pt-10">
+      <div className="mb-5 grid grid-cols-[1fr_2fr_1fr] gap-5">
+        <div className="w-full gap-3 rounded-md border-2 border-graySecondary/50 p-3 pt-10 text-center font-bold text-darkBlue dark:bg-secondDarkBlue dark:text-white">
           <Truck className="mx-auto grid " size={34} />
-          <h2>RP. 31.0000</h2>
+          <h2 className="font-light">RP. 31.0000</h2>
           <h2>Lorem, ipsum dolor.</h2>
         </div>
 
-        <div className="w-full px-5 py-1 border-graySecondary/50 rounded-md border-2 dark:bg-secondDarkBlue">
+        <div className="w-full rounded-md border-2 border-graySecondary/50 px-5 py-1 dark:bg-secondDarkBlue">
           <ReactApexChart
             options={options}
             series={series}
@@ -74,14 +74,14 @@ export default function Content() {
           />
         </div>
 
-        <div className="w-full p-3 border-graySecondary/50 rounded-md border-2 gap-3 text-darkBlue dark:text-white font-bold dark:bg-secondDarkBlue text-center pt-10">
+        <div className="w-full gap-3 rounded-md border-2 border-graySecondary/50 p-3 pt-10 text-center font-bold text-darkBlue dark:bg-secondDarkBlue dark:text-white">
           <Plane className="mx-auto grid " size={34} />
-          <h2>310 Total Export/Import</h2>
+          <h2 className="font-light">310 Total Export/Import</h2>
           <h2>Lorem ipsum dolor sit amet..</h2>
         </div>
       </div>
 
-      <div className="mt-5 border-graySecondary/50 rounded-md border-2 w-[90%] dark:bg-secondDarkBlue">
+      <div className="mt-5 w-[90%] rounded-md border-2 border-graySecondary/50 dark:bg-secondDarkBlue">
         <ReactApexChart
           options={optionsTwo}
           series={seriesTwo}

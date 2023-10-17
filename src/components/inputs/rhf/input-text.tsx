@@ -69,7 +69,7 @@ export default function InputText({
           className={cn('mb-1 inline-block', labelCN)}
         >
           {label || startCase(name)}
-          {mandatory && <span className='text-[#f00]'>*</span>}
+          {mandatory && <span className="text-[#f00]">*</span>}
         </label>
       )}
 
@@ -81,7 +81,7 @@ export default function InputText({
       >
         <input
           {...register(name)}
-          type='text'
+          type="text"
           value={field.value ?? ''}
           id={id || name}
           className={cn(
@@ -103,7 +103,7 @@ export default function InputText({
         />
       </div>
       {!noErrorMessage && error?.message && (
-        <p className='text-xs text-red-600'>{error.message}</p>
+        <p className="text-xs text-red-600">{error.message}</p>
       )}
     </div>
   );

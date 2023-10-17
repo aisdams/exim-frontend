@@ -9,7 +9,7 @@ type InputHiddenProps = {
   id?: string;
   placeholder?: string;
   disabled?: boolean;
-  mandatory?: boolean;
+  // mandatory?: boolean;
   defaultCase?: boolean;
   value?: string | number;
   withLabel?: boolean;
@@ -26,7 +26,7 @@ const InputHidden: React.FC<InputHiddenProps> = ({
   id,
   placeholder,
   disabled,
-  mandatory,
+  // mandatory,
   defaultCase,
   withLabel = true,
   containerCN,
@@ -70,7 +70,7 @@ const InputHidden: React.FC<InputHiddenProps> = ({
 
       <div
         className={cn(
-          'relative flex items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary w-[300px]',
+          'relative flex w-[300px] items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >

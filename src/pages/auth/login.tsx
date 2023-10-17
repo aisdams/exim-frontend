@@ -6,8 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import bgLogis from 'public/img/bg-log.jpg';
-import bgLogo from 'public/img/logo.png';
 import bgImg from 'public/img/bg-log.jpg';
+import bgLogo from 'public/img/logo.png';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
@@ -101,16 +101,16 @@ const Login: NextPageCustomLayout = () => {
   }, [router?.query?.error]);
 
   return (
-    <div className="grid min-h-screen bg-[url('https://aplikasisaya.net/fw/css/img/back.jpg')] bg-no-repeat bg-cover bg-center z-0 relative">
+    <div className="relative z-0 grid min-h-screen bg-[url('https://aplikasisaya.net/fw/css/img/back.jpg')] bg-cover bg-center bg-no-repeat">
       <Image
         src={bgLogis}
         alt=""
         width={0}
         height={0}
-        className="mx-auto grid w-[800px] h-52 bg-cover bg-center my-auto border-white border-2"
+        className="mx-auto my-auto grid h-52 w-[800px] border-2 border-white bg-cover bg-center"
       />
 
-      <div className="card w-[335px] bg-white shadow-md mx-auto grid my-auto absolute left-[28%] top-[25%]">
+      <div className="card absolute left-[28%] top-[25%] mx-auto my-auto grid w-[335px] bg-white shadow-md">
         <div className="px-5 py-10">
           <Image src={bgLogo} alt="" />
           <FormProvider {...methods}>
@@ -119,7 +119,7 @@ const Login: NextPageCustomLayout = () => {
                 name="email"
                 label="Email"
                 labelCN="text-sm"
-                inputCN="text-sm bg-transparent text-black"
+                inputCN="text-sm !bg-transparent text-black"
                 containerCN="mb-4"
                 uppercase={false}
                 withLabel={false}
@@ -133,7 +133,7 @@ const Login: NextPageCustomLayout = () => {
               />
               <Button
                 type="submit"
-                className="w-full text-[#fafafa] bg-blueHeaderCard"
+                className="w-full bg-blueHeaderCard text-[#fafafa]"
                 disabled={isLoading}
               >
                 {isLoading ? 'Loading...' : 'Login'}

@@ -25,6 +25,7 @@ import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import CreateCost from '@/components/cost/create';
 import InputDate from '@/components/forms/input-date';
+import InputHidden from '@/components/forms/input-hidden';
 import InputNumber from '@/components/forms/input-number';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
@@ -81,7 +82,7 @@ const defaultValues = {
   loading: '',
   discharge: '',
   kurs: '',
-  item_cost: '',
+  item_cost: 'COST-00001',
 };
 
 const Schema = yup.object({
@@ -119,10 +120,17 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
     null
   );
   const [createdItemCost, setCreatedItemCost] = useState('');
-  const handleCostCreated = (newItemCost: any) => {
-    setCreatedItemCost(newItemCost);
+  // const handleCostCreated = (newItemCost: any) => {
+  //   setCreatedItemCost(newItemCost);
 
-    setValue('item_cost', newItemCost);
+  //   setValue('item_cost', newItemCost);
+  // };
+
+  const handleCostCreated = (newItemCost: any) => {
+    const newCost = newItemCost.item_cost;
+
+    // Set nilai inputText menjadi item_cost yang baru
+    setValue('item_cost', newCost);
   };
 
   const [headerText, setHeaderText] = useState(
@@ -377,12 +385,14 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         </button>
                       </div>
                       <InputNumber name="kurs" mandatory />
-                      <InputText name="item_cost" mandatory />
+                      <div className="hidden">
+                        <InputText name="item_cost" placeholder="COST-00001" />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-
+              {/*  */}
               <div className="block gap-2 rounded-sm shadow-md shadow-black dark:bg-graySecondary/50">
                 <div className="mb-5 flex h-max gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                   <Command className="text-white" />
