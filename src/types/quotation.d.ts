@@ -35,7 +35,6 @@ export type createQuotationInput = {
 export type updateQuotationInput = Omit<
   createQuotationInput,
   'customer_code',
-  'item_cost',
   'port_code'
 >;
 

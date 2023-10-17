@@ -31,4 +31,8 @@ export type createJOCInput = {
   discharge: string | null;
 };
 
+export type UpdateStatusInput = {
+  status?: string | null;
+};
+
 export type updateJOCInput = Omit<createJOCInput>;

@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useIsMediumScreen } from '@/hooks';
+import { useSession } from 'next-auth/react';
 
 import useSidebarStore from '@/zustand/use-sidebar';
 import { cn } from '@/lib/utils';
-import Topbar from '@/components/layouts/topbar';
 import Footer from '@/components/layouts/footer';
 import Sidebar from '@/components/layouts/sidebar';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import Topbar from '@/components/layouts/topbar';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -22,6 +22,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { data: session } = useSession();
   const router = useRouter();
 
+  // useEffect(() => {
+  //   if (!session) {
+  //     // Jika pengguna belum masuk, arahkan mereka ke halaman login
+  //     router.push('/auth/login');
+  //   }
+  // }, [session]);
+
+  // // Jika pengguna belum masuk, tidak akan memuat konten layout
+  // if (!session) {
+  //   return null;
+  // }
   useEffect(() => {
     if (isMediumScreen) {
       if (!showSidebar) {
@@ -39,10 +50,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex h-screen dark:bg-[#262e4b]">
       <Sidebar />
-      <div className="flex-1 flex flex-col z-50">
+      <div className="z-50 flex flex-1 flex-col">
         <Topbar />
         <div className="flex-1 overflow-y-auto">
-          <div className="overflow-y-auto mx-6 mt-8 mb-20 z-50">{children}</div>
+          <div className="z-50 mx-6 mb-20 mt-8 overflow-y-auto">{children}</div>
         </div>
         <Footer />
       </div>

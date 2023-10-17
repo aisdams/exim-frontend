@@ -1,19 +1,37 @@
-import { useEffect, useState } from 'react';
-import { Calendar } from '@/components/ui/calendar';
 import { ParsedUrlQuery } from 'querystring';
+import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { format } from 'date-fns';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
+import { Label } from '@radix-ui/react-label';
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { Command, Search } from 'lucide-react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { InferType } from 'yup';
+
+import * as quotationService from '@/apis/quotation.api';
+import { getNextPageParam } from '@/lib/react-query';
+import { cn, getErrMessage } from '@/lib/utils';
+import yup from '@/lib/yup';
+import CreateCost from '@/components/cost/create';
+import InputDate from '@/components/forms/input-date';
+import InputNumber from '@/components/forms/input-number';
+import InputSelect from '@/components/forms/input-select';
+import InputText from '@/components/forms/input-text';
+import Loader from '@/components/table/loader';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -23,25 +41,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { InferType } from 'yup';
-
-import * as quotationService from '@/apis/quotation.api';
-import { getNextPageParam } from '@/lib/react-query';
-import { cn, getErrMessage } from '@/lib/utils';
-import yup from '@/lib/yup';
-import { Button, buttonVariants } from '@/components/ui/button';
-import InputText from '@/components/forms/input-text';
-import { Label } from '@radix-ui/react-label';
-import { Input } from '@/components/ui/input';
-import { Command, Search } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
-import InputDate from '@/components/forms/input-date';
-import InputNumber from '@/components/forms/input-number';
-import InputSelect from '@/components/forms/input-select';
-import Loader from '@/components/table/loader';
-import CreateCost from '@/components/cost/create';
 
 interface Customer {
   customer_code: string;
@@ -81,6 +81,7 @@ const defaultValues = {
   loading: '',
   discharge: '',
   kurs: '',
+  item_cost: '',
 };
 
 const Schema = yup.object({
@@ -93,6 +94,7 @@ const Schema = yup.object({
   loading: yup.string().required(),
   discharge: yup.string().required(),
   kurs: yup.string().required(),
+  item_cost: yup.string().required(),
 });
 
 type QuotationSchema = InferType<typeof Schema>;
@@ -116,6 +118,13 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
+  const [createdItemCost, setCreatedItemCost] = useState('');
+  const handleCostCreated = (newItemCost: any) => {
+    setCreatedItemCost(newItemCost);
+
+    setValue('item_cost', newItemCost);
+  };
+
   const [headerText, setHeaderText] = useState(
     'We are pleased to quote you the following :'
   );
@@ -221,7 +230,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
   };
 
   return (
-    <div className="overflow-hidden ml-3">
+    <div className="ml-3 overflow-hidden">
       <div className="mb-4 flex gap-3 ">
         <Command className="text-blueLight" />
         <h1 className="">Add Quotation</h1>
@@ -234,13 +243,13 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
             <div className="grid grid-cols-2 gap-3">
-              <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm pb-4">
-                <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-2">
+              <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
+                <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                   <Command className="text-white" />
                   <h1> Data Quotation</h1>
                 </div>
 
-                <div className="px-3 grid gap-3">
+                <div className="grid gap-3 px-3">
                   <div className="grid grid-cols-[1fr_2fr]">
                     <div className="grid gap-5">
                       <Label>Quo No :</Label>
@@ -258,13 +267,13 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                     <div className="grid gap-2">
                       <Input
                         name="quo_no"
-                        className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted  w-[300px] border-none"
+                        className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
                         disabled
                         placeholder={`${id}`}
                       />
                       <Input
                         name="createdAt"
-                        className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted  w-[300px] border-none"
+                        className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
                         disabled
                         placeholder="~AUTO~"
                         value="2023-10-05T03:17:44.892Z"
@@ -283,8 +292,8 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         />
                         <button
                           className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
                           onClick={openCustomerModal}
                         >
                           <Search className="w-4" />
@@ -342,8 +351,8 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         />
                         <button
                           className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
                           onClick={openPortModal}
                         >
                           <Search className="w-4" />
@@ -360,27 +369,28 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         />
                         <button
                           className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
                           onClick={openPortTwoModal}
                         >
                           <Search className="w-4" />
                         </button>
                       </div>
                       <InputNumber name="kurs" mandatory />
+                      <InputText name="item_cost" mandatory />
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="block gap-2 dark:bg-graySecondary/50 rounded-sm shadow-md shadow-black">
-                <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-2 h-max">
+              <div className="block gap-2 rounded-sm shadow-md shadow-black dark:bg-graySecondary/50">
+                <div className="mb-5 flex h-max gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                   <Command className="text-white" />
                   <h1> Data Quotation</h1>
                 </div>
 
                 <div className="px-3">
-                  <div className="flex gap-2 mb-5">
+                  <div className="mb-5 flex gap-2">
                     <Label>Header: </Label>
                     <Textarea
                       className="header h-32"
@@ -417,14 +427,14 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
             {isCustomerModalOpen && (
               <div
                 style={{ overflow: 'hidden' }}
-                className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                   isCustomerModalOpen ? 'open' : 'closed'
                 }`}
               >
                 <div className="absolute inset-0 bg-black opacity-75"></div>
-                <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                   <Button
-                    className="absolute -top-9 right-0 text-white !bg-transparent"
+                    className="absolute -top-9 right-0 !bg-transparent text-white"
                     onClick={closeCustomerModal}
                   >
                     <h1 className="text-xl">X</h1>
@@ -450,7 +460,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                           <TableCell className="font-medium">
                             {customer.unit}
                           </TableCell>
-                          <TableCell className="!w-2 !h-2 rounded-md">
+                          <TableCell className="!h-2 !w-2 rounded-md">
                             <Button
                               className=""
                               onClick={() => {
@@ -472,14 +482,14 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
             {isPortModalOpen && (
               <div
                 style={{ overflow: 'hidden' }}
-                className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                   isPortModalOpen ? 'open' : 'closed'
                 }`}
               >
                 <div className="absolute inset-0 bg-black opacity-75"></div>
-                <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                   <Button
-                    className="absolute -top-9 right-0 text-white !bg-transparent"
+                    className="absolute -top-9 right-0 !bg-transparent text-white"
                     onClick={closePortModal}
                   >
                     <h1 className="text-xl">X</h1>
@@ -499,7 +509,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                           <TableCell className="font-medium">
                             {port.port_name}
                           </TableCell>
-                          <TableCell className="!w-2 !h-2 rounded-md">
+                          <TableCell className="!h-2 !w-2 rounded-md">
                             <Button
                               className=""
                               onClick={() => {
@@ -521,14 +531,14 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
             {isPortTwoModalOpen && (
               <div
                 style={{ overflow: 'hidden' }}
-                className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                   isPortTwoModalOpen ? 'open' : 'closed'
                 }`}
               >
                 <div className="absolute inset-0 bg-black opacity-75"></div>
-                <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                   <Button
-                    className="absolute -top-9 right-0 text-white !bg-transparent"
+                    className="absolute -top-9 right-0 !bg-transparent text-white"
                     onClick={closePortTwoModal}
                   >
                     <h1 className="text-xl">X</h1>
@@ -548,7 +558,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                           <TableCell className="font-medium">
                             {port.port_name}
                           </TableCell>
-                          <TableCell className="!w-2 !h-2 rounded-md">
+                          <TableCell className="!h-2 !w-2 rounded-md">
                             <Button
                               className=""
                               onClick={() => {
@@ -570,7 +580,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
         </FormProvider>
       )}
 
-      <CreateCost />
+      <CreateCost onCostCreated={handleCostCreated} />
     </div>
   );
 };

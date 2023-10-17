@@ -1,14 +1,38 @@
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { format } from 'date-fns';
-import { toast } from 'react-toastify';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useRouter } from 'next/router';
+import { JOC } from '@/types';
+import { useDebouncedValue } from '@mantine/hooks';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createColumnHelper,
   getCoreRowModel,
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
+import { format } from 'date-fns';
+import {
+  Calendar,
+  CheckCircle2,
+  CheckIcon,
+  Command,
+  Copy,
+  Edit2,
+  MoreHorizontal,
+  PlusCircle,
+  PlusSquare,
+  Printer,
+  Search,
+  Trash,
+  XCircle,
+} from 'lucide-react';
+import { toast } from 'react-toastify';
+
 import * as quotationService from '@/apis/quotation.api';
+import { cn, getErrMessage } from '@/lib/utils';
+import { DateRangePicker } from '@/components/forms/data-range-picker';
+import InputSearch from '@/components/forms/input-search';
+import ReactTable from '@/components/table/react-table';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,6 +44,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -29,47 +69,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  CheckCircle2,
-  PlusCircle,
-  XCircle,
-  Calendar,
-  PlusSquare,
-  Search,
-  Command,
-  MoreHorizontal,
-  Edit2,
-  Trash,
-  Copy,
-  Printer,
-} from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { useRouter } from 'next/router';
-import { cn, getErrMessage } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import * as JOCService from '../../apis/joc.api';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useDebouncedValue } from '@mantine/hooks';
-import ReactTable from '@/components/table/react-table';
-import InputSearch from '@/components/forms/input-search';
-import { DateRangePicker } from '@/components/forms/data-range-picker';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Input } from '@/components/ui/input';
-
-import { JOC } from '@/types';
-import { Label } from '@/components/ui/label';
 
 const columnHelper = createColumnHelper<JOC>();
 
@@ -226,7 +227,7 @@ const columnsDef = [
           <Link href={`/joc/print/${joc_no}`} target="_blank">
             <Printer
               size={15}
-              className="dark:text-white items-center grid mx-auto justify-center"
+              className="mx-auto grid items-center justify-center dark:text-white"
             />
           </Link>
         </Button>
@@ -240,13 +241,36 @@ const columnsDef = [
       const { joc_no } = info.row.original;
       const deleteJOCMutation = info.table.options.meta?.deleteMutation;
       const [open, setOpen] = useState(false);
+      const jocQuery = useQuery({
+        queryKey: ['joc', joc_no],
+        queryFn: () => JOCService.getById(joc_no),
+        onError: (err) => {
+          toast.error(`Error, ${getErrMessage(err)}`);
+        },
+      });
+      const router = useRouter();
+
+      const changeStatus = async (joc_no: string) => {
+        try {
+          const data = { status: 'Executed' };
+
+          const response = await JOCService.updateStatusById({
+            joc_no,
+            data,
+          });
+
+          toast.success('Status successfully changed');
+          router.reload();
+        } finally {
+        }
+      };
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="h-8 w-8 p-0 data-[state=open]:bg-muted grid mx-auto justify-center items-center"
+              className="mx-auto grid h-8 w-8 items-center justify-center p-0 data-[state=open]:bg-muted"
             >
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
@@ -261,6 +285,20 @@ const columnsDef = [
                 <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
                 Edit
               </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="p-0">
+              <button
+                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+                onClick={() => {
+                  const joc_no = jocQuery.data?.data.joc_no;
+                  if (joc_no) {
+                    changeStatus(joc_no);
+                  }
+                }}
+              >
+                <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                Executed
+              </button>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
@@ -383,30 +421,30 @@ export default function Index() {
 
   return (
     <>
-      <div className="mb-4 z-[100] !overflow-hidden">
+      <div className="z-[100] mb-4 !overflow-hidden">
         <div className="flex gap-3 font-semibold">
           <Command className="text-blueLight" />
           <h1> Job Order</h1>
         </div>
-        <div className="flex gap-1 mt-3 text-white">
+        <div className="mt-3 flex gap-1 text-white">
           <button
-            className={`px-3 py-1 rounded-sm ${
+            className={`rounded-sm px-3 py-1 ${
               router.pathname === '/jo' ? 'bg-blueHeaderCard' : 'bg-green-500'
             }`}
           >
             <Link href="/jo">Data JO</Link>
           </button>
           <button
-            className={`px-3 py-1 rounded-sm ${
+            className={`rounded-sm px-3 py-1 ${
               router.pathname === '/joc' ? 'bg-blueHeaderCard' : 'bg-green-500'
             }`}
           >
             <Link href="/joc">Data Consolidation</Link>
           </button>
         </div>
-        <div className="w-full rounded-xl border-2 border-graySecondary/50 mt-5 px-3 py-3 dark:bg-secondDarkBlue">
-          <div className="flex gap-3 items-center mb-5">
-            <Search className="w-4 h-4" />
+        <div className="mt-5 w-full rounded-xl border-2 border-graySecondary/50 px-3 py-3 dark:bg-secondDarkBlue">
+          <div className="mb-5 flex items-center gap-3">
+            <Search className="h-4 w-4" />
             <h3> Filter Data JOC</h3>
           </div>
 
@@ -430,7 +468,7 @@ export default function Index() {
                 />
               </div>
               <Select value={orderBy} onValueChange={setOrderBy}>
-                <SelectTrigger className="h-7 w-max [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
+                <SelectTrigger className="h-7 w-max bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                   <SelectValue placeholder="Order by" className="" />
                 </SelectTrigger>
                 <SelectContent align="end" className="dark:text-black">
@@ -445,7 +483,7 @@ export default function Index() {
               <div className="grid gap-1">
                 <div className="flex gap-1">
                   <Select value={orderByTwo} onValueChange={setOrderByTwo}>
-                    <SelectTrigger className="h-7 w-1/2 [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
+                    <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>
                     <SelectContent align="end" className="dark:text-black">
@@ -463,17 +501,17 @@ export default function Index() {
                     name=""
                     id=""
                     placeholder="Search..."
-                    className="border border-graySecondary dark:border-white rounded-md"
+                    className="rounded-md border border-graySecondary dark:border-white"
                   />
                 </div>
 
-                <div className="flex relative">
+                <div className="relative flex">
                   <div className="flex gap-1">
                     <Select
                       value={orderByThree}
                       onValueChange={setOrderByThree}
                     >
-                      <SelectTrigger className="h-7 w-1/2 [&>span]:text-xs bg-lightWhite dark:bg-secondDarkBlue dark:border-white">
+                      <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                         <SelectValue placeholder="Order by" className="" />
                       </SelectTrigger>
                       <SelectContent align="end" className="dark:text-black">
@@ -491,7 +529,7 @@ export default function Index() {
                       name=""
                       id=""
                       placeholder="Search...."
-                      className="border border-graySecondary dark:border-white rounded-md"
+                      className="rounded-md border border-graySecondary dark:border-white"
                       value={searchValue}
                       onChange={(e) => {
                         setSearchValue(e.target.value);
@@ -506,8 +544,8 @@ export default function Index() {
                     />
                   </div>
 
-                  <button className="bg-[#3c8dbc] rounded-md absolute -right-10 px-2 py-1">
-                    <Search className="text-white w-4" />
+                  <button className="absolute -right-10 rounded-md bg-[#3c8dbc] px-2 py-1">
+                    <Search className="w-4 text-white" />
                   </button>
                 </div>
               </div>
@@ -515,7 +553,7 @@ export default function Index() {
           </div>
         </div>
         <Link href="/joc/create">
-          <Button className="my-5 bg-green-600 text-white w-max px-2 py-4 gap-2">
+          <Button className="my-5 w-max gap-2 bg-green-600 px-2 py-4 text-white">
             <PlusSquare className="h-5" />
             <h3>Create JOC</h3>
           </Button>

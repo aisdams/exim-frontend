@@ -1,4 +1,11 @@
-import { JOC, createJOCInput, updateJOCInput, Pagination, Res } from '@/types';
+import {
+  createJOCInput,
+  JOC,
+  Pagination,
+  Res,
+  updateJOCInput,
+  UpdateStatusInput,
+} from '@/types';
 
 import { axios } from '@/lib/axios';
 import { generateSearchQuery } from '@/lib/utils';
@@ -34,6 +41,18 @@ export const updateById = async ({
   data: updateJOCInput;
 }) => {
   const res = await axios.put(`/joc/${id}`, data);
+
+  return res.data;
+};
+
+export const updateStatusById = async ({
+  joc_no,
+  data,
+}: {
+  joc_no: string;
+  data: UpdateStatusInput;
+}) => {
+  const res = await axios.put(`/joc/${joc_no}/update-status`, data);
 
   return res.data;
 };

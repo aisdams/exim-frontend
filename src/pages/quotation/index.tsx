@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Quotation } from '@/types';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -161,6 +162,7 @@ const columnsDef = [
     cell: (info) => {
       const { quo_no } = info.row.original;
       const [isCopying, setIsCopying] = useState(false);
+      const router = useRouter();
 
       const handleCopyData = async () => {
         try {
@@ -169,14 +171,11 @@ const columnsDef = [
           const response = await QuotationService.copyQuotationData(quo_no);
 
           if (response.status === 200) {
-            console.log('Data has been copied successfully');
-          } else {
-            console.error('Failed to copy data:', response.statusText);
+            toast.success('Status successfully changed');
           }
-        } catch (error) {
-          console.error('Error copying data:', error);
         } finally {
           setIsCopying(false);
+          router.reload();
         }
       };
 
@@ -249,6 +248,23 @@ const columnsDef = [
         },
       });
 
+      const router = useRouter();
+
+      const changeStatus = async (quo_no: string) => {
+        try {
+          const data = { status: 'Executed' };
+
+          const response = await QuotationService.updateStatusById({
+            quo_no,
+            data,
+          });
+
+          toast.success('Status successfully changed');
+          router.reload();
+        } finally {
+        }
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -274,9 +290,9 @@ const columnsDef = [
               <button
                 className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
                 onClick={() => {
-                  const currentStatus = quotationQuery.data?.data.status;
-
-                  if (currentStatus === 'InProgress') {
+                  const quo_no = quotationQuery.data?.data.quo_no;
+                  if (quo_no) {
+                    changeStatus(quo_no);
                   }
                 }}
               >
@@ -382,17 +398,6 @@ export default function Index() {
     setSearchResults(filteredData || []);
   };
 
-  const filterDataByStatus = (selectedStatus: any) => {
-    if (selectedStatus === 'All') {
-      setSearchResults(quotationsQuery.data?.data || []);
-    } else {
-      const filteredData = quotationsQuery.data?.data.filter((item) => {
-        return item.status === selectedStatus;
-      });
-      setSearchResults(filteredData || []);
-    }
-  };
-
   const quotationsQuery = useQuery({
     queryKey: ['quotations', { fetchDataOptions, searchValue }],
     queryFn: () => fetchData(fetchDataOptions, searchValue),
@@ -401,6 +406,23 @@ export default function Index() {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
+
+  const [tableData, setTableData] = useState(quotationsQuery.data?.data || []);
+
+  const filterDataByStatus = (status: string) => {
+    if (status === 'All') {
+      setTableData(quotationsQuery.data?.data || []);
+    } else {
+      const filteredData = quotationsQuery.data?.data.filter(
+        (item) => item.status === status
+      );
+      setTableData(filteredData || []);
+    }
+  };
+
+  useEffect(() => {
+    filterDataByStatus(selectedStatus);
+  }, [selectedStatus]);
 
   const pagination = useMemo(
     () => ({
@@ -423,7 +445,9 @@ export default function Index() {
 
   const table = useReactTable({
     columns,
-    data: searchValue ? searchResults : quotationsQuery.data?.data ?? [],
+    data: searchValue
+      ? searchResults
+      : tableData || quotationsQuery.data?.data || [],
     pageCount: quotationsQuery.data?.pagination.total_page ?? -1,
     state: {
       pagination,
@@ -463,9 +487,9 @@ export default function Index() {
                 />
               </div>
               <Select
-                value={orderBy}
+                value={selectedStatus}
                 onValueChange={(selectedStatus) => {
-                  setOrderBy(selectedStatus);
+                  setSelectedStatus(selectedStatus);
                   filterDataByStatus(selectedStatus);
                 }}
               >
@@ -475,7 +499,7 @@ export default function Index() {
                 <SelectContent align="end" className="dark:text-black">
                   <SelectGroup>
                     <SelectItem value="All">All</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
+                    <SelectItem value="InProgress">InProgress</SelectItem>
                     <SelectItem value="Executed">Executed</SelectItem>
                   </SelectGroup>
                 </SelectContent>
