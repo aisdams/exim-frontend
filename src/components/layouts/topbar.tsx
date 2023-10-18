@@ -135,7 +135,10 @@ export default function Topbar() {
               <DropdownMenuLabel>Welcome</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link href="/">My Profile</Link>
+                <button>
+                  {' '}
+                  <Link href="/change/profile">My Profile</Link>
+                </button>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>

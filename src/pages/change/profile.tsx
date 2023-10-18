@@ -18,6 +18,7 @@ export default function Profile() {
           <Image src={Avatar} alt="" width={80} height={80} />
         </div>
 
+        <div className=""></div>
         <div className="">
           <InputText name="name" placeholder="Name..." />
         </div>
