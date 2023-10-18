@@ -43,7 +43,6 @@ export type createJobOrderInput = {
 export type updateJobOrderInput = Omit<
   createJobOrderInput,
   'jo_date',
-  'quo_no',
   'customer_code',
   'port_code'
 >;

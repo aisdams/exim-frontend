@@ -73,20 +73,20 @@ export const getServerSideProps: GetServerSideProps<{
 
 const defaultValues = {
   type: '',
-  no_mbl: '',
   vessel: '',
   loading: '',
   discharge: '',
   no_container: '',
+  jo_no: '',
 };
 
 const Schema = yup.object({
   type: yup.string().required(),
-  no_mbl: yup.string().required(),
   vessel: yup.string().required(),
   loading: yup.string().required(),
   discharge: yup.string().required(),
   no_container: yup.string().required(),
+  jo_no: yup.string().required(),
 });
 
 type JOCSchema = InferType<typeof Schema>;
@@ -177,7 +177,6 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
         setValue('type', data.type);
       } else {
       }
-      setValue('no_mbl', data.no_mbl);
       setValue('vessel', data.vessel);
       setValue('loading', data.loading);
       setValue('discharge', data.discharge);
@@ -323,6 +322,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                       </div>
 
                       <InputText name="no_container" mandatory />
+                      <InputText name="jo_no" mandatory />
                     </div>
                   </div>
                 </div>

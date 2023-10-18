@@ -198,7 +198,7 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                     </Text>
                     <Text style={styles.tableColumnTwo}>{dateString}</Text>
                     <Text style={styles.tableColumnTwo}>
-                      {jocQuery.data.data.quo_no || '-'}
+                      {jocQuery.data.data.type || '-'}
                     </Text>
                   </View>
                 </View>
@@ -262,11 +262,11 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
                   <Text style={styles.tableCell}>
-                    {customer ? customer.partner_name : ''}
+                    {jocQuery.data.data.agent}
                   </Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>-</Text>
+                  <Text style={styles.tableCell}>ONEYBKKCBP13454</Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
                   <Text style={styles.tableCell}>

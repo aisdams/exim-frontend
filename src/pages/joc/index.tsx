@@ -98,31 +98,9 @@ const columnsDef = [
       );
     },
   }),
-  columnHelper.display({
+  columnHelper.accessor('type', {
     header: 'TYPE',
-    cell: (info) => {
-      const [type, setType] = useState('');
-
-      useEffect(() => {
-        const quoNo = info.row.original.quo_no
-          ? info.row.original.quo_no.toString()
-          : null;
-
-        if (quoNo) {
-          quotationService.getById(quoNo).then((quotation) => {
-            if (quotation && quotation.data && quotation.data.type) {
-              setType(quotation.data.type);
-            }
-          });
-        }
-      }, []);
-
-      return (
-        <div>
-          <div>{type}</div>
-        </div>
-      );
-    },
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('agent', {
     header: 'AGENT',

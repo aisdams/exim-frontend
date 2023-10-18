@@ -1,11 +1,34 @@
+import { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
-import { Calendar } from '@/components/ui/calendar';
+import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
+import { Customer, Port } from '@/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
-import { GetServerSideProps } from 'next';
+import { Label } from '@radix-ui/react-label';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { Command, Printer, Search } from 'lucide-react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { InferType } from 'yup';
+
+import * as JoService from '@/apis/jo.api';
+import { getNextPageParam } from '@/lib/react-query';
+import { cn, getErrMessage } from '@/lib/utils';
+import yup from '@/lib/yup';
+import InputDisable from '@/components/forms/input-disable';
+import InputNumber from '@/components/forms/input-number';
+import InputText from '@/components/forms/input-text';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -15,29 +38,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { InferType } from 'yup';
-
-import * as JoService from '@/apis/jo.api';
-import { getNextPageParam } from '@/lib/react-query';
-import { cn, getErrMessage } from '@/lib/utils';
-import yup from '@/lib/yup';
-import { Button, buttonVariants } from '@/components/ui/button';
-import InputText from '@/components/forms/input-text';
-import { Label } from '@radix-ui/react-label';
-import { Input } from '@/components/ui/input';
-import { Command, Printer, Search } from 'lucide-react';
-import { ParsedUrlQuery } from 'querystring';
 import { Textarea } from '@/components/ui/textarea';
-import InputNumber from '@/components/forms/input-number';
-import InputDisable from '@/components/forms/input-disable';
-import { Customer, Port } from '@/types';
 
 const defaultValues = {
   shipper: '',
@@ -101,6 +102,43 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
+
+  // get data jo then get data quotation
+  const fetchJOData = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:8089/api/jo/${id}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error('Gagal mengambil data');
+    }
+  };
+
+  const { data: JOData } = useQuery(['jo', id], () => {
+    if (typeof id === 'string') {
+      return fetchJOData(id).then((joData) => {
+        const quoNo = joData?.data?.quo_no;
+
+        const fetchQuotationData = async (quoNo: string) => {
+          try {
+            const response = await fetch(
+              `http://localhost:8089/api/quotation/${quoNo}`
+            );
+            const quotationData = await response.json();
+            return quotationData;
+          } catch (error) {
+            throw new Error('Gagal mengambil data quotation');
+          }
+        };
+
+        return fetchQuotationData(quoNo);
+      });
+    } else {
+      throw new Error('jo harus menjadi string');
+    }
+  });
+  console.log(JOData);
+
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
   const [selectedPortThree, setSelectedPortThree] = useState<Port | null>(null);
@@ -219,11 +257,11 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
     updatedJOMutation.mutate({ id, data });
   };
   return (
-    <div className="overflow-hidden ml-3">
+    <div className="ml-3 overflow-hidden">
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-2 gap-3">
-            <div className="border border-graySecondary rounded-md">
+            <div className="rounded-md border border-graySecondary">
               <div className="flex w-full bg-blueHeaderCard p-2">
                 <Command />
                 {''}
@@ -239,7 +277,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
 
                 <div className="grid gap-2">
                   <Input
-                    className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted w-full border-none"
+                    className="w-full border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted"
                     disabled
                     placeholder="~AUTO~"
                   />
@@ -249,16 +287,19 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                     disabled
                     value={`${dd}-${mm}-${yyyy}`}
                   />
-                  <Input placeholder="Import" disabled />
+                  <Input
+                    placeholder={JOData?.data?.type || 'Loading...'}
+                    disabled
+                  />
                   <Input
                     name="customer_code"
-                    placeholder="PT SARANA MULYA"
+                    placeholder={JOData?.data?.customer || 'Loading...'}
                     disabled
                   />
                 </div>
               </div>
             </div>
-            <div className="border border-graySecondary rounded-md">
+            <div className="rounded-md border border-graySecondary">
               <div className="flex w-full bg-blueHeaderCard p-2">
                 <Command />
                 <h1>Data Quotation</h1>
@@ -274,13 +315,16 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 <div className="grid">
                   <Input name="quo_no" placeholder={id} value={id} />
                   <Input placeholder="11-01-2023" disabled />
-                  <Input placeholder="Sales" disabled />
+                  <Input
+                    placeholder={JOData?.data?.sales || 'Loading...'}
+                    disabled
+                  />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex gap-3 border border-graySecondary rounded-md mt-5 p-5">
+          <div className="mt-5 flex gap-3 rounded-md border border-graySecondary p-5">
             <div className="grid gap-8">
               <Label>Shipper</Label>
               <Label>Consignee</Label>
@@ -305,8 +349,8 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 />
                 <button
                   className="
-          dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-          rounded-md text-white"
+          mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+          text-white dark:bg-blueLight"
                   onClick={openCustomerModal}
                 >
                   <Search className="w-4" />
@@ -319,8 +363,8 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 />
                 <button
                   className="
-          dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-          rounded-md text-white"
+          mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+          text-white dark:bg-blueLight"
                   onClick={openPortModal}
                 >
                   <Search className="w-4" />
@@ -333,8 +377,8 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 />
                 <button
                   className="
-          dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-          rounded-md text-white"
+          mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+          text-white dark:bg-blueLight"
                   onClick={openPortTwoModal}
                 >
                   <Search className="w-4" />
@@ -347,8 +391,8 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 />
                 <button
                   className="
-          dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-          rounded-md text-white"
+          mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+          text-white dark:bg-blueLight"
                   onClick={openPortThreeModal}
                 >
                   <Search className="w-4" />
@@ -371,7 +415,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 my-3">
+          <div className="my-3 flex items-center gap-2">
             <Button className="bg-green-500">
               <Link href="/jo">Back</Link>
             </Button>
@@ -397,14 +441,14 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
           {isCustomerModalOpen && (
             <div
               style={{ overflow: 'hidden' }}
-              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+              className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                 isCustomerModalOpen ? 'open' : 'closed'
               }`}
             >
               <div className="absolute inset-0 bg-black opacity-75"></div>
-              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+              <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                 <Button
-                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  className="absolute -top-9 right-0 !bg-transparent text-white"
                   onClick={closeCustomerModal}
                 >
                   <h1 className="text-xl">X</h1>
@@ -428,7 +472,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                         <TableCell className="font-medium">
                           {customer.unit}
                         </TableCell>
-                        <TableCell className="!w-2 !h-2 rounded-md">
+                        <TableCell className="!h-2 !w-2 rounded-md">
                           <Button
                             className=""
                             onClick={() => {
@@ -450,14 +494,14 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
           {isPortModalOpen && (
             <div
               style={{ overflow: 'hidden' }}
-              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+              className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                 isPortModalOpen ? 'open' : 'closed'
               }`}
             >
               <div className="absolute inset-0 bg-black opacity-75"></div>
-              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+              <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                 <Button
-                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  className="absolute -top-9 right-0 !bg-transparent text-white"
                   onClick={closePortModal}
                 >
                   <h1 className="text-xl">X</h1>
@@ -477,7 +521,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                         <TableCell className="font-medium">
                           {port.port_name}
                         </TableCell>
-                        <TableCell className="!w-2 !h-2 rounded-md">
+                        <TableCell className="!h-2 !w-2 rounded-md">
                           <Button
                             className=""
                             onClick={() => {
@@ -499,14 +543,14 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
           {isPortTwoModalOpen && (
             <div
               style={{ overflow: 'hidden' }}
-              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+              className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                 isPortTwoModalOpen ? 'open' : 'closed'
               }`}
             >
               <div className="absolute inset-0 bg-black opacity-75"></div>
-              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+              <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                 <Button
-                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  className="absolute -top-9 right-0 !bg-transparent text-white"
                   onClick={closePortTwoModal}
                 >
                   <h1 className="text-xl">X</h1>
@@ -526,7 +570,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                         <TableCell className="font-medium">
                           {port.port_name}
                         </TableCell>
-                        <TableCell className="!w-2 !h-2 rounded-md">
+                        <TableCell className="!h-2 !w-2 rounded-md">
                           <Button
                             className=""
                             onClick={() => {
@@ -548,14 +592,14 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
           {isPortThreeModalOpen && (
             <div
               style={{ overflow: 'hidden' }}
-              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+              className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                 isPortThreeModalOpen ? 'open' : 'closed'
               }`}
             >
               <div className="absolute inset-0 bg-black opacity-75"></div>
-              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+              <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                 <Button
-                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  className="absolute -top-9 right-0 !bg-transparent text-white"
                   onClick={closePortThreeModal}
                 >
                   <h1 className="text-xl">X</h1>
@@ -575,7 +619,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                         <TableCell className="font-medium">
                           {port.port_name}
                         </TableCell>
-                        <TableCell className="!w-2 !h-2 rounded-md">
+                        <TableCell className="!h-2 !w-2 rounded-md">
                           <Button
                             className=""
                             onClick={() => {

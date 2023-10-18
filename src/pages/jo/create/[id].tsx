@@ -1,35 +1,35 @@
+import { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
-import { Calendar } from '@/components/ui/calendar';
+import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
-import { ParsedUrlQuery } from 'querystring';
-import { GetServerSideProps } from 'next';
+import { Label } from '@radix-ui/react-label';
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { Command, Search } from 'lucide-react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
 
 import * as JoService from '@/apis/jo.api';
 import * as QuotationService from '@/apis/quotation.api';
+import { axios } from '@/lib/axios';
 import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
-import { Button, buttonVariants } from '@/components/ui/button';
-import InputText from '@/components/forms/input-text';
-import { Label } from '@radix-ui/react-label';
-import { Input } from '@/components/ui/input';
-import { Command, Search } from 'lucide-react';
-import { Textarea } from '@/components/ui/textarea';
-import { axios } from '@/lib/axios';
 import InputDisable from '@/components/forms/input-disable';
+import InputText from '@/components/forms/input-text';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 const defaultValues = {
   jo_date: '',
@@ -64,10 +64,32 @@ export const getServerSideProps: GetServerSideProps<{
 type JoCreateProps = {
   id: string;
 };
+
+// [13.39, 18/10/2023] .:
+// [13.39, 18/10/2023] .: import { fetchQuotationData } from './path-to-fetchQuotationData'; // Sesuaikan dengan struktur proyek Anda.
+
+// // ...
+
+// const { data: quotationData } = useQuery(['quotation', id], () => fetchQuotationData(id));
+
 const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
   const router = useRouter();
   const qc = useQueryClient();
 
+  const fetchQuotationData = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:8089/api/quotation/${id}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error('Get Data');
+    }
+  };
+  const { data: quotationData } = useQuery(['quotation', id], () =>
+    fetchQuotationData(id)
+  );
+
+  // get data success
   const [dd, setDd] = useState('');
   const [mm, setMm] = useState('');
   const [yyyy, setYyyy] = useState('');
@@ -110,11 +132,11 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
   };
 
   return (
-    <div className="overflow-hidden ml-3">
+    <div className="ml-3 overflow-hidden">
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-2 gap-3">
-            <div className="border border-graySecondary rounded-md">
+            <div className="rounded-md border border-graySecondary">
               <div className="flex w-full bg-blueHeaderCard p-2">
                 <Command />
                 <h1>Data Order</h1>
@@ -129,7 +151,7 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
 
                 <div className="grid gap-2">
                   <Input
-                    className="!bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted w-full border-none"
+                    className="w-full border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted"
                     disabled
                     placeholder="~AUTO~"
                   />
@@ -139,17 +161,22 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
                     disabled
                     value={`${dd}-${mm}-${yyyy}`}
                   />
-                  <Input placeholder="Import" disabled />
+                  <Input
+                    placeholder={quotationData?.data?.type || 'Loading...'}
+                    disabled
+                  />
                   <InputDisable
                     name="customer_code"
                     disabled
-                    placeholder="CTM-00001"
-                    value="CTM-00001"
+                    placeholder={
+                      quotationData?.data?.customer_code || 'Loading...'
+                    }
+                    value={quotationData?.data?.customer_code || 'Loading...'}
                   />
                 </div>
               </div>
             </div>
-            <div className="border border-graySecondary rounded-md">
+            <div className="rounded-md border border-graySecondary">
               <div className="flex w-full bg-blueHeaderCard p-2">
                 <Command />
                 <h1>Data Quotation</h1>
@@ -169,8 +196,14 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
                     value={id}
                     disabled
                   />
-                  <Input placeholder="11-01-2023" disabled />
-                  <Input placeholder="Sales" disabled />
+                  <Input
+                    placeholder={quotationData?.data?.createdAt || 'Loading...'}
+                    disabled
+                  />
+                  <Input
+                    placeholder={quotationData?.data?.sales || 'Loading...'}
+                    disabled
+                  />
                 </div>
               </div>
             </div>

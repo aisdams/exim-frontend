@@ -46,7 +46,7 @@ const InputNumber: React.FC<InputNumberProps> = ({
 
       <div
         className={cn(
-          'relative flex items-center overflow-hidden rounded-md border focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary w-[300px]',
+          'relative flex w-[300px] items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >

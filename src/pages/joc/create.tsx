@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import InputText from '@/components/forms/input-text';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { IS_DEV } from '@/constants';
+import { Customer, Port } from '@/types';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Command, Search } from 'lucide-react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
-import { IS_DEV } from '@/constants';
-import { yupResolver } from '@hookform/resolvers/yup';
+
+import * as JOCService from '@/apis/joc.api';
 import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
-import * as JOCService from '@/apis/joc.api';
 import yup from '@/lib/yup';
-import { useRouter } from 'next/router';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Input } from '@/components/ui/input';
-import InputSelect from '@/components/forms/input-select';
-import { Textarea } from '@/components/ui/textarea';
 import InputDisable from '@/components/forms/input-disable';
+import InputSelect from '@/components/forms/input-select';
+import InputText from '@/components/forms/input-text';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Table,
   TableBody,
@@ -27,8 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Customer, Port } from '@/types';
-import Link from 'next/link';
+import { Textarea } from '@/components/ui/textarea';
 
 const defaultValues = {
   no_mbl: '',
@@ -175,14 +176,14 @@ export default function create() {
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-2 gap-3 mt-10">
-            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm h-max pb-[4rem]">
-              <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-2">
+          <div className="mt-10 grid grid-cols-2 gap-3">
+            <div className="grid h-max gap-2 rounded-sm pb-[4rem] dark:bg-graySecondary/50">
+              <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                 <Command className="text-white" />
                 <h1> Data JOC</h1>
               </div>
 
-              <div className="px-3 grid gap-3">
+              <div className="grid gap-3 px-3">
                 <div className="grid grid-cols-[1fr_2fr]">
                   <div className="grid gap-5">
                     <Label>Type : </Label>
@@ -220,8 +221,8 @@ export default function create() {
                       />
                       <button
                         className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
                         onClick={openCustomerModal}
                       >
                         <Search className="w-4" />
@@ -234,8 +235,8 @@ export default function create() {
                       />
                       <button
                         className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
                         onClick={openPortModal}
                       >
                         <Search className="w-4" />
@@ -246,13 +247,13 @@ export default function create() {
               </div>
             </div>
 
-            <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm h-max pb-[4rem]">
-              <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-2">
+            <div className="grid h-max gap-2 rounded-sm pb-[4rem] dark:bg-graySecondary/50">
+              <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                 <Command className="text-white" />
                 <h1> Data Consolidation</h1>
               </div>
 
-              <div className="px-3 grid gap-3">
+              <div className="grid gap-3 px-3">
                 <div className="grid grid-cols-[1fr_2fr]">
                   <div className="grid gap-5">
                     <Label>Discharge :</Label>
@@ -268,8 +269,8 @@ export default function create() {
                       />
                       <button
                         className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
                         onClick={openPortTwoModal}
                       >
                         <Search className="w-4" />
@@ -317,14 +318,14 @@ export default function create() {
           {isCustomerModalOpen && (
             <div
               style={{ overflow: 'hidden' }}
-              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+              className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                 isCustomerModalOpen ? 'open' : 'closed'
               }`}
             >
               <div className="absolute inset-0 bg-black opacity-75"></div>
-              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+              <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                 <Button
-                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  className="absolute -top-9 right-0 !bg-transparent text-white"
                   onClick={closeCustomerModal}
                 >
                   <h1 className="text-xl">X</h1>
@@ -348,7 +349,7 @@ export default function create() {
                         <TableCell className="font-medium">
                           {customer.unit}
                         </TableCell>
-                        <TableCell className="!w-2 !h-2 rounded-md">
+                        <TableCell className="!h-2 !w-2 rounded-md">
                           <Button
                             className=""
                             onClick={() => {
@@ -370,14 +371,14 @@ export default function create() {
           {isPortModalOpen && (
             <div
               style={{ overflow: 'hidden' }}
-              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+              className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                 isPortModalOpen ? 'open' : 'closed'
               }`}
             >
               <div className="absolute inset-0 bg-black opacity-75"></div>
-              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+              <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                 <Button
-                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  className="absolute -top-9 right-0 !bg-transparent text-white"
                   onClick={closePortModal}
                 >
                   <h1 className="text-xl">X</h1>
@@ -397,7 +398,7 @@ export default function create() {
                         <TableCell className="font-medium">
                           {port.port_name}
                         </TableCell>
-                        <TableCell className="!w-2 !h-2 rounded-md">
+                        <TableCell className="!h-2 !w-2 rounded-md">
                           <Button
                             className=""
                             onClick={() => {
@@ -419,14 +420,14 @@ export default function create() {
           {isPortTwoModalOpen && (
             <div
               style={{ overflow: 'hidden' }}
-              className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+              className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                 isPortTwoModalOpen ? 'open' : 'closed'
               }`}
             >
               <div className="absolute inset-0 bg-black opacity-75"></div>
-              <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+              <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                 <Button
-                  className="absolute -top-9 right-0 text-white !bg-transparent"
+                  className="absolute -top-9 right-0 !bg-transparent text-white"
                   onClick={closePortTwoModal}
                 >
                   <h1 className="text-xl">X</h1>
@@ -446,7 +447,7 @@ export default function create() {
                         <TableCell className="font-medium">
                           {port.port_name}
                         </TableCell>
-                        <TableCell className="!w-2 !h-2 rounded-md">
+                        <TableCell className="!h-2 !w-2 rounded-md">
                           <Button
                             className=""
                             onClick={() => {

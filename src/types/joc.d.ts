@@ -35,4 +35,11 @@ export type UpdateStatusInput = {
   status?: string | null;
 };
 
-export type updateJOCInput = Omit<createJOCInput, 'etd', 'eta', 'status'>;
+export type updateJOCInput = {
+  type?: string | null;
+  vessel?: string | null;
+  no_container?: string | null;
+  loading: string | null;
+  discharge: string | null;
+  jo_no: string | null;
+};

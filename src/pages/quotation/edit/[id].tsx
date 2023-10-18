@@ -129,7 +129,6 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
   const handleCostCreated = (newItemCost: any) => {
     const newCost = newItemCost.item_cost;
 
-    // Set nilai inputText menjadi item_cost yang baru
     setValue('item_cost', newCost);
   };
 
@@ -388,7 +387,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         </button>
                       </div>
                       <InputNumber name="kurs" mandatory />
-                      <div className="hidden">
+                      <div>
                         <InputText name="item_cost" placeholder="COST-00001" />
                       </div>
                     </div>
