@@ -98,7 +98,7 @@ const columnsDef = [
       );
     },
   }),
-  columnHelper.accessor('quo_no', {
+  columnHelper.display({
     header: 'TYPE',
     cell: (info) => {
       const [type, setType] = useState('');
@@ -132,7 +132,7 @@ const columnsDef = [
     header: 'NO MBL',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('quo_no', {
+  columnHelper.accessor('joc_no', {
     enableSorting: false,
     header: () => (
       <div>
@@ -140,35 +140,12 @@ const columnsDef = [
         <div>DISCHARGE</div>
       </div>
     ),
-    cell: (info) => {
-      const [loading, setLoading] = useState('');
-      const [discharge, setDischarge] = useState('');
-
-      useEffect(() => {
-        // const quoNo = info.row.original.quo_no?.toString();
-        const quoNo = info.row.original.quo_no
-          ? info.row.original.quo_no.toString()
-          : '';
-        quotationService.getById(quoNo).then((quotation) => {
-          if (quotation && quotation.data && quotation.data.loading) {
-            setLoading(quotation.data.loading);
-          }
-        });
-
-        quotationService.getById(quoNo).then((quotation) => {
-          if (quotation && quotation.data && quotation.data.discharge) {
-            setDischarge(quotation.data.discharge);
-          }
-        });
-      }, []);
-
-      return (
-        <div>
-          <div>{loading}</div>
-          <div>{discharge}</div>
-        </div>
-      );
-    },
+    cell: (info) => (
+      <div>
+        <div>{info.row.original.loading}</div>
+        <div>{info.row.original.discharge}</div>
+      </div>
+    ),
   }),
   columnHelper.accessor('eta', {
     header: () => (
@@ -179,11 +156,6 @@ const columnsDef = [
     ),
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('no_count', {
-    header: 'NO COUNT',
-    cell: (info) => info.getValue(),
-  }),
-
   columnHelper.display({
     id: 'jml',
     header: 'JML JO',
@@ -250,6 +222,7 @@ const columnsDef = [
         },
       });
       const router = useRouter();
+      const status = jocQuery.data?.data.status;
 
       const changeStatus = async (joc_no: string) => {
         try {
@@ -278,29 +251,33 @@ const columnsDef = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="font-normal">
-            <DropdownMenuItem className="p-0">
-              <Link
-                href={`/joc/edit/${joc_no}`}
-                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
-              >
-                <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                Edit
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="p-0">
-              <button
-                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
-                onClick={() => {
-                  const joc_no = jocQuery.data?.data.joc_no;
-                  if (joc_no) {
-                    changeStatus(joc_no);
-                  }
-                }}
-              >
-                <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                Executed
-              </button>
-            </DropdownMenuItem>
+            {status !== 'Executed' && (
+              <DropdownMenuItem className="p-0">
+                <Link
+                  href={`/joc/edit/${joc_no}`}
+                  className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+                >
+                  <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                  Edit
+                </Link>
+              </DropdownMenuItem>
+            )}
+            {status !== 'Executed' && (
+              <DropdownMenuItem className="p-0">
+                <button
+                  className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+                  onClick={() => {
+                    const joc_no = jocQuery.data?.data.joc_no;
+                    if (joc_no) {
+                      changeStatus(joc_no);
+                    }
+                  }}
+                >
+                  <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                  Executed
+                </button>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem
               onClick={(e) => {
                 e.preventDefault();
@@ -369,7 +346,7 @@ export default function Index() {
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 15,
   });
 
   const fetchDataOptions = {
@@ -395,14 +372,21 @@ export default function Index() {
       const filteredData = jocQuery.data?.data.filter(
         (item) => item.status === status
       );
-      setTableData(filteredData || []);
+      setTableData(filteredData || [] || jocQuery.data?.data || []);
     }
     jocQuery.data?.data || [];
   };
 
   useEffect(() => {
+    setTableData(jocQuery.data?.data || []);
+  }, []);
+
+  // useEffect(() => {
+  //   filterDataByStatus(selectedStatus);
+  // }, [selectedStatus]);
+  useEffect(() => {
     filterDataByStatus(selectedStatus);
-  }, [selectedStatus]);
+  }, [selectedStatus, jocQuery.data]);
 
   const pagination = useMemo(
     () => ({
@@ -525,7 +509,7 @@ export default function Index() {
                     name=""
                     id=""
                     placeholder="Search..."
-                    className="rounded-md border border-graySecondary dark:border-white"
+                    className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
                   />
                 </div>
 
@@ -553,7 +537,7 @@ export default function Index() {
                       name=""
                       id=""
                       placeholder="Search...."
-                      className="rounded-md border border-graySecondary dark:border-white"
+                      className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
                       value={searchValue}
                       onChange={(e) => {
                         setSearchValue(e.target.value);

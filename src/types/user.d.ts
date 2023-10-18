@@ -3,7 +3,7 @@ export type User = {
   employee_code: string | null;
   name: string;
   email: string | null;
-  photo: string | null;
+  photo: string;
   verified: boolean | null;
   password: string;
   role_code: string;

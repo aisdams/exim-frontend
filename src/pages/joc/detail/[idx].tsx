@@ -1,21 +1,21 @@
-import InputText from '@/components/forms/input-text';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Command } from 'lucide-react';
-import { toast } from 'react-toastify';
 import React, { useMemo, useState } from 'react';
-import ReactTable from '@/components/table/react-table';
-import * as JOCService from '../../../apis/joc.api';
-import { cn, getErrMessage } from '@/lib/utils';
+import { JOC } from '@/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createColumnHelper,
   getCoreRowModel,
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Command } from 'lucide-react';
+import { toast } from 'react-toastify';
 
-import { JOC } from '@/types';
+import { cn, getErrMessage } from '@/lib/utils';
+import InputText from '@/components/forms/input-text';
+import ReactTable from '@/components/table/react-table';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import * as JOCService from '../../../apis/joc.api';
 
 const columnHelper = createColumnHelper<JOC>();
 
@@ -28,7 +28,7 @@ const columnsDef = [
     header: 'Customer',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('quo_no', {
+  columnHelper.display({
     header: 'TYPE',
     cell: (info) => info.getValue(),
   }),
@@ -40,7 +40,7 @@ const columnsDef = [
     header: 'NO. BL',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('quo_no', {
+  columnHelper.display({
     header: 'LOADING',
     cell: (info) => info.getValue(),
   }),
@@ -62,7 +62,7 @@ export default function DetailJOC() {
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 15,
   });
 
   const fetchDataOptions = {
@@ -122,7 +122,7 @@ export default function DetailJOC() {
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-sm dark:bg-graySecondary/70">
-          <div className="bg-blueHeaderCard w-full">
+          <div className="w-full bg-blueHeaderCard">
             <div className="flex">
               <Command />
               <h1>Data JOC</h1>
@@ -153,7 +153,7 @@ export default function DetailJOC() {
           </div>
         </div>
         <div className="rounded-sm dark:bg-graySecondary/70">
-          <div className="bg-blueHeaderCard w-full">
+          <div className="w-full bg-blueHeaderCard">
             <div className="flex">
               <Command />
               <h1>Data Consolidation</h1>
@@ -191,10 +191,10 @@ export default function DetailJOC() {
       <Button>Back</Button>
 
       <div className="flex">
-        <div className="bg-blueNav py-1 px-2">Data</div>
-        <div className="bg-green-500 py-1 px-2">CN</div>
-        <div className="bg-green-500 py-1 px-2">DN</div>
-        <div className="bg-green-500 py-1 px-2">PR</div>
+        <div className="bg-blueNav px-2 py-1">Data</div>
+        <div className="bg-green-500 px-2 py-1">CN</div>
+        <div className="bg-green-500 px-2 py-1">DN</div>
+        <div className="bg-green-500 px-2 py-1">PR</div>
       </div>
 
       <ReactTable tableInstance={table} isLoading={JOCsQuery.isFetching} />

@@ -239,7 +239,6 @@ const columnsDef = [
       const deleteQuotationMutation = info.table.options.meta?.deleteMutation;
       const [open, setOpen] = useState(false);
       const [newStatus, setNewStatus] = useState('InProgress');
-      const currentStatus = info.getValue();
       const quotationQuery = useQuery({
         queryKey: ['quotation', quo_no],
         queryFn: () => QuotationService.getById(quo_no),
@@ -264,7 +263,7 @@ const columnsDef = [
         } finally {
         }
       };
-
+      const status = quotationQuery.data?.data.status;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -277,29 +276,33 @@ const columnsDef = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="font-normal">
-            <DropdownMenuItem className="p-0">
-              <Link
-                href={`/quotation/edit/${quo_no}`}
-                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
-              >
-                <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                Edit
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="p-0">
-              <button
-                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
-                onClick={() => {
-                  const quo_no = quotationQuery.data?.data.quo_no;
-                  if (quo_no) {
-                    changeStatus(quo_no);
-                  }
-                }}
-              >
-                <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                Executed
-              </button>
-            </DropdownMenuItem>
+            {status !== 'Executed' && (
+              <DropdownMenuItem className="p-0">
+                <Link
+                  href={`/quotation/edit/${quo_no}`}
+                  className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+                >
+                  <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                  Edit
+                </Link>
+              </DropdownMenuItem>
+            )}
+            {status !== 'Executed' && (
+              <DropdownMenuItem className="p-0">
+                <button
+                  className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+                  onClick={() => {
+                    const quo_no = quotationQuery.data?.data.quo_no;
+                    if (quo_no) {
+                      changeStatus(quo_no);
+                    }
+                  }}
+                >
+                  <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                  Executed
+                </button>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem
               onClick={(e) => {
                 e.preventDefault();
@@ -363,11 +366,12 @@ export default function Index() {
   const [searchValue, setSearchValue] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
   const debouncedSearchValue = useDebouncedValue(searchValue, 500);
+
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 15,
   });
 
   const fetchDataOptions = {
@@ -383,20 +387,20 @@ export default function Index() {
     });
   };
 
-  const handleSearch = () => {
-    const filteredData = quotationsQuery.data?.data.filter((item) => {
-      if (selectedStatus === 'All') {
-        return item.status.toLowerCase().includes(searchValue.toLowerCase());
-      } else {
-        return (
-          item.status.toLowerCase().includes(searchValue.toLowerCase()) &&
-          item.status === selectedStatus
-        );
-      }
-    });
+  // const handleSearch = () => {
+  //   const filteredData = quotationsQuery.data?.data.filter((item) => {
+  //     if (selectedStatus === 'All') {
+  //       return item.status.toLowerCase().includes(searchValue.toLowerCase());
+  //     } else {
+  //       return (
+  //         item.status.toLowerCase().includes(searchValue.toLowerCase()) &&
+  //         item.status === selectedStatus
+  //       );
+  //     }
+  //   });
 
-    setSearchResults(filteredData || []);
-  };
+  //   setSearchResults(filteredData || []);
+  // };
 
   const quotationsQuery = useQuery({
     queryKey: ['quotations', { fetchDataOptions, searchValue }],
@@ -416,14 +420,21 @@ export default function Index() {
       const filteredData = quotationsQuery.data?.data.filter(
         (item) => item.status === status
       );
-      setTableData(filteredData || []);
+      setTableData(filteredData || [] || quotationsQuery.data?.data || []);
     }
     quotationsQuery.data?.data || [];
   };
 
   useEffect(() => {
+    setTableData(quotationsQuery.data?.data || []);
+  }, []);
+
+  // useEffect(() => {
+  //   filterDataByStatus(selectedStatus);
+  // }, [selectedStatus]);
+  useEffect(() => {
     filterDataByStatus(selectedStatus);
-  }, [selectedStatus]);
+  }, [selectedStatus, quotationsQuery.data]);
 
   const pagination = useMemo(
     () => ({
@@ -489,10 +500,7 @@ export default function Index() {
               </div>
               <Select
                 value={selectedStatus}
-                onValueChange={(selectedStatus) => {
-                  setSelectedStatus(selectedStatus);
-                  filterDataByStatus(selectedStatus);
-                }}
+                onValueChange={(newStatus) => setSelectedStatus(newStatus)}
               >
                 <SelectTrigger className="h-7 w-max bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                   <SelectValue placeholder="Order by" className="" />
@@ -527,7 +535,7 @@ export default function Index() {
                     name=""
                     id=""
                     placeholder="Search...."
-                    className="rounded-md border border-graySecondary dark:border-white"
+                    className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
                     value={searchValue}
                     onChange={(e) => {
                       setSearchValue(e.target.value);
@@ -548,7 +556,7 @@ export default function Index() {
                       value={orderByThree}
                       onValueChange={setOrderByThree}
                     >
-                      <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
+                      <SelectTrigger className="h-7 w-1/2 !bg-transparent dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                         <SelectValue placeholder="Order by" className="" />
                       </SelectTrigger>
                       <SelectContent align="end" className="dark:text-black">
@@ -565,7 +573,7 @@ export default function Index() {
                       name=""
                       id=""
                       placeholder="Search...."
-                      className="rounded-md border border-graySecondary dark:border-white"
+                      className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
                       value={searchValue}
                       onChange={(e) => {
                         setSearchValue(e.target.value);

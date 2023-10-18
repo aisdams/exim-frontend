@@ -241,7 +241,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
     <div className="ml-3 overflow-hidden">
       <div className="mb-4 flex gap-3 ">
         <Command className="text-blueLight" />
-        <h1 className="">Add Quotation</h1>
+        <h1 className="">Edit Quotation</h1>
       </div>
       {quotationQuery.isLoading ? (
         <Loader dark />
@@ -299,6 +299,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                           }
                         />
                         <button
+                          type="button"
                           className="
                   mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
                   text-white dark:bg-blueLight"
@@ -358,6 +359,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                           value={selectedPort ? selectedPort.port_name : ''}
                         />
                         <button
+                          type="button"
                           className="
                   mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
                   text-white dark:bg-blueLight"
@@ -376,6 +378,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                           }
                         />
                         <button
+                          type="button"
                           className="
                   mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
                   text-white dark:bg-blueLight"

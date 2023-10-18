@@ -98,7 +98,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
                   : null
               }
               components={animatedComponents}
-              className="!w-[300px] dark:bg-black bg-transparent border border-muted-foreground dark:border-none rounded-md"
+              className="!w-[300px] rounded-md border border-muted-foreground bg-transparent dark:border-none dark:bg-black"
               classNamePrefix="select"
               theme={(theme) => ({
                 ...theme,

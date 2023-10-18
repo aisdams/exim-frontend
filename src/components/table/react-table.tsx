@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { flexRender, Table } from '@tanstack/react-table';
 import {
   ChevronLeft,
   ChevronRight,
@@ -6,6 +6,7 @@ import {
   ChevronsRight,
 } from 'lucide-react';
 
+import { cn } from '@/lib/utils';
 import {
   Select,
   SelectContent,
@@ -14,9 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import Loader from './loader';
 import ButtonNavigation from './button-navigation';
-import { flexRender, Table } from '@tanstack/react-table';
+import Loader from './loader';
 
 type ReactTableProps = {
   tableInstance: Table<any>;
@@ -30,8 +30,8 @@ const ReactTable: React.FC<ReactTableProps> = ({
   containerCN,
 }) => {
   return (
-    <div className="border-2 border-graySecondary/50 rounded-lg p-3 dark:bg-secondDarkBlue">
-      <div className="grid place-content-end mb-5">
+    <div className="rounded-lg border-2 border-graySecondary/50 p-3 dark:bg-secondDarkBlue">
+      <div className="mb-5 grid place-content-end">
         <Select
           defaultValue="15"
           onValueChange={(newValue) => {
@@ -62,15 +62,15 @@ const ReactTable: React.FC<ReactTableProps> = ({
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                className="transition-colors border-graySecondary/50 border-y-2"
+                className="border-y-2 border-graySecondary/50 transition-colors"
               >
-                <th className="p-2 border-l-2 border-graySecondary/70 dark:border-white/30">
+                <th className="border-l-2 border-graySecondary/70 p-2 dark:border-white/30">
                   No
                 </th>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="border-x-2 p-2 text-start text-sm font-medium tracking-wide border-graySecondary/70 dark:border-white/30"
+                    className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30"
                   >
                     <div className="text-center">
                       {header.isPlaceholder
@@ -85,7 +85,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
               </tr>
             ))}
           </thead>
-          <tbody className="relative font-normal border-l-2 border-graySecondary/70 dark:border-white/30">
+          <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
             {table.getRowModel().rows.map((row, idx) => {
               const rowNumber =
                 table.getState().pagination.pageIndex === 0
@@ -100,13 +100,13 @@ const ReactTable: React.FC<ReactTableProps> = ({
                     'transition-colors hover:bg-muted/50 [&:last-child>td]:!border-b-0'
                   )}
                 >
-                  <td className="border-b p-2 text-center font-semibold border-graySecondary/70">
+                  <td className="border-b border-graySecondary/70 p-2 text-center font-semibold">
                     {rowNumber + idx + 1}
                   </td>
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="border-b border-x-2 p-2 text-center border-graySecondary/70 dark:border-white/30"
+                      className="border-x-2 border-b border-graySecondary/70 p-2 text-center dark:border-white/30"
                     >
                       <div className="!grid">
                         {flexRender(
@@ -162,16 +162,24 @@ const ReactTable: React.FC<ReactTableProps> = ({
 
         {/* Next & Prev Buttons*/}
         <div className="flex flex-wrap items-center gap-2">
+          {/* [...Array(table.getPageCount() > 0 ? table.getPageCount() : 3)].map(
+         (_, pageIndex) => (
+            <button key={pageIndex} onClick={() => table.gotoPage(pageIndex)}>
+              {pageIndex + 1}
+            </button>
+          ) */}
+
           {[...Array(table.getPageCount() > 0 ? table.getPageCount() : 3)].map(
             (_, pageIndex) => (
               <button
                 key={pageIndex}
                 className={cn(
-                  'px-2 py-1 rounded-md',
+                  'rounded-md px-2 py-1',
                   table.getState().pagination.pageIndex === pageIndex
                     ? 'bg-black text-white'
                     : 'bg-transparent'
                 )}
+                // onClick={() => table.gotoPage(pageIndex)}
                 onClick={() => table.setPageIndex(pageIndex)}
               >
                 {pageIndex + 1}

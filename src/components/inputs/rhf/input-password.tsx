@@ -53,7 +53,7 @@ const InputPassword: React.FC<InputPasswordProps> = ({
           className={cn('mb-1 inline-block', labelCN)}
         >
           {label || startCase(name)}
-          {mandatory && <span className='text-[#f00]'>*</span>}
+          {mandatory && <span className="text-[#f00]">*</span>}
         </label>
       )}
 
@@ -87,18 +87,18 @@ const InputPassword: React.FC<InputPasswordProps> = ({
 
         {show ? (
           <Eye
-            className='absolute right-[12px] top-[50%] h-[1.1rem] w-[1.1rem] translate-y-[-50%] cursor-pointer'
+            className="absolute right-[12px] top-[50%] h-[1.1rem] w-[1.1rem] translate-y-[-50%] cursor-pointer text-black"
             onClick={() => setShow(false)}
           />
         ) : (
           <EyeOff
-            className='absolute right-[12px] top-[50%] h-[1.1rem] w-[1.1rem] translate-y-[-50%] cursor-pointer'
+            className="absolute right-[12px] top-[50%] h-[1.1rem] w-[1.1rem] translate-y-[-50%] cursor-pointer text-black"
             onClick={() => setShow(true)}
           />
         )}
       </div>
       {error?.message && (
-        <p className='text-xs text-red-600'>{error.message}</p>
+        <p className="text-xs text-red-600">{error.message}</p>
       )}
     </div>
   );

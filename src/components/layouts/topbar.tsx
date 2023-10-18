@@ -1,18 +1,21 @@
 import React, { useEffect } from 'react';
 import Image from 'next/image';
-import { useTheme } from 'next-themes';
-import Avatar from 'public/img/avatar.png';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import {
+  Bell,
+  Maximize,
+  Moon,
   Search,
+  Sun,
   ToggleLeft,
   ToggleRight,
-  Bell,
-  Moon,
-  Sun,
-  Maximize,
 } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
+import { useTheme } from 'next-themes';
+import Avatar from 'public/img/avatar.png';
+
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,8 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { Input } from '@/components/ui/input';
 
 export default function Topbar() {
   const { setTheme } = useTheme();
@@ -60,19 +62,19 @@ export default function Topbar() {
     });
 
   return (
-    <div className="p-4 flex justify-between items-center shadow-2xl">
-      <div className="flex items-center relative">
+    <div className="flex items-center justify-between p-4 shadow-2xl">
+      <div className="relative flex items-center">
         <Input
           type="search"
           placeholder="Search....."
-          className="border border-gray-400 rounded-full px-10 py-2 mr-4 w-full dark:bg-secondDarkBlue"
+          className="mr-4 w-full rounded-full border border-gray-400 px-10 py-2 dark:bg-secondDarkBlue"
         />
-        <div className="text-gray-600 absolute right-8 dark:text-white">
-          <Search className="w-5 h-5" />
+        <div className="absolute right-8 text-gray-600 dark:text-white">
+          <Search className="h-5 w-5" />
         </div>
       </div>
 
-      <div className="flex gap-4 items-center text-graySecondary dark:text-white">
+      <div className="flex items-center gap-4 text-graySecondary dark:text-white">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="dark:bg-darkBlue">
@@ -92,18 +94,18 @@ export default function Topbar() {
         </DropdownMenu>
 
         <div
-          className="dark:text-white cursor-pointer fullscreen-button"
+          className="fullscreen-button cursor-pointer dark:text-white"
           onClick={toggleFullScreen}
         >
           <Maximize />
         </div>
 
-        <div className="flex relative">
+        <div className="relative flex">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2">
               <Bell />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="shadow-lg rounded-lg w-40 mr-5 dark:text-black">
+            <DropdownMenuContent className="mr-5 w-40 rounded-lg shadow-lg dark:text-black">
               <DropdownMenuLabel>News</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -113,7 +115,7 @@ export default function Topbar() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <div className="absolute right-1 bullet rounded-full w-2 h-2 bg-red-600"></div>
+          <div className="bullet absolute right-1 h-2 w-2 rounded-full bg-red-600"></div>
         </div>
 
         <div className="relative">
@@ -122,16 +124,19 @@ export default function Topbar() {
               <Image
                 src={Avatar}
                 alt=""
-                className="rounded-full w-9"
+                className="w-9 rounded-full"
                 width={36}
                 height={36}
               />
 
               {session?.user?.name}
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="shadow-lg rounded-lg w-40 mr-5 dark:text-black">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuContent className="mr-5 w-40 rounded-lg shadow-lg dark:text-black">
+              <DropdownMenuLabel>Welcome</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href="/">My Profile</Link>
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

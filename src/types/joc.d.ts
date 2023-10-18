@@ -9,11 +9,11 @@ export type JOC = {
   discharge: string;
   etd: string;
   eta: string;
+  type?: string;
   quo_no: string | null;
   jo_no: string;
   customer_code: string | null;
   createdBy: string;
-  no_count: string;
   createdAt: Date;
   updatedAt: Date | null;
   deletedAt: Date | null;
@@ -35,4 +35,4 @@ export type UpdateStatusInput = {
   status?: string | null;
 };
 
-export type updateJOCInput = Omit<createJOCInput>;
+export type updateJOCInput = Omit<createJOCInput, 'etd', 'eta', 'status'>;

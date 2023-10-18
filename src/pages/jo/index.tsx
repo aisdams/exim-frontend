@@ -97,7 +97,9 @@ const columnsDef = [
       );
     },
   }),
-  columnHelper.accessor('quo_no', {
+  // columnHelper.accessor('quo_no', {
+  columnHelper.display({
+    id: 'sales',
     enableSorting: false,
     header: () => (
       <div>
@@ -126,7 +128,7 @@ const columnsDef = [
       );
     },
   }),
-  columnHelper.accessor('quo_no', {
+  columnHelper.display({
     header: 'TYPE',
     cell: (info) => {
       const [type, setType] = useState('');
@@ -347,7 +349,7 @@ export default function Index() {
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 15,
   });
 
   const fetchDataOptions = {
@@ -469,7 +471,7 @@ export default function Index() {
                     name=""
                     id=""
                     placeholder="Search..."
-                    className="rounded-md border border-graySecondary dark:border-white"
+                    className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
                   />
                 </div>
 
@@ -497,7 +499,7 @@ export default function Index() {
                       name=""
                       id=""
                       placeholder="Search...."
-                      className="rounded-md border border-graySecondary dark:border-white"
+                      className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
                       value={searchValue}
                       onChange={(e) => {
                         setSearchValue(e.target.value);

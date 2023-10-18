@@ -1,8 +1,7 @@
 {
   "extends": [
-    "next/core-web-vitals"
-    // "airbnb",
-    // "airbnb-typescript",
+    "next/core-web-vitals",
+    "prettier"
     // "plugin:tailwindcss/recommended",
     // "plugin:prettier/recommended"
   ],
@@ -12,6 +11,7 @@
   },
   "rules": {
     "import/order": "off",
+    "jsx-a11y/img-has-alt": "off",
     //! TS
     // "@typescript-eslint/no-unused-vars": [
     //   "warn",

@@ -144,7 +144,7 @@ export default function CreateCost({
   const defaultData = useMemo(() => [], []);
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 15,
   });
 
   const { handleSubmit, setValue, watch } = methods;

@@ -66,6 +66,14 @@ module.exports = {
       //   md: 'calc(var(--radius) - 2px)',
       //   sm: 'calc(var(--radius) - 4px)',
       // },
+      screens: {
+        xs: '360px',
+        sm: '576px',
+        md: '768px',
+        lg: '992px',
+        xl: '1200px',
+        xxl: '1400px',
+      },
       keyframes: {
         'accordion-down': {
           from: { height: 0 },

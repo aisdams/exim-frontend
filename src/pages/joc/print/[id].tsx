@@ -26,10 +26,10 @@ export const getServerSideProps: GetServerSideProps<{
 };
 
 type JOCPrintProps = {
-  joc_no: string;
+  id: string;
 };
 
-const JOCPrint: NextPageCustomLayout<JOCPrintProps> = ({ joc_no }) => {
+const JOCPrint: NextPageCustomLayout<JOCPrintProps> = ({ id: joc_no }) => {
   return <JOCPdf joc_no={joc_no} />;
 };
 

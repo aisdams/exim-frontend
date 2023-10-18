@@ -1,24 +1,24 @@
+import React, { useEffect, useState } from 'react';
+import { IS_DEV } from '@/constants';
 import { JobOrder } from '@/types';
 import {
   Document,
-  Text,
-  View,
+  Font,
+  Image,
   Page,
   PDFViewer,
   StyleSheet,
-  Image,
-  Font,
+  Text,
+  View,
 } from '@react-pdf/renderer';
-import { toast } from 'react-toastify';
-import { IS_DEV } from '@/constants';
 import { useQuery } from '@tanstack/react-query';
-import * as JOCService from '@/apis/joc.api';
+import { toast } from 'react-toastify';
+
 import * as customerService from '@/apis/customer.api';
 import * as joService from '@/apis/jo.api';
+import * as JOCService from '@/apis/joc.api';
 import { getErrMessage } from '@/lib/utils';
 import Loader from '@/components/table/loader';
-
-import React, { useEffect, useState } from 'react';
 
 Font.register({
   family: 'tahoma.ttf',
@@ -126,7 +126,7 @@ type JOCPdfProps = {
 const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
   //! get jo
   const jocQuery = useQuery({
-    queryKey: ['jo', joc_no],
+    queryKey: ['joc', joc_no],
     queryFn: () => JOCService.getById(joc_no),
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -182,6 +182,7 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
             />
             <View style={styles.tableRow0}>
               <View>
+                g pd
                 <View style={styles.tablePad}>
                   <Text style={styles.textPad}>JO CONSOLIDATION</Text>
                 </View>
@@ -197,7 +198,7 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                     </Text>
                     <Text style={styles.tableColumnTwo}>{dateString}</Text>
                     <Text style={styles.tableColumnTwo}>
-                      {jocQuery.data.data.quo_no}
+                      {jocQuery.data.data.quo_no || '-'}
                     </Text>
                   </View>
                 </View>

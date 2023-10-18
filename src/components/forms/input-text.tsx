@@ -70,7 +70,7 @@ const InputText: React.FC<InputTextProps> = ({
 
       <div
         className={cn(
-          'relative flex items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary w-[300px]',
+          'relative flex w-[300px] items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >
@@ -96,9 +96,9 @@ const InputText: React.FC<InputTextProps> = ({
           {...props}
         />
       </div>
-      {!noErrorMessage && error?.message && (
+      {/* {!noErrorMessage && error?.message && (
         <p className="text-xs tracking-wide text-red-600">{error.message}</p>
-      )}
+      )} */}
     </div>
   );
 };

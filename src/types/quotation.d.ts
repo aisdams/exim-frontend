@@ -11,7 +11,7 @@ export type Quotation = {
   no_count: string;
   discharge: string;
   status: string;
-  customer_code: string | null;
+  customer_code: string;
   item_cost: string;
   port_code: string | null;
   createdAt: Date;
@@ -30,6 +30,7 @@ export type createQuotationInput = {
   loading?: string | null;
   discharge?: string | null;
   status?: string | null;
+  customer_code: string | null;
 };
 
 export type updateQuotationInput = Omit<

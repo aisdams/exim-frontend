@@ -1,27 +1,54 @@
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { format } from 'date-fns';
-import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import { IS_DEV } from '@/constants';
+import { Cost } from '@/types';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useDebouncedValue } from '@mantine/hooks';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createColumnHelper,
   getCoreRowModel,
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-import { IS_DEV } from '@/constants';
-import { useRouter } from 'next/router';
-import yup from '@/lib/yup';
+import { format } from 'date-fns';
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { yupResolver } from '@hookform/resolvers/yup';
+  Calendar,
+  CheckCircle2,
+  Command,
+  PlusCircle,
+  PlusSquare,
+  Search,
+  XCircle,
+} from 'lucide-react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { InferType } from 'yup';
+
+import * as quotationService from '@/apis/quotation.api';
+import { cn, getErrMessage } from '@/lib/utils';
+import yup from '@/lib/yup';
+import { DateRangePicker } from '@/components/forms/data-range-picker';
+import InputSearch from '@/components/forms/input-search';
+import InputText from '@/components/forms/input-text';
+import ReactTable from '@/components/table/react-table';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -32,43 +59,16 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  CheckCircle2,
-  PlusCircle,
-  XCircle,
-  Calendar,
-  PlusSquare,
-  Search,
-  Command,
-} from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { cn, getErrMessage } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import * as CostService from '../../../apis/cost.api';
-import * as quotationService from '@/apis/quotation.api';
-import React, { useMemo, useState } from 'react';
-import { useDebouncedValue } from '@mantine/hooks';
-import ReactTable from '@/components/table/react-table';
-import InputSearch from '@/components/forms/input-search';
-import { DateRangePicker } from '@/components/forms/data-range-picker';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Input } from '@/components/ui/input';
-
-import { Cost } from '@/types';
-import { Label } from '@/components/ui/label';
-import InputText from '@/components/forms/input-text';
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
+import * as CostService from '../../../apis/cost.api';
 
 interface Customer {
   item_cost: string;
@@ -214,7 +214,7 @@ export default function QuotationDetail() {
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 15,
   });
 
   const fetchDataOptions = {
@@ -268,7 +268,7 @@ export default function QuotationDetail() {
 
   return (
     <>
-      <div className="mb-4 z-[100]">
+      <div className="z-[100] mb-4">
         <div className="flex gap-3 font-semibold">
           <Command className="text-blueLight" />
           <h1> Quotation</h1>
@@ -276,13 +276,13 @@ export default function QuotationDetail() {
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
             <div className="grid grid-cols-2 gap-3">
-              <div className="grid gap-2 dark:bg-graySecondary/50 rounded-sm pb-4">
-                <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-2">
+              <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
+                <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                   <Command className="text-white" />
                   <h1> Data Quotation</h1>
                 </div>
 
-                <div className="px-3 grid gap-3">
+                <div className="grid gap-3 px-3">
                   <div className="grid grid-cols-[1fr_2fr]">
                     <div className="grid gap-5">
                       <Label>Date :</Label>
@@ -303,9 +303,10 @@ export default function QuotationDetail() {
                       <div className="flex gap-2">
                         <InputText name="customer" mandatory />
                         <button
+                          type="button"
                           className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
                           onClick={openCustomerModal}
                         >
                           <Search className="w-4" />
@@ -317,9 +318,10 @@ export default function QuotationDetail() {
                       <div className="flex gap-2">
                         <InputText name="loading" mandatory />
                         <button
+                          type="button"
                           className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1 w-6 h-6
-                  rounded-md text-white"
+                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
                           onClick={openCustomerModal}
                         >
                           <Search className="w-4" />
@@ -329,8 +331,8 @@ export default function QuotationDetail() {
                         <InputText name="discharge" mandatory />
                         <Search
                           className="
-                  dark:bg-blueLight bg-graySecondary text-base px-1 mt-1
-                  rounded-md text-white"
+                  mt-1 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
                         />
                       </div>
                       <InputText name="kurs" mandatory />
@@ -339,14 +341,14 @@ export default function QuotationDetail() {
                 </div>
               </div>
 
-              <div className="block gap-2 dark:bg-graySecondary/50 rounded-sm shadow-md shadow-black">
-                <div className="flex gap-3 bg-blueHeaderCard text-white dark:bg-secondDarkBlue mb-5 p-2 h-max">
+              <div className="block gap-2 rounded-sm shadow-md shadow-black dark:bg-graySecondary/50">
+                <div className="mb-5 flex h-max gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                   <Command className="text-white" />
                   <h1> Data Quotation</h1>
                 </div>
 
                 <div className="px-3">
-                  <div className="flex gap-2 mb-5">
+                  <div className="mb-5 flex gap-2">
                     <Label>Header: </Label>
                     <Textarea
                       className="header h-32"
@@ -381,14 +383,14 @@ export default function QuotationDetail() {
             {isCustomerModalOpen && (
               <div
                 style={{ overflow: 'hidden' }}
-                className={`fixed inset-0 flex items-center justify-center z-50 modal ${
+                className={`modal fixed inset-0 z-50 flex items-center justify-center ${
                   isCustomerModalOpen ? 'open' : 'closed'
                 }`}
               >
                 <div className="absolute inset-0 bg-black opacity-75"></div>
-                <div className="z-10 bg-white p-4 rounded-lg shadow-lg w-1/3 relative">
+                <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
                   <Button
-                    className="absolute -top-9 right-0 text-white !bg-transparent"
+                    className="absolute -top-9 right-0 !bg-transparent text-white"
                     onClick={closeCustomerModal}
                   >
                     <h1 className="text-xl">X</h1>
@@ -426,7 +428,7 @@ export default function QuotationDetail() {
       </div>
 
       <Link href="/quotation/create">
-        <Button className="mb-5 bg-green-600 text-white w-max px-2 py-4 gap-2">
+        <Button className="mb-5 w-max gap-2 bg-green-600 px-2 py-4 text-white">
           <PlusSquare className="h-5" />
           <h3>Create Quotation</h3>
         </Button>

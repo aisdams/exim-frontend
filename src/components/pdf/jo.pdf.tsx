@@ -1,24 +1,25 @@
+import React, { useEffect, useState } from 'react';
+import { IS_DEV } from '@/constants';
 import { JobOrder } from '@/types';
+import ImageLogo from '@public/img/boAvatar.png';
 import {
   Document,
-  Text,
-  View,
+  Font,
+  Image,
   Page,
   PDFViewer,
   StyleSheet,
-  Image,
-  Font,
+  Text,
+  View,
 } from '@react-pdf/renderer';
-import { toast } from 'react-toastify';
-import { IS_DEV } from '@/constants';
 import { useQuery } from '@tanstack/react-query';
+import { format, parse, parseISO } from 'date-fns';
+import { toast } from 'react-toastify';
+
 import * as JOService from '@/apis/jo.api';
 import * as QuotationService from '@/apis/quotation.api';
 import { getErrMessage } from '@/lib/utils';
 import Loader from '@/components/table/loader';
-
-import React, { useEffect, useState } from 'react';
-import { parse, parseISO, format } from 'date-fns';
 
 Font.register({
   family: 'tahoma.ttf',
@@ -280,7 +281,7 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
             }}
           >
             <View>
-              <Text>Created</Text>
+              <Text style={{ fontSize: 10 }}>Created</Text>
               <Text style={{ fontSize: 10, marginTop: 80 }}>
                 ({joQuery.data.data.createdBy})
               </Text>
@@ -292,7 +293,7 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
                 marginHorizontal: 'auto',
               }}
             >
-              <Text>Approved</Text>
+              <Text style={{ fontSize: 10 }}>Approved</Text>
               <Text style={{ fontSize: 10, marginTop: 80 }}>
                 (...........................................)
               </Text>
