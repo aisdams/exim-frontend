@@ -38,12 +38,12 @@ const InputDate: React.FC<InputDateProps> = ({
 
   return (
     <div>
-      <label htmlFor={id || name} className="mb-1 inline-block">
+      {/* <label htmlFor={id || name} className="mb-1 inline-block">
         {label || startCase(name)}
         {mandatory && <span className="text-[#f00]">*</span>}
-      </label>
+      </label> */}
 
-      <div className="relative !z-[999]">
+      <div className="relative w-[300px]">
         <DatePickerInput
           ref={field.ref}
           value={

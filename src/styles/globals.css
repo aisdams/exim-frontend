@@ -115,3 +115,7 @@ body {
 .rdp-vhidden {
   @apply hidden;
 }
+
+.dark .mantine-DatePickerInput-input {
+  background-color: #000 !important;
+}

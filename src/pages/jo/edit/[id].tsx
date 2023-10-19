@@ -23,6 +23,7 @@ import * as JoService from '@/apis/jo.api';
 import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
+import InputDate from '@/components/forms/input-date';
 import InputDisable from '@/components/forms/input-disable';
 import InputNumber from '@/components/forms/input-number';
 import InputText from '@/components/forms/input-text';
@@ -398,8 +399,8 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                   <Search className="w-4" />
                 </button>
               </div>
-              <InputText name="etd" />
-              <InputText name="eta" />
+              <InputDate name="etd" />
+              <InputDate name="eta" />
               <InputText name="hbl" />
               <InputText name="mbl" />
               <InputText name="vessel" />
