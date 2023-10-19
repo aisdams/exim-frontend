@@ -89,6 +89,8 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
     fetchQuotationData(id)
   );
 
+  // console.log(quotationData?.data.customer_code);
+
   // get data success
   const [dd, setDd] = useState('');
   const [mm, setMm] = useState('');

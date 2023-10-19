@@ -82,7 +82,7 @@ const defaultValues = {
   loading: '',
   discharge: '',
   kurs: '',
-  item_cost: 'COST-00001',
+  item_cost: '',
 };
 
 const Schema = yup.object({
@@ -120,17 +120,22 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
     null
   );
   const [createdItemCost, setCreatedItemCost] = useState('');
+  const [itemCostValue, setItemCostValue] = useState('');
   // const handleCostCreated = (newItemCost: any) => {
   //   setCreatedItemCost(newItemCost);
 
   //   setValue('item_cost', newItemCost);
   // };
+  const [submittedItemCost, setSubmittedItemCost] = useState('');
 
   const handleCostCreated = (newItemCost: any) => {
     const newCost = newItemCost.item_cost;
-
+    setSubmittedItemCost(newItemCost);
     setValue('item_cost', newCost);
+    setItemCostValue(newCost);
   };
+
+  console.log(handleCostCreated);
 
   const [headerText, setHeaderText] = useState(
     'We are pleased to quote you the following :'
@@ -141,7 +146,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
 
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
-  const { handleSubmit, setValue, watch } = methods;
+  const { handleSubmit, setValue, watch, register } = methods;
   const openCustomerModal = () => {
     setIsCustomerModalOpen(true);
 
@@ -234,6 +239,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
     }
 
     updatedQuotationMutation.mutate({ id, data });
+    const itemCostValue = data.item_cost;
   };
 
   return (
@@ -308,7 +314,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         </button>
                       </div>
                       <InputText name="attn" mandatory />
-                      {/* <InputSelect
+                      <InputSelect
                         name="type"
                         options={[
                           {
@@ -322,19 +328,6 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                           {
                             value: 'Domestik',
                             label: 'Domestik',
-                          },
-                        ]}
-                      /> */}
-                      <InputSelect
-                        name="type"
-                        options={[
-                          {
-                            value: 'FCL',
-                            label: 'FCL',
-                          },
-                          {
-                            value: 'LCL',
-                            label: 'LCL',
                           },
                         ]}
                       />

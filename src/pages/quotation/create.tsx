@@ -211,6 +211,7 @@ export default function QuotationAdd() {
                     <Label>Sales :</Label>
                     <Label>Subject :</Label>
                     <Label>Customer :</Label>
+                    <Label>Customer Code :</Label>
                     <Label>Attn :</Label>
                     <Label>Type :</Label>
                     <Label>Delivery :</Label>

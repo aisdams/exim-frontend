@@ -25,6 +25,7 @@ import {
   Trash,
   XCircle,
 } from 'lucide-react';
+import { DateTime } from 'luxon';
 import { toast } from 'react-toastify';
 
 import * as customerService from '@/apis/customer.api';
@@ -347,6 +348,11 @@ export default function Index() {
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
 
+  const [{ periodOf, periodUntil }, setDates] = useState({
+    periodOf: DateTime.fromJSDate(new Date()).minus({ months: 1 }).toJSDate(),
+    periodUntil: new Date(),
+  });
+
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 15,
@@ -385,9 +391,16 @@ export default function Index() {
     },
   });
 
+  const [tableData, setTableData] = useState(JobOrdersQuery.data?.data || []);
+
+  const filteredData = tableData.filter((item) => {
+    const itemDate = new Date(item.createdAt);
+    return itemDate >= periodOf && itemDate <= periodUntil;
+  });
+
   const table = useReactTable({
     columns,
-    data: searchValue ? searchResults : JobOrdersQuery.data?.data ?? [],
+    data: searchValue ? searchResults : filteredData,
     pageCount: JobOrdersQuery.data?.pagination.total_page ?? -1,
 
     state: {
@@ -441,9 +454,14 @@ export default function Index() {
             <div className="grid gap-6">
               <div>
                 <DateRangePicker
-                  onUpdate={(values) => console.log(values)}
-                  initialDateFrom="2023-01-01"
-                  initialDateTo="2023-12-31"
+                  initialDateFrom={periodOf}
+                  initialDateTo={periodUntil}
+                  onUpdate={({ range }) => {
+                    setDates({
+                      periodOf: range.from,
+                      periodUntil: range.to ? range.to : range.from,
+                    });
+                  }}
                   align="start"
                   locale="en-GB"
                   showCompare={false}

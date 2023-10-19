@@ -125,6 +125,7 @@ export default function CreateCost({
   onCostCreated: (newItemCost: any) => void;
 }) {
   const qc = useQueryClient();
+  const [itemCost, setItemCost] = useState('');
   const [statusesKey, setStatusesKey] = useState<string[]>([]);
   const router = useRouter();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -211,19 +212,6 @@ export default function CreateCost({
     },
   });
 
-  // const addCostMutation = useMutation({
-  //   mutationFn: CostService.create,
-  //   onSuccess: () => {
-  //     qc.invalidateQueries(['cost']);
-  //     toast.success('Success, Cost has been added.');
-  //     const { id } = router.query;
-  //     router.push(`/quotation/edit/${id}`);
-  //   },
-  //   onError: (err) => {
-  //     toast.error(`Error, ${getErrMessage(err)}`);
-  //   },
-  // });
-
   const addCostMutation = useMutation({
     mutationFn: CostService.create,
     onSuccess: (newItemCost) => {
@@ -244,6 +232,8 @@ export default function CreateCost({
     }
 
     addCostMutation.mutate(data);
+    // setItemCost(data.item_cost);
+    onCostCreated(data);
   };
 
   return (

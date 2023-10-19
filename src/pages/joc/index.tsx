@@ -26,6 +26,7 @@ import {
   Trash,
   XCircle,
 } from 'lucide-react';
+import { DateTime } from 'luxon';
 import { fetchData } from 'next-auth/client/_utils';
 import { toast } from 'react-toastify';
 
@@ -319,6 +320,11 @@ export default function Index() {
   const [isActive, SetIsActive] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
 
+  const [{ periodOf, periodUntil }, setDates] = useState({
+    periodOf: DateTime.fromJSDate(new Date()).minus({ months: 1 }).toJSDate(),
+    periodUntil: new Date(),
+  });
+
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
 
@@ -342,6 +348,11 @@ export default function Index() {
   });
 
   const [tableData, setTableData] = useState(jocQuery.data?.data || []);
+
+  const filteredData = tableData.filter((item) => {
+    const itemDate = new Date(item.createdAt);
+    return itemDate >= periodOf && itemDate <= periodUntil;
+  });
 
   const filterDataByStatus = (status: string) => {
     if (status === 'All') {
@@ -387,7 +398,9 @@ export default function Index() {
 
   const table = useReactTable({
     columns,
-    data: searchValue ? searchResults : tableData || jocQuery.data?.data || [],
+    data: searchValue
+      ? searchResults
+      : filteredData || jocQuery.data?.data || [],
     pageCount: jocQuery.data?.pagination.total_page ?? -1,
     state: {
       pagination,
@@ -439,9 +452,14 @@ export default function Index() {
             <div className="grid gap-6">
               <div>
                 <DateRangePicker
-                  onUpdate={(values) => console.log(values)}
-                  initialDateFrom="2023-01-01"
-                  initialDateTo="2023-12-31"
+                  initialDateFrom={periodOf}
+                  initialDateTo={periodUntil}
+                  onUpdate={({ range }) => {
+                    setDates({
+                      periodOf: range.from,
+                      periodUntil: range.to ? range.to : range.from,
+                    });
+                  }}
                   align="start"
                   locale="en-GB"
                   showCompare={false}

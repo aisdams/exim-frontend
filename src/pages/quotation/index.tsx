@@ -28,6 +28,7 @@ import {
   Trash,
   XCircle,
 } from 'lucide-react';
+import { DateTime } from 'luxon';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 
@@ -365,6 +366,12 @@ export default function Index() {
   const [searchResults, setSearchResults] = useState<Quotation[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
+
+  const [{ periodOf, periodUntil }, setDates] = useState({
+    periodOf: DateTime.fromJSDate(new Date()).minus({ months: 1 }).toJSDate(),
+    periodUntil: new Date(),
+  });
+  // console.log(periodOf, '-', periodUntil);
   const debouncedSearchValue = useDebouncedValue(searchValue, 500);
 
   const columns = useMemo(() => columnsDef, []);
@@ -386,22 +393,6 @@ export default function Index() {
       quo_no: debouncedSearchValue,
     });
   };
-
-  // const handleSearch = () => {
-  //   const filteredData = quotationsQuery.data?.data.filter((item) => {
-  //     if (selectedStatus === 'All') {
-  //       return item.status.toLowerCase().includes(searchValue.toLowerCase());
-  //     } else {
-  //       return (
-  //         item.status.toLowerCase().includes(searchValue.toLowerCase()) &&
-  //         item.status === selectedStatus
-  //       );
-  //     }
-  //   });
-
-  //   setSearchResults(filteredData || []);
-  // };
-
   const quotationsQuery = useQuery({
     queryKey: ['quotations', { fetchDataOptions, searchValue }],
     queryFn: () => fetchData(fetchDataOptions, searchValue),
@@ -412,6 +403,11 @@ export default function Index() {
   });
 
   const [tableData, setTableData] = useState(quotationsQuery.data?.data || []);
+
+  const filteredData = tableData.filter((item) => {
+    const itemDate = new Date(item.createdAt);
+    return itemDate >= periodOf && itemDate <= periodUntil;
+  });
 
   const filterDataByStatus = (status: string) => {
     if (status === 'All') {
@@ -429,9 +425,6 @@ export default function Index() {
     setTableData(quotationsQuery.data?.data || []);
   }, []);
 
-  // useEffect(() => {
-  //   filterDataByStatus(selectedStatus);
-  // }, [selectedStatus]);
   useEffect(() => {
     filterDataByStatus(selectedStatus);
   }, [selectedStatus, quotationsQuery.data]);
@@ -459,7 +452,7 @@ export default function Index() {
     columns,
     data: searchValue
       ? searchResults
-      : tableData || quotationsQuery.data?.data || [],
+      : filteredData || quotationsQuery.data?.data || [],
     pageCount: quotationsQuery.data?.pagination.total_page ?? -1,
     state: {
       pagination,
@@ -490,9 +483,14 @@ export default function Index() {
             <div className="grid gap-6">
               <div>
                 <DateRangePicker
-                  onUpdate={(values) => console.log(values)}
-                  initialDateFrom="2023-01-01"
-                  initialDateTo="2023-12-31"
+                  initialDateFrom={periodOf}
+                  initialDateTo={periodUntil}
+                  onUpdate={({ range }) => {
+                    setDates({
+                      periodOf: range.from,
+                      periodUntil: range.to ? range.to : range.from,
+                    });
+                  }}
                   align="start"
                   locale="en-GB"
                   showCompare={false}

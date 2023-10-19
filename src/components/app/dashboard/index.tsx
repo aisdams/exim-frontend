@@ -1,15 +1,25 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import { Cost } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 import ApexCharts, { ApexOptions } from 'apexcharts';
 import { Home, Menu, Plane, Truck } from 'lucide-react';
+import { toast } from 'react-toastify';
+
+import * as CostService from '@/apis/cost.api';
+import { getErrMessage } from '@/lib/utils';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
 
 export default function Content() {
+  const router = useRouter();
+  const [costData, setCostData] = useState<Cost[]>([]);
+
   const options: ApexOptions = {
     chart: {
       height: 150,
@@ -51,6 +61,29 @@ export default function Content() {
       data: [11, 32, 45, 32, 34, 52, 41],
     },
   ];
+
+  // const costdata = () => {
+  //   fetch('http://localhost:8089/api/cost')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log('Data Cost:', data.data);
+  //       setCostData(data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error:', error);
+  //     });
+  // };
+
+  const fetchData = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:8089/api/quotation/${id}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error('Get Data');
+    }
+  };
+  console.log(fetchData);
 
   return (
     <div className="grid">
