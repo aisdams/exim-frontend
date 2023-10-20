@@ -119,6 +119,8 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
+  const [quotationId, setQuotationId] = useState(null);
+  const [selectedItemCost, setSelectedItemCost] = useState('');
   const [createdItemCost, setCreatedItemCost] = useState('');
   const [itemCostValue, setItemCostValue] = useState('');
   // const handleCostCreated = (newItemCost: any) => {
@@ -126,14 +128,19 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
 
   //   setValue('item_cost', newItemCost);
   // };
-  const [submittedItemCost, setSubmittedItemCost] = useState('');
 
   const handleCostCreated = (newItemCost: any) => {
-    const newCost = newItemCost.item_cost;
-    setSubmittedItemCost(newItemCost);
-    setValue('item_cost', newCost);
-    setItemCostValue(newCost);
+    // newItemCost adalah data item_cost yang baru
+    setSelectedItemCost(newItemCost.item_cost);
   };
+  const [submittedItemCost, setSubmittedItemCost] = useState('');
+
+  // const handleCostCreated = (newItemCost: any) => {
+  //   const newCost = newItemCost.item_cost;
+  //   setSubmittedItemCost(newItemCost);
+  //   setValue('item_cost', newCost);
+  //   setItemCostValue(newCost);
+  // };
 
   console.log(handleCostCreated);
 
@@ -381,7 +388,11 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                       </div>
                       <InputNumber name="kurs" mandatory />
                       <div>
-                        <InputText name="item_cost" placeholder="COST-00001" />
+                        <InputText
+                          name="item_cost"
+                          placeholder="COST-00001"
+                          value={selectedItemCost}
+                        />
                       </div>
                     </div>
                   </div>
@@ -585,7 +596,11 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
         </FormProvider>
       )}
 
-      <CreateCost onCostCreated={handleCostCreated} />
+      <CreateCost
+        onCostCreated={handleCostCreated}
+        quotationId={quotationId}
+        setSelectedItemCost={setSelectedItemCost}
+      />
     </div>
   );
 };

@@ -9,7 +9,6 @@ type InputTextProps = {
   id?: string;
   placeholder?: string;
   disabled?: boolean;
-  mandatory?: boolean;
   defaultCase?: boolean;
   value?: string | number;
   withLabel?: boolean;
@@ -26,7 +25,6 @@ const InputText: React.FC<InputTextProps> = ({
   id,
   placeholder,
   disabled,
-  mandatory,
   defaultCase,
   withLabel = true,
   containerCN,
@@ -58,29 +56,19 @@ const InputText: React.FC<InputTextProps> = ({
 
   return (
     <div className={cn('relative', containerCN)}>
-      {/* {withLabel && (
-        <label
-          htmlFor={id || name}
-          className={cn('mb-1 inline-block', labelCN)}
-        >
-          {label || startCase(name)}
-          {mandatory && <span className="text-[#f00]">*</span>}
-        </label>
-      )} */}
-
       <div
         className={cn(
-          'relative flex w-[300px] items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
+          'relative w-[300px] items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >
         <input
           {...register(name)}
-          type="text"
+          type="name"
           value={field.value ?? ''}
           id={id || name}
           className={cn(
-            'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
+            'flex h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
             inputCN
           )}
           placeholder={
@@ -96,9 +84,6 @@ const InputText: React.FC<InputTextProps> = ({
           {...props}
         />
       </div>
-      {!noErrorMessage && error?.message && (
-        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
-      )}
     </div>
   );
 };
