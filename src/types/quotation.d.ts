@@ -13,6 +13,8 @@ export type Quotation = {
   status: string;
   customer_code: string;
   item_cost: string;
+  valheader: string;
+  valfooter: string;
   port_code: string | null;
   createdAt: Date;
   updatedAt: Date | null;
@@ -30,6 +32,8 @@ export type createQuotationInput = {
   loading?: string | null;
   discharge?: string | null;
   status?: string | null;
+  valheader: string | null;
+  valfooter: string | null;
   customer_code: string | null;
 };
 

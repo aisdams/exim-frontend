@@ -1,8 +1,11 @@
-import Link from 'next/link';
-import Topbar from './topbar';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Logo from 'public/img/logo.png';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Menu, X } from 'lucide-react';
+import Logo from 'public/img/logo.png';
+
+import sidebarData from '@/data/sidebar-data';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -10,12 +13,11 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import sidebarData from '@/data/sidebar-data';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import Topbar from './topbar';
 
 export default function Sidebar() {
   const [isActive, setIsActive] = useState(0);
+  // const [isActive, setIsActive] = useState(-1);
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [menuIcon, setMenuIcon] = useState('Menu');
   const router = useRouter();
@@ -32,6 +34,15 @@ export default function Sidebar() {
   useEffect(() => {
     const defaultActiveItem = sidebarData[isActive];
   }, [isActive]);
+
+  // useEffect(() => {
+  //   const activeIndex = sidebarData.findIndex((item) =>
+  //     router.pathname.startsWith(item.link)
+  //   );
+  //   if (activeIndex !== -1) {
+  //     setIsActive(activeIndex);
+  //   }
+  // }, [router.pathname]);
 
   useEffect(() => {
     const list = document.querySelectorAll(
@@ -58,13 +69,13 @@ export default function Sidebar() {
   return (
     <div>
       <div
-        className={`w-auto h-screen bg-blueNav ${
-          sidebarVisible ? 'bg-blueNav rounded-r-[2rem] ' : ''
+        className={`h-screen w-auto bg-blueNav ${
+          sidebarVisible ? 'rounded-r-[2rem] bg-blueNav ' : ''
         }`}
       >
-        <div className="flex relative h-screen">
+        <div className="relative flex h-screen">
           <div
-            className={`bg-blueLight text-white px-7 transition-all ease-in-out duration-500 ${
+            className={`bg-blueLight px-7 text-white transition-all duration-500 ease-in-out ${
               sidebarVisible
                 ? 'rounded-e-[1.5rem] rounded-s-[1.5rem] '
                 : 'rounded-none'
@@ -72,22 +83,22 @@ export default function Sidebar() {
           >
             {menuIcon === 'Menu' ? (
               <Menu
-                className="absolute top-10 left-4 cursor-pointer"
+                className="absolute left-4 top-10 cursor-pointer"
                 size={30}
                 onClick={handleToggleSidebar}
               />
             ) : (
               <X
-                className="absolute top-10 left-4 cursor-pointer"
+                className="absolute left-4 top-10 cursor-pointer"
                 size={30}
                 onClick={handleToggleSidebar}
               />
             )}
-            <div className="grid absolute top-[6.9rem] gap-[32px] left-2">
+            <div className="absolute left-2 top-[6.9rem] grid gap-[32px]">
               {sidebarData.map((sidebar, idx) => (
                 <button
                   key={idx}
-                  className={`text-lg w-full flex px-2 ${
+                  className={`flex w-full px-2 text-lg ${
                     isActive === idx ? 'border-l-[3px] border-white' : ''
                   }`}
                   onClick={() => setIsActive(idx)}
@@ -104,21 +115,21 @@ export default function Sidebar() {
           </div>
 
           <div
-            className={`bg-blueNav dark:bg-[#] rounded-r-[2rem] text-white transition-all ease-in-out duration-500 ${
+            className={`rounded-r-[2rem] bg-blueNav text-white transition-all duration-500 ease-in-out dark:bg-[#] ${
               sidebarVisible ? '' : 'hidden'
             }`}
           >
             <Image src={Logo} alt="" width={250} />
-            <div className="navigation mt-4 grid gap-2">
+            <div className="navigation lap- mt-4 grid gap-2">
               {sidebarData.map((sidebar, idx) => (
                 <NavigationMenu key={idx} className="childOne">
                   <NavigationMenuList className="childTwo">
                     <NavigationMenuItem className="childThree">
                       <Link href={sidebar.link} className="childFour">
                         <NavigationMenuTrigger
-                          className={`text-lg !text-left !justify-normal h-12 dark:hover:!bg-[#262e4b] dark:text-white hover:!bg-white text-white hover:text-[#4a5ea6] Link rounded-l-full w-[17rem] ${
+                          className={`Link h-12 w-[17rem] !justify-normal rounded-l-full !text-left text-lg text-white hover:!bg-white hover:text-[#4a5ea6] dark:text-white dark:hover:!bg-[#262e4b] ${
                             isActive === idx
-                              ? 'transition-all ease-linear duration-300 dark:!bg-[#262e4b] dark:!text-white !bg-white !text-[#4a5ea6]'
+                              ? '!bg-white !text-[#4a5ea6] transition-all duration-300 ease-linear dark:!bg-[#262e4b] dark:!text-white'
                               : ''
                           }`}
                           onClick={() => setIsActive(idx)}

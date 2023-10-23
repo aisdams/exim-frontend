@@ -180,15 +180,9 @@ interface ItemCost {
 
 type QuotationPdfProps = {
   quo_no: string;
-  headerText: string;
-  footerText: string;
 };
 
-const QuotationPdf: React.FC<QuotationPdfProps> = ({
-  quo_no,
-  headerText,
-  footerText,
-}) => {
+const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
   //! get quotation
   const quotationQuery = useQuery({
     queryKey: ['quotation', quo_no],
@@ -290,7 +284,7 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({
               </Text>
               <Text style={styles.textHead}>Re. CUSTOMS CLEARANCE SEA</Text>
               <Text style={styles.textHeadFour}>
-                We are pleased to quote you the following :
+                {quotationQuery.data.data.valheader}
               </Text>
             </View>
 
@@ -351,9 +345,7 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({
             </View>
 
             <Text style={styles.textTableUnder}>
-              Will be happy to supply and any further information you may need
-              and trust that you call on us to fill your order which will
-              receive our prompt and careful attention.
+              {quotationQuery.data.data.valfooter}
             </Text>
 
             <View style={styles.secApprov}>

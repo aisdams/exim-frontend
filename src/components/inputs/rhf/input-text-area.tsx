@@ -9,8 +9,10 @@ type InputTextAreaProps = {
   id?: string;
   placeholder?: string;
   disabled?: boolean;
+  value?: string;
   mandatory?: boolean;
   containerCN?: string;
+  onChange?: any;
   inputWrapperCN?: string;
   inputCN?: string;
 };
@@ -20,11 +22,13 @@ const InputTextArea: React.FC<InputTextAreaProps> = ({
   name,
   id,
   placeholder,
+  value,
   disabled,
+  inputCN,
   mandatory,
   containerCN,
+  onChange,
   inputWrapperCN,
-  inputCN,
   ...props
 }) => {
   const { register } = useFormContext();
@@ -33,16 +37,16 @@ const InputTextArea: React.FC<InputTextAreaProps> = ({
     fieldState: { error },
   } = useController({ name });
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    field.onChange(e.target.value);
-  };
+  // const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   field.onChange(e.target.value);
+  // };
 
   return (
     <div className={cn('relative', containerCN)}>
-      <label htmlFor={id || name} className='mb-1 inline-block'>
+      {/* <label htmlFor={id || name} className="mb-1 inline-block">
         {label || startCase(name)}
-        {mandatory && <span className='text-[#f00]'>*</span>}
-      </label>
+        {mandatory && <span className="text-[#f00]">*</span>}
+      </label> */}
 
       <div
         className={cn(
@@ -67,13 +71,13 @@ const InputTextArea: React.FC<InputTextAreaProps> = ({
               : undefined
           }
           disabled={disabled}
-          onChange={onChange}
+          // onChange={onChange}
           rows={5}
           {...props}
         />
       </div>
       {error?.message && (
-        <p className='text-xs text-red-600'>{error.message}</p>
+        <p className="text-xs text-red-600">{error.message}</p>
       )}
     </div>
   );

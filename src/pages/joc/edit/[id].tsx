@@ -28,6 +28,7 @@ import InputHidden from '@/components/forms/input-hidden';
 import InputNumber from '@/components/forms/input-number';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
+import InputTextNoErr from '@/components/forms/input-text-noerr';
 import Loader from '@/components/table/loader';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -286,7 +287,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                     </div>
                     <div className="grid gap-2">
                       <div className="flex gap-2">
-                        <InputText
+                        <InputTextNoErr
                           name="loading"
                           mandatory
                           value={selectedPort ? selectedPort.port_name : ''}
@@ -303,7 +304,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                       </div>
 
                       <div className="flex gap-2">
-                        <InputText
+                        <InputTextNoErr
                           name="discharge"
                           mandatory
                           value={

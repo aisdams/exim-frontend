@@ -165,6 +165,12 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
   const datenya = new Date(`${jocQuery.data?.data.createdAt}`);
   const dateString = datenya.toDateString();
 
+  const dateetd = new Date(`${jocQuery.data?.data.etd}`);
+  const dateStringEtd = dateetd.toDateString();
+
+  const dateeta = new Date(`${jocQuery.data?.data.eta}`);
+  const dateStringEta = dateeta.toDateString();
+
   return jocQuery.isLoading ? (
     <div className="grid place-items-center">
       <Loader />
@@ -211,8 +217,8 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
               <Text>Agent : {jocQuery.data.data.agent}</Text>
               <Text>Loading : {jocQuery.data.data.loading}</Text>
               <Text>Discharge : {jocQuery.data.data.discharge}</Text>
-              <Text>ETD : {jocQuery.data.data.etd}</Text>
-              <Text>ETA : {jocQuery.data.data.eta}</Text>
+              <Text>ETD : {dateStringEtd}</Text>
+              <Text>ETA : {dateStringEta}</Text>
             </View>
             <View>
               <Text>No. HBL : </Text>

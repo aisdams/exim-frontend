@@ -17,8 +17,9 @@ import { format } from 'date-fns';
 import { Command, Search } from 'lucide-react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { InferType } from 'yup';
+import { InferType, string } from 'yup';
 
+import * as CostService from '@/apis/cost.api';
 import * as quotationService from '@/apis/quotation.api';
 import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
@@ -29,6 +30,9 @@ import InputHidden from '@/components/forms/input-hidden';
 import InputNumber from '@/components/forms/input-number';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
+import InputTextNoErr from '@/components/forms/input-text-noerr';
+import TextareaN from '@/components/inputs/rhf/input-text-area';
+import InputTextArea from '@/components/inputs/rhf/input-text-area';
 import Loader from '@/components/table/loader';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -82,6 +86,8 @@ const defaultValues = {
   loading: '',
   discharge: '',
   kurs: '',
+  valheader: '',
+  valfooter: '',
   item_cost: '',
 };
 
@@ -95,6 +101,8 @@ const Schema = yup.object({
   loading: yup.string().required(),
   discharge: yup.string().required(),
   kurs: yup.string().required(),
+  valheader: yup.string().required(),
+  valfooter: yup.string().required(),
   item_cost: yup.string().required(),
 });
 
@@ -119,30 +127,25 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
-  const [quotationId, setQuotationId] = useState(null);
-  const [selectedItemCost, setSelectedItemCost] = useState('');
   const [createdItemCost, setCreatedItemCost] = useState('');
   const [itemCostValue, setItemCostValue] = useState('');
+  const [submittedItemCost, setSubmittedItemCost] = useState('');
   // const handleCostCreated = (newItemCost: any) => {
   //   setCreatedItemCost(newItemCost);
 
   //   setValue('item_cost', newItemCost);
   // };
 
-  const handleCostCreated = (newItemCost: any) => {
-    // newItemCost adalah data item_cost yang baru
-    setSelectedItemCost(newItemCost.item_cost);
+  const handleCostCreated = (newItemCost: { data: { item_cost: string } }) => {
+    setValue('item_cost', newItemCost.data.item_cost);
+
+    setItemCostValue(newItemCost.data.item_cost);
+
+    // Set data cost yang baru saja dibuat
+    setCreatedItemCost(newItemCost.data.item_cost);
+
+    const itemCost = newItemCost.data.item_cost;
   };
-  const [submittedItemCost, setSubmittedItemCost] = useState('');
-
-  // const handleCostCreated = (newItemCost: any) => {
-  //   const newCost = newItemCost.item_cost;
-  //   setSubmittedItemCost(newItemCost);
-  //   setValue('item_cost', newCost);
-  //   setItemCostValue(newCost);
-  // };
-
-  console.log(handleCostCreated);
 
   const [headerText, setHeaderText] = useState(
     'We are pleased to quote you the following :'
@@ -222,6 +225,9 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
       setValue('kurs', data.kurs);
       setValue('loading', data.loading);
       setValue('discharge', data.discharge);
+      setValue('valheader', data.valheader);
+      setValue('valfooter', data.valfooter);
+      setValue('loading', data.loading);
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -240,6 +246,33 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
     },
   });
 
+  async function fetchCostData() {
+    try {
+      const response = await fetch('http://localhost:8089/api/cost');
+      if (!response.ok) {
+        throw new Error('Failed to fetch customer data');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching customer data:', error);
+      return [];
+    }
+  }
+
+  useEffect(() => {
+    fetchCostData()
+      .then((costData) => {
+        if (costData.length > 0) {
+          const firstItemCost = costData[0].item_cost;
+          setValue('item_cost', firstItemCost);
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
+
   const onSubmit: SubmitHandler<QuotationSchema> = (data) => {
     if (IS_DEV) {
       console.log('data =>', data);
@@ -247,6 +280,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
 
     updatedQuotationMutation.mutate({ id, data });
     const itemCostValue = data.item_cost;
+    console.log('item_cost value submitted:', data.item_cost);
   };
 
   return (
@@ -360,7 +394,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         <button
                           type="button"
                           className="
-                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  InputTextNoErr mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
                   text-white dark:bg-blueLight"
                           onClick={openPortModal}
                         >
@@ -369,7 +403,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                       </div>
 
                       <div className="flex gap-2">
-                        <InputText
+                        <InputTextNoErr
                           name="discharge"
                           mandatory
                           value={
@@ -388,11 +422,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                       </div>
                       <InputNumber name="kurs" mandatory />
                       <div>
-                        <InputText
-                          name="item_cost"
-                          placeholder="COST-00001"
-                          value={selectedItemCost}
-                        />
+                        <InputText name="item_cost" value={itemCostValue} />
                       </div>
                     </div>
                   </div>
@@ -408,20 +438,16 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                 <div className="px-3">
                   <div className="mb-5 flex gap-2">
                     <Label>Header: </Label>
-                    <Textarea
-                      className="header h-32"
-                      value={headerText}
-                      onChange={(e) => setHeaderText(e.target.value)}
-                    />
+                    <div className="w-full">
+                      <InputTextArea mandatory name="valheader" />
+                    </div>
                   </div>
 
                   <div className="flex gap-2">
                     <Label>Footer:</Label>
-                    <Textarea
-                      className="footer h-32"
-                      value={footerText}
-                      onChange={(e) => setFooterText(e.target.value)}
-                    />
+                    <div className="w-full">
+                      <InputTextArea mandatory name="valfooter" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -596,11 +622,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
         </FormProvider>
       )}
 
-      <CreateCost
-        onCostCreated={handleCostCreated}
-        quotationId={quotationId}
-        setSelectedItemCost={setSelectedItemCost}
-      />
+      <CreateCost onCostCreated={setItemCostValue} />
     </div>
   );
 };

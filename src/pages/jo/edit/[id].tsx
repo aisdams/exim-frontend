@@ -19,7 +19,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
 
-import * as JoService from '@/apis/jo.api';
+import * as JOService from '@/apis/jo.api';
 import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
@@ -27,6 +27,7 @@ import InputDate from '@/components/forms/input-date';
 import InputDisable from '@/components/forms/input-disable';
 import InputNumber from '@/components/forms/input-number';
 import InputText from '@/components/forms/input-text';
+import InputTextNoErr from '@/components/forms/input-text-noerr';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
@@ -235,10 +236,10 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
     defaultValues,
     resolver: yupResolver(Schema),
   });
-  const { handleSubmit, setValue, watch } = methods;
+  const { handleSubmit, resetField, setValue } = methods;
 
   const updatedJOMutation = useMutation({
-    mutationFn: JoService.updateById,
+    mutationFn: JOService.updateById,
     onSuccess: () => {
       qc.invalidateQueries(['jo']);
       toast.success('Success, Job Order has been updated.');
@@ -256,6 +257,18 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
     }
 
     updatedJOMutation.mutate({ id, data });
+
+    resetField('shipper');
+    resetField('consignee');
+    resetField('qty');
+    resetField('hbl');
+    resetField('mbl');
+    resetField('etd');
+    resetField('eta');
+    resetField('vessel');
+    resetField('gross_weight');
+    resetField('volume');
+    resetField('name_of_goods');
   };
   return (
     <div className="ml-3 overflow-hidden">
@@ -344,7 +357,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
 
             <div className="grid">
               <div className="flex gap-2">
-                <InputText
+                <InputTextNoErr
                   name="shipper"
                   value={selectedCustomer ? selectedCustomer.partner_name : ''}
                 />
@@ -358,7 +371,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 </button>
               </div>
               <div className="flex gap-2">
-                <InputText
+                <InputTextNoErr
                   name="consignee"
                   value={selectedPort ? selectedPort.port_name : ''}
                 />
@@ -372,7 +385,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 </button>
               </div>
               <div className="flex gap-2">
-                <InputText
+                <InputTextNoErr
                   name="loading"
                   value={selectedPortTwo ? selectedPortTwo.port_name : ''}
                 />
@@ -386,7 +399,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 </button>
               </div>
               <div className="flex gap-2">
-                <InputText
+                <InputTextNoErr
                   name="discharge"
                   value={selectedPortThree ? selectedPortThree.port_name : ''}
                 />

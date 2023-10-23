@@ -1,9 +1,10 @@
+import { useEffect, useState } from 'react';
 import { lowerCase, startCase } from 'lodash';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { cn } from '@/lib/utils';
 
-type InputTextProps = {
+type InputHiddenProps = {
   label?: string;
   name: string;
   id?: string;
@@ -19,7 +20,7 @@ type InputTextProps = {
   noErrorMessage?: boolean;
 };
 
-const InputText: React.FC<InputTextProps> = ({
+const InputHidden: React.FC<InputHiddenProps> = ({
   label,
   name,
   id,
@@ -40,6 +41,17 @@ const InputText: React.FC<InputTextProps> = ({
     fieldState: { error },
   } = useController({ name });
 
+  const [shouldUpdateValue, setShouldUpdateValue] = useState(false);
+  const { setValue } = useFormContext();
+  const [newValue, setNewValue] = useState('');
+
+  useEffect(() => {
+    if (shouldUpdateValue) {
+      setValue(name, newValue);
+      setShouldUpdateValue(false); // Reset the flag
+    }
+  }, [shouldUpdateValue, newValue]);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (defaultCase) {
       field.onChange(e.target.value);
@@ -51,24 +63,25 @@ const InputText: React.FC<InputTextProps> = ({
     e.target.value = e.target.value.toUpperCase();
     e.target.setSelectionRange(selectionStart, selectionEnd);
 
-    field.onChange(e.target.value);
+    setShouldUpdateValue(true);
+    setNewValue(e.target.value);
   };
 
   return (
     <div className={cn('relative', containerCN)}>
       <div
         className={cn(
-          'relative w-[300px] items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
+          'relative flex w-[300px] items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >
         <input
           {...register(name)}
-          type="name"
+          type="hidden"
           value={field.value ?? ''}
           id={id || name}
           className={cn(
-            'flex h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
+            'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:bg-slate-200 dark:disabled:bg-slate-800',
             inputCN
           )}
           placeholder={
@@ -81,11 +94,18 @@ const InputText: React.FC<InputTextProps> = ({
           }
           disabled={disabled}
           onChange={onChange}
+          onWheelCapture={(e) => {
+            //! disable scroll onChange
+            e.currentTarget.blur();
+          }}
           {...props}
         />
       </div>
+      {error?.message && (
+        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
+      )}
     </div>
   );
 };
 
-export default InputText;
+export default InputHidden;

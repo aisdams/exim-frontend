@@ -198,7 +198,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
           {!noClear && field.value && !disabled && (
             <button
               type="button"
-              className="absolute right-[3rem] top-[50%] grid h-[20px] w-[20px] translate-y-[-50%] cursor-pointer place-items-center rounded-full bg-slate-400 text-sm transition-all hover:bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600"
+              className="absolute right-[4.3rem] top-[50%] grid h-[20px] w-[20px] translate-y-[-50%] cursor-pointer place-items-center rounded-full bg-slate-400 text-sm transition-all hover:bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600"
               onClick={() => {
                 setValue(name, '', {
                   shouldValidate: true,

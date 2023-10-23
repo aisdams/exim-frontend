@@ -107,10 +107,10 @@ const Login: NextPageCustomLayout = () => {
         alt=""
         width={0}
         height={0}
-        className="mx-auto my-auto grid h-52 w-[800px] border-2 border-white bg-cover bg-center"
+        className="mx-auto my-auto grid h-56 w-[800px] border-2 border-white bg-cover bg-center"
       />
 
-      <div className="card absolute left-[28%] top-[25%] mx-auto my-auto grid w-[335px] bg-white shadow-md">
+      <div className="card absolute left-0 right-0 top-[25%] mx-auto my-auto grid w-[335px] bg-white shadow-md md:left-[-28%]">
         <div className="px-5 py-10">
           <Image src={bgLogo} alt="" />
           <FormProvider {...methods}>

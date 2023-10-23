@@ -239,6 +239,7 @@ const columnsDef = [
       const { quo_no } = info.row.original;
       const deleteQuotationMutation = info.table.options.meta?.deleteMutation;
       const [open, setOpen] = useState(false);
+      const [openTwo, setOpenTwo] = useState(false);
       const [newStatus, setNewStatus] = useState('InProgress');
       const quotationQuery = useQuery({
         queryKey: ['quotation', quo_no],
@@ -264,13 +265,16 @@ const columnsDef = [
         } finally {
         }
       };
+
       const status = quotationQuery.data?.data.status;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               className="mx-auto grid h-8 w-8 items-center justify-center p-0 data-[state=open]:bg-muted"
+              //
             >
               <span className="sr-only">Open menu</span>
               <MoreVertical className="mx-auto grid h-4 w-4 items-center justify-center" />
@@ -289,19 +293,44 @@ const columnsDef = [
               </DropdownMenuItem>
             )}
             {status !== 'Executed' && (
-              <DropdownMenuItem className="p-0">
-                <button
-                  className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
-                  onClick={() => {
-                    const quo_no = quotationQuery.data?.data.quo_no;
-                    if (quo_no) {
-                      changeStatus(quo_no);
-                    }
-                  }}
-                >
-                  <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                  Executed
-                </button>
+              <DropdownMenuItem
+                className="p-0"
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <AlertDialog open={openTwo} onOpenChange={setOpenTwo}>
+                  <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
+                    <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                    Executed
+                  </AlertDialogTrigger>
+
+                  <AlertDialogContent className="font-sans">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure ?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        updated your data from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="font-sans">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => {
+                          const quo_no = quotationQuery.data?.data.quo_no;
+                          if (quo_no) {
+                            changeStatus(quo_no);
+                          }
+                        }}
+                        className="!bg-green-500"
+                      >
+                        continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </DropdownMenuItem>
             )}
             <DropdownMenuItem

@@ -14,9 +14,11 @@ import * as JOCService from '@/apis/joc.api';
 import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
+import InputDate from '@/components/forms/input-date';
 import InputDisable from '@/components/forms/input-disable';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
+import InputTextNoErr from '@/components/forms/input-text-noerr';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -213,13 +215,14 @@ export default function create() {
                     <InputText name="no_mbl" mandatory />
                     <InputText name="vessel" mandatory />
                     <div className="flex gap-2">
-                      <InputText
+                      <InputTextNoErr
                         name="agent"
                         value={
                           selectedCustomer ? selectedCustomer.partner_name : ''
                         }
                       />
                       <button
+                        type="button"
                         className="
                   mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
                   text-white dark:bg-blueLight"
@@ -229,11 +232,12 @@ export default function create() {
                       </button>
                     </div>
                     <div className="flex gap-2">
-                      <InputText
+                      <InputTextNoErr
                         name="loading"
                         value={selectedPort ? selectedPort.port_name : ''}
                       />
                       <button
+                        type="button"
                         className="
                   mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
                   text-white dark:bg-blueLight"
@@ -268,6 +272,7 @@ export default function create() {
                         value={selectedPortTwo ? selectedPortTwo.port_name : ''}
                       />
                       <button
+                        type="button"
                         className="
                   mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
                   text-white dark:bg-blueLight"
@@ -276,8 +281,8 @@ export default function create() {
                         <Search className="w-4" />
                       </button>
                     </div>
-                    <InputText name="etd" />
-                    <InputText name="eta" />
+                    <InputDate name="etd" />
+                    <InputDate name="eta" />
                     <InputSelect
                       name="no_container"
                       options={[
@@ -302,7 +307,7 @@ export default function create() {
           </div>
 
           {/* Buttons */}
-          <div className="flex items-center gap-2">
+          <div className="mt-5 flex items-center gap-2">
             <Button className="bg-graySecondary">
               <Link href="/quotation">Back</Link>
             </Button>

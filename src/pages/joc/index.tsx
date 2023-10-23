@@ -133,7 +133,24 @@ const columnsDef = [
         <div>ETA</div>
       </div>
     ),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const date = new Date(info.row.original.etd);
+      const formattedDate = `${date.getDate()}/${
+        date.getMonth() + 1
+      }/${date.getFullYear()}`;
+
+      const dateTwo = new Date(info.row.original.eta);
+      const formattedDateTwo = `${dateTwo.getDate()}/${
+        dateTwo.getMonth() + 1
+      }/${dateTwo.getFullYear()}`;
+
+      return (
+        <div>
+          <div>{formattedDate}</div>
+          <div>{formattedDateTwo}</div>
+        </div>
+      );
+    },
   }),
   columnHelper.display({
     id: 'jml',
@@ -200,6 +217,7 @@ const columnsDef = [
           toast.error(`Error, ${getErrMessage(err)}`);
         },
       });
+      const [openTwo, setOpenTwo] = useState(false);
       const router = useRouter();
       const status = jocQuery.data?.data.status;
 
@@ -242,19 +260,44 @@ const columnsDef = [
               </DropdownMenuItem>
             )}
             {status !== 'Executed' && (
-              <DropdownMenuItem className="p-0">
-                <button
-                  className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
-                  onClick={() => {
-                    const joc_no = jocQuery.data?.data.joc_no;
-                    if (joc_no) {
-                      changeStatus(joc_no);
-                    }
-                  }}
-                >
-                  <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                  Executed
-                </button>
+              <DropdownMenuItem
+                className="p-0"
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <AlertDialog open={openTwo} onOpenChange={setOpenTwo}>
+                  <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
+                    <CheckIcon className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                    Executed
+                  </AlertDialogTrigger>
+
+                  <AlertDialogContent className="font-sans">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure ?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        updated your data from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="font-sans">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => {
+                          const joc_no = jocQuery.data?.data.joc_no;
+                          if (joc_no) {
+                            changeStatus(joc_no);
+                          }
+                        }}
+                        className="!bg-green-500"
+                      >
+                        continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </DropdownMenuItem>
             )}
             <DropdownMenuItem

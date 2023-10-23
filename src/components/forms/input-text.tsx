@@ -96,9 +96,9 @@ const InputText: React.FC<InputTextProps> = ({
           {...props}
         />
       </div>
-      {/* {!noErrorMessage && error?.message && (
+      {!noErrorMessage && error?.message && (
         <p className="text-xs tracking-wide text-red-600">{error.message}</p>
-      )} */}
+      )}
     </div>
   );
 };

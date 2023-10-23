@@ -62,29 +62,6 @@ export default function Content() {
     },
   ];
 
-  // const costdata = () => {
-  //   fetch('http://localhost:8089/api/cost')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log('Data Cost:', data.data);
-  //       setCostData(data.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error:', error);
-  //     });
-  // };
-
-  const fetchData = async (id: string) => {
-    try {
-      const response = await fetch(`http://localhost:8089/api/quotation/${id}`);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      throw new Error('Get Data');
-    }
-  };
-  console.log(fetchData);
-
   return (
     <div className="grid">
       <div className="mb-10 mt-5 flex items-center gap-3 font-semibold">

@@ -150,6 +150,12 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
   const datenya = new Date(`${joQuery.data?.data.createdAt}`);
   const dateString = datenya.toDateString();
 
+  const dateetd = new Date(`${joQuery.data?.data.etd}`);
+  const dateStringEtd = dateetd.toDateString();
+
+  const dateeta = new Date(`${joQuery.data?.data.eta}`);
+  const dateStringEta = dateeta.toDateString();
+
   return joQuery.isLoading ? (
     <div className="grid place-items-center">
       <Loader />
@@ -237,8 +243,8 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
                     ? quotation.discharge
                     : 'discharge tidak ditemukan'}
                 </Text>
-                <Text style={styles.tableDData}>{joQuery.data.data.etd}</Text>
-                <Text style={styles.tableDData}>{joQuery.data.data.eta}</Text>
+                <Text style={styles.tableDData}>{dateStringEtd}</Text>
+                <Text style={styles.tableDData}>{dateStringEta}</Text>
                 <Text style={styles.tableDData}>{joQuery.data.data.hbl}</Text>
                 <Text style={styles.tableDData}>{joQuery.data.data.mbl}</Text>
                 <Text style={styles.tableDData}>

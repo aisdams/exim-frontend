@@ -27,22 +27,12 @@ export const getServerSideProps: GetServerSideProps<{
 
 type QuotationPrintProps = {
   id: string;
-  headerText: string;
-  footerText: string;
 };
 
 const QuotationPrint: NextPageCustomLayout<QuotationPrintProps> = ({
   id: quo_no,
-  headerText,
-  footerText,
 }) => {
-  return (
-    <QuotationPdf
-      quo_no={quo_no}
-      headerText={headerText}
-      footerText={footerText}
-    />
-  );
+  return <QuotationPdf quo_no={quo_no} />;
 };
 
 QuotationPrint.theme = 'light';

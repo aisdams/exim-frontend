@@ -25,6 +25,8 @@ import InputHidden from '@/components/forms/input-hidden';
 import InputNumber from '@/components/forms/input-number';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
+import InputTextNoErr from '@/components/forms/input-text-noerr';
+import Textarea from '@/components/inputs/rhf/input-text-area';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
@@ -37,7 +39,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Textarea } from '@/components/ui/textarea';
 
 interface Customer {
   customer_code: string;
@@ -62,6 +63,8 @@ const defaultValues = {
   loading: '',
   discharge: '',
   kurs: '',
+  valheader: '',
+  valfooter: '',
 };
 
 const Schema = yup.object({
@@ -75,6 +78,8 @@ const Schema = yup.object({
   loading: yup.string().required(),
   discharge: yup.string().required(),
   kurs: yup.string().required(),
+  valheader: yup.string().required(),
+  valfooter: yup.string().required(),
 });
 
 type QuotationSchema = InferType<typeof Schema>;
@@ -101,6 +106,13 @@ export default function QuotationAdd() {
   const [footerText, setFooterText] = useState(
     'Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention.'
   );
+  const handleHeaderChange = (e: any) => {
+    setHeaderText(e.target.value);
+  };
+
+  const handleFooterChange = (e: any) => {
+    setFooterText(e.target.value);
+  };
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
   const { handleSubmit, setValue, watch } = methods;
@@ -211,7 +223,7 @@ export default function QuotationAdd() {
                     <Label>Sales :</Label>
                     <Label>Subject :</Label>
                     <Label>Customer :</Label>
-                    <Label>Customer Code :</Label>
+                    {/* <Label>Customer Code :</Label> */}
                     <Label>Attn :</Label>
                     <Label>Type :</Label>
                     <Label>Delivery :</Label>
@@ -230,7 +242,7 @@ export default function QuotationAdd() {
                     <InputText name="sales" mandatory />
                     <InputText name="subject" mandatory />
                     <div className="flex gap-2">
-                      <InputText
+                      <InputTextNoErr
                         name="customer"
                         mandatory
                         value={
@@ -248,7 +260,7 @@ export default function QuotationAdd() {
                       </button>
                     </div>
                     <div>
-                      <InputHidden name="customer_code" value={customerCode} />
+                      <InputText name="customer_code" value={customerCode} />
                     </div>
                     <InputText name="attn" mandatory />
                     <InputSelect
@@ -282,7 +294,7 @@ export default function QuotationAdd() {
                       ]}
                     />
                     <div className="flex gap-2">
-                      <InputText
+                      <InputTextNoErr
                         name="loading"
                         mandatory
                         value={selectedPort ? selectedPort.port_name : ''}
@@ -299,7 +311,7 @@ export default function QuotationAdd() {
                     </div>
 
                     <div className="flex gap-2">
-                      <InputText
+                      <InputTextNoErr
                         name="discharge"
                         mandatory
                         value={selectedPortTwo ? selectedPortTwo.port_name : ''}
@@ -327,22 +339,26 @@ export default function QuotationAdd() {
               </div>
 
               <div className="px-3">
-                <div className="mb-5 flex gap-2">
+                <div className="mb-5 flex w-full gap-2">
                   <Label>Header: </Label>
-                  <Textarea
-                    className="header h-32"
-                    value={headerText}
-                    onChange={(e) => setHeaderText(e.target.value)}
-                  />
+                  <div className="w-full">
+                    <Textarea
+                      name="valheader"
+                      value={headerText}
+                      onChange={handleHeaderChange}
+                    />
+                  </div>
                 </div>
 
                 <div className="flex gap-2">
                   <Label>Footer:</Label>
-                  <Textarea
-                    className="footer h-32"
-                    value={footerText}
-                    onChange={(e) => setFooterText(e.target.value)}
-                  />
+                  <div className="w-full">
+                    <Textarea
+                      name="valfooter"
+                      value={footerText}
+                      onChange={handleFooterChange}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

@@ -3,13 +3,13 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { cn } from '@/lib/utils';
 
-type InputHiddenProps = {
+type InputTextNoErrProps = {
   label?: string;
   name: string;
   id?: string;
   placeholder?: string;
   disabled?: boolean;
-  // mandatory?: boolean;
+  mandatory?: boolean;
   defaultCase?: boolean;
   value?: string | number;
   withLabel?: boolean;
@@ -20,13 +20,13 @@ type InputHiddenProps = {
   noErrorMessage?: boolean;
 };
 
-const InputHidden: React.FC<InputHiddenProps> = ({
+const InputTextNoErr: React.FC<InputTextNoErrProps> = ({
   label,
   name,
   id,
   placeholder,
   disabled,
-  // mandatory,
+  mandatory,
   defaultCase,
   withLabel = true,
   containerCN,
@@ -58,15 +58,25 @@ const InputHidden: React.FC<InputHiddenProps> = ({
 
   return (
     <div className={cn('relative', containerCN)}>
+      {/* {withLabel && (
+        <label
+          htmlFor={id || name}
+          className={cn('mb-1 inline-block', labelCN)}
+        >
+          {label || startCase(name)}
+          {mandatory && <span className="text-[#f00]">*</span>}
+        </label>
+      )} */}
+
       <div
         className={cn(
-          'relative flex w-[300px] items-center rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
+          'relative flex w-[300px] items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >
         <input
           {...register(name)}
-          type="hidden"
+          type="text"
           value={field.value ?? ''}
           id={id || name}
           className={cn(
@@ -85,16 +95,12 @@ const InputHidden: React.FC<InputHiddenProps> = ({
           onChange={onChange}
           {...props}
         />
-        <style>
-          {`
-            #${id || name} {
-              visibility: hidden;
-            }
-          `}
-        </style>
       </div>
+      {/* {!noErrorMessage && error?.message && (
+        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
+      )} */}
     </div>
   );
 };
 
-export default InputHidden;
+export default InputTextNoErr;

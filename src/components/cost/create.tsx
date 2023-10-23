@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
@@ -34,7 +34,6 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
 
-import * as QuotationsService from '@/apis/quotation.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import { DateRangePicker } from '@/components/forms/data-range-picker';
@@ -120,17 +119,11 @@ const columnsDef = [
 
 type CostSchema = InferType<typeof Schema>;
 
-interface CreateCostProps {
-  onCostCreated: (newItemCost: any) => void;
-  quotationId: number | null;
-  setSelectedItemCost: Dispatch<SetStateAction<string>>;
-}
-
 export default function CreateCost({
   onCostCreated,
-  quotationId, // Pastikan prop ini ada
-  setSelectedItemCost,
-}: CreateCostProps) {
+}: {
+  onCostCreated: (newItemCost: any) => void;
+}) {
   const qc = useQueryClient();
   const [itemCost, setItemCost] = useState('');
   const [statusesKey, setStatusesKey] = useState<string[]>([]);
@@ -161,42 +154,12 @@ export default function CreateCost({
     limit: pageSize,
   };
 
-  // const fetchData = (fetchDataOptions: any, debouncedSearchValue: any) => {
-  //   return CostService.getAll({
-  //     ...fetchDataOptions,
-  //     searchValue: debouncedSearchValue,
-  //     quo_no: debouncedSearchValue,
-  //   });
-  // };
-
-  const fetchData = async (
-    fetchDataOptions: any,
-    debouncedSearchValue: any
-  ) => {
-    try {
-      if (quotationId) {
-        const quotationIdString = quotationId.toString();
-        const quotation = await QuotationsService.getById(quotationIdString);
-
-        if (quotation && quotation.data) {
-          if (
-            quotation.data.item_cost &&
-            Array.isArray(quotation.data.item_cost)
-          ) {
-            const itemCostData = quotation.data.item_cost;
-            return itemCostData;
-          }
-        }
-      }
-      // Jika ada kesalahan atau data tidak ada, kembalikan array kosong
-      // yah bksa ga
-      return [];
-    } catch (error) {
-      // Handle error, misalnya dengan menampilkan pesan error
-      console.error('Error fetching item_cost:', error);
-      toast.error('Error fetching item_cost');
-      return [];
-    }
+  const fetchData = (fetchDataOptions: any, debouncedSearchValue: any) => {
+    return CostService.getAll({
+      ...fetchDataOptions,
+      searchValue: debouncedSearchValue,
+      quo_no: debouncedSearchValue,
+    });
   };
 
   const costQuery = useQuery({
@@ -237,8 +200,8 @@ export default function CreateCost({
 
   const table = useReactTable({
     columns,
-    data: costQuery.data || [],
-    pageCount: costQuery.data ? 1 : 0,
+    data: costQuery.data?.data ?? [],
+    pageCount: costQuery.data?.pagination.total_page ?? -1,
     state: {
       pagination,
     },
@@ -271,7 +234,9 @@ export default function CreateCost({
     addCostMutation.mutate(data);
     // setItemCost(data.item_cost);
     onCostCreated(data);
+    setIsCostModalOpen(false);
   };
+
   return (
     <div className="mt-10">
       <Link href="#">
