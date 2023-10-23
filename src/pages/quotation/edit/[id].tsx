@@ -429,7 +429,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                 </div>
               </div>
               {/*  */}
-              <div className="block gap-2 rounded-sm shadow-md shadow-black dark:bg-graySecondary/50">
+              <div className="block gap-2 rounded-sm dark:bg-graySecondary/50">
                 <div className="mb-5 flex h-max gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                   <Command className="text-white" />
                   <h1> Data Quotation</h1>

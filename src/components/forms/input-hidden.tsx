@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { lowerCase, startCase } from 'lodash';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -48,7 +48,7 @@ const InputHidden: React.FC<InputHiddenProps> = ({
   useEffect(() => {
     if (shouldUpdateValue) {
       setValue(name, newValue);
-      setShouldUpdateValue(false); // Reset the flag
+      setShouldUpdateValue(false);
     }
   }, [shouldUpdateValue, newValue]);
 
@@ -65,6 +65,14 @@ const InputHidden: React.FC<InputHiddenProps> = ({
 
     setShouldUpdateValue(true);
     setNewValue(e.target.value);
+  };
+
+  const hiddenFileInput = useRef<HTMLInputElement>(null);
+
+  const handleFileClick = () => {
+    hiddenFileInput.current?.click();
+    console.log(hiddenFileInput.current);
+    console.log('Clicked!');
   };
 
   return (
