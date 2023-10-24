@@ -65,13 +65,6 @@ type JoCreateProps = {
   id: string;
 };
 
-// [13.39, 18/10/2023] .:
-// [13.39, 18/10/2023] .: import { fetchQuotationData } from './path-to-fetchQuotationData'; // Sesuaikan dengan struktur proyek Anda.
-
-// // ...
-
-// const { data: quotationData } = useQuery(['quotation', id], () => fetchQuotationData(id));
-
 const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
   const router = useRouter();
   const qc = useQueryClient();
@@ -212,7 +205,7 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
           </div>
 
           {/* Buttons */}
-          <div className="flex items-center gap-2">
+          <div className="mt-5 flex items-center gap-2">
             <Button className="bg-graySecondary">
               <Link href="/quotation">Back</Link>
             </Button>

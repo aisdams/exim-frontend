@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { Cost } from '@/types';
@@ -19,6 +19,7 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
 export default function Content() {
   const router = useRouter();
   const [costData, setCostData] = useState<Cost[]>([]);
+  const [totalPrice, setTotalPrice] = useState<string>('0');
 
   const options: ApexOptions = {
     chart: {
@@ -62,6 +63,38 @@ export default function Content() {
     },
   ];
 
+  // const dataCost = () => {
+  //   fetch('http://localhost:8089/api/cost')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setCostData(data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error:', error);
+  //     });
+  // };
+
+  useEffect(() => {
+    dataCost();
+  }, []);
+
+  const dataCost = () => {
+    fetch('http://localhost:8089/api/cost')
+      .then((response) => response.json())
+      .then((data) => {
+        setCostData(data.data);
+        const total = data.data.reduce(
+          (accumulator: any, cost: any) => accumulator + cost.price,
+          0
+        );
+        // Ubah total harga menjadi string dan hapus "0" di depannya.
+        setTotalPrice(total.toString().replace(/^0+/, ''));
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
   return (
     <div className="grid">
       <div className="mb-10 mt-5 flex items-center gap-3 font-semibold">
@@ -71,7 +104,7 @@ export default function Content() {
       <div className="mb-5 grid grid-cols-[1fr_2fr_1fr] gap-5">
         <div className="w-full gap-3 rounded-md border-2 border-graySecondary/50 p-3 pt-10 text-center font-bold text-darkBlue dark:bg-secondDarkBlue dark:text-white">
           <Truck className="mx-auto grid " size={34} />
-          <h2 className="font-light">RP. 31.0000</h2>
+          <p>Rp. {totalPrice}</p>
           <h2>Lorem, ipsum dolor.</h2>
         </div>
 

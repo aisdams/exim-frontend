@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useDebouncedValue } from '@mantine/hooks';
 import { Label } from '@radix-ui/react-label';
 import {
   useInfiniteQuery,
@@ -20,18 +19,13 @@ import { toast } from 'react-toastify';
 import { InferType } from 'yup';
 
 import * as JOCService from '@/apis/joc.api';
-import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
-import InputDate from '@/components/forms/input-date';
-import InputHidden from '@/components/forms/input-hidden';
-import InputNumber from '@/components/forms/input-number';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
 import Loader from '@/components/table/loader';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import {
   Table,

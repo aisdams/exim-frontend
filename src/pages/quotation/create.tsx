@@ -27,6 +27,7 @@ import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
 import Textarea from '@/components/inputs/rhf/input-text-area';
+import InputTextArea from '@/components/inputs/rhf/input-text-area';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
@@ -342,10 +343,9 @@ export default function QuotationAdd() {
                 <div className="mb-5 flex w-full gap-2">
                   <Label>Header: </Label>
                   <div className="w-full">
-                    <Textarea
+                    <InputTextArea
                       name="valheader"
-                      value={headerText}
-                      onChange={handleHeaderChange}
+                      value="We are pleased to quote you the following"
                     />
                   </div>
                 </div>
@@ -353,10 +353,9 @@ export default function QuotationAdd() {
                 <div className="flex gap-2">
                   <Label>Footer:</Label>
                   <div className="w-full">
-                    <Textarea
+                    <InputTextArea
                       name="valfooter"
-                      value={footerText}
-                      onChange={handleFooterChange}
+                      placeholder="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention."
                     />
                   </div>
                 </div>

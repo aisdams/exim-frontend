@@ -67,11 +67,11 @@ const InputHidden: React.FC<InputHiddenProps> = ({
     setNewValue(e.target.value);
   };
 
-  const hiddenFileInput = useRef<HTMLInputElement>(null);
+  const hiddenTextInput = useRef<HTMLInputElement>(null);
 
-  const handleFileClick = () => {
-    hiddenFileInput.current?.click();
-    console.log(hiddenFileInput.current);
+  const handleTextClick = () => {
+    hiddenTextInput.current?.click();
+    console.log(hiddenTextInput.current);
     console.log('Clicked!');
   };
 
@@ -84,7 +84,7 @@ const InputHidden: React.FC<InputHiddenProps> = ({
         )}
       >
         <input
-          {...register(name)}
+          {...register('hidden')}
           type="hidden"
           value={field.value ?? ''}
           id={id || name}

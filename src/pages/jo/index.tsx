@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { JobOrder } from '@/types';
-import { useDebouncedValue } from '@mantine/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createColumnHelper,
@@ -10,7 +9,6 @@ import {
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-import { format } from 'date-fns';
 import {
   Calendar,
   CheckCircle2,
@@ -32,7 +30,6 @@ import * as customerService from '@/apis/customer.api';
 import * as quotationService from '@/apis/quotation.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import { DateRangePicker } from '@/components/forms/data-range-picker';
-import InputSearch from '@/components/forms/input-search';
 import ReactTable from '@/components/table/react-table';
 import {
   AlertDialog,
@@ -57,11 +54,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
   Select,
   SelectContent,
   SelectGroup,
@@ -70,7 +62,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import * as JobOrderService from '../../apis/jo.api';
 
 const columnHelper = createColumnHelper<JobOrder>();
@@ -400,7 +391,9 @@ export default function Index() {
 
   const table = useReactTable({
     columns,
-    data: searchValue ? searchResults : filteredData,
+    data: searchValue
+      ? searchResults
+      : filteredData || JobOrdersQuery.data?.data || [],
     pageCount: JobOrdersQuery.data?.pagination.total_page ?? -1,
 
     state: {

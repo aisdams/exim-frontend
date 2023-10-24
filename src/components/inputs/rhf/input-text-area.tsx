@@ -65,7 +65,7 @@ const InputTextArea: React.FC<InputTextAreaProps> = ({
           placeholder={
             !disabled
               ? placeholder ||
-                label ||
+                placeholder ||
                 `Enter ${lowerCase(name)}...` ||
                 'Type something...'
               : undefined

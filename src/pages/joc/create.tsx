@@ -11,16 +11,13 @@ import { toast } from 'react-toastify';
 import { InferType } from 'yup';
 
 import * as JOCService from '@/apis/joc.api';
-import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import InputDate from '@/components/forms/input-date';
-import InputDisable from '@/components/forms/input-disable';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Table,

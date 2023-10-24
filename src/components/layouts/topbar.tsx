@@ -137,7 +137,7 @@ export default function Topbar() {
               <DropdownMenuItem>
                 <button>
                   {' '}
-                  <Link href="/change/profile">My Profile</Link>
+                  <Link href="/profile/user">My Profile</Link>
                 </button>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>

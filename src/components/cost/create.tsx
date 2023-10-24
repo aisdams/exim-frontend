@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
-import { Cost, Quotation } from '@/types';
+import { Cost } from '@/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -12,70 +12,16 @@ import {
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-import { format } from 'date-fns';
-import {
-  Calendar,
-  CheckCircle2,
-  CheckIcon,
-  Command,
-  Copy,
-  Edit2,
-  MoreHorizontal,
-  MoreVertical,
-  PackageSearch,
-  PlusCircle,
-  PlusSquare,
-  Printer,
-  Search,
-  Trash,
-  XCircle,
-} from 'lucide-react';
+import { Command, PlusSquare } from 'lucide-react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
 
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
-import { DateRangePicker } from '@/components/forms/data-range-picker';
-import InputSearch from '@/components/forms/input-search';
-import ActionLink from '@/components/table/action-link';
 import ReactTable from '@/components/table/react-table';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import * as CostService from '../../apis/cost.api';
 import InputNumber from '../forms/input-number';
 import InputText from '../forms/input-text';
@@ -125,13 +71,7 @@ export default function CreateCost({
   onCostCreated: (newItemCost: any) => void;
 }) {
   const qc = useQueryClient();
-  const [itemCost, setItemCost] = useState('');
-  const [statusesKey, setStatusesKey] = useState<string[]>([]);
   const router = useRouter();
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-  const [orderBy, setOrderBy] = useState('All');
-  const [orderByTwo, setOrderByTwo] = useState('Quo No');
-  const [orderByThree, setOrderByThree] = useState('Quo No');
   const [searchValue, setSearchValue] = useState('');
   const [isCostModalOpen, setIsCostModalOpen] = useState(false);
 
@@ -140,7 +80,6 @@ export default function CreateCost({
     defaultValues,
     resolver: yupResolver(Schema),
   });
-  const debouncedSearchValue = useDebouncedValue(searchValue, 500);
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
@@ -232,8 +171,9 @@ export default function CreateCost({
     }
 
     addCostMutation.mutate(data);
-    // setItemCost(data.item_cost);
+
     onCostCreated(data);
+
     setIsCostModalOpen(false);
   };
 
@@ -288,26 +228,6 @@ export default function CreateCost({
                         <InputText name="item_name" />
                         <div className="flex">
                           <InputNumber name="qty" />
-                          {/* <Select value={orderBy} onValueChange={setOrderBy}>
-                            <SelectTrigger className="rounded-md w-max [&>span]:text-xs bg-lightWhite dark:bg-black h-9">
-                              <SelectValue
-                                placeholder="Order by"
-                                className=""
-                              />
-                            </SelectTrigger>
-                            <SelectContent
-                              align="end"
-                              className="dark:text-black"
-                            >
-                              <SelectGroup>
-                                <SelectItem value="Choose">Choose</SelectItem>
-                                <SelectItem value="10FR">10FR</SelectItem>
-                                <SelectItem value="20FR">20FR</SelectItem>
-                                <SelectItem value="30FR">30FR</SelectItem>
-                                <SelectItem value="40FR">40FR</SelectItem>
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select> */}
                         </div>
                         <InputNumber name="unit" />
                         <div className="flex">

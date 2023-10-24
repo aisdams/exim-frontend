@@ -4,6 +4,7 @@ export type Cost = {
   qty: string;
   unit: string;
   mata_uang: string;
+  price: string;
   note: string;
   createdAt: Date | null;
   updatedAt: Date | null;
@@ -11,7 +12,6 @@ export type Cost = {
 };
 
 export type createCostInput = {
-  item_name?: string | null;
   qty?: string | null;
   unit?: string | null;
   note?: string | null;

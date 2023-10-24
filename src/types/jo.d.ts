@@ -1,9 +1,9 @@
 export type JobOrder = {
   jo_no: string;
   jo_date: string;
-  shipper?: string;
-  consignee?: string;
-  qty?: string;
+  shipper: string;
+  consignee: string;
+  qty: string;
   hbl: string;
   mbl: string;
   etd: string;

@@ -4,8 +4,8 @@ import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
+import { Cost } from '@/types';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useDebouncedValue } from '@mantine/hooks';
 import { Label } from '@radix-ui/react-label';
 import {
   useInfiniteQuery,
@@ -13,29 +13,22 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { format } from 'date-fns';
 import { Command, Search } from 'lucide-react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { InferType, string } from 'yup';
+import { InferType } from 'yup';
 
-import * as CostService from '@/apis/cost.api';
 import * as quotationService from '@/apis/quotation.api';
-import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import CreateCost from '@/components/cost/create';
-import InputDate from '@/components/forms/input-date';
-import InputHidden from '@/components/forms/input-hidden';
 import InputNumber from '@/components/forms/input-number';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
-import TextareaN from '@/components/inputs/rhf/input-text-area';
 import InputTextArea from '@/components/inputs/rhf/input-text-area';
 import Loader from '@/components/table/loader';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -130,29 +123,17 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
   const [createdItemCost, setCreatedItemCost] = useState('');
   const [itemCostValue, setItemCostValue] = useState('');
   const [submittedItemCost, setSubmittedItemCost] = useState('');
-  // const handleCostCreated = (newItemCost: any) => {
-  //   setCreatedItemCost(newItemCost);
 
-  //   setValue('item_cost', newItemCost);
+  // const handleCostCreated = (newItemCost: { data: { item_cost: string } }) => {
+  //   if (newItemCost && newItemCost.data && newItemCost.data.item_cost) {
+  //     setValue('item_cost', newItemCost.data.item_cost);
+  //   }
   // };
-
-  const handleCostCreated = (newItemCost: { data: { item_cost: string } }) => {
-    setValue('item_cost', newItemCost.data.item_cost);
-
-    setItemCostValue(newItemCost.data.item_cost);
-
-    // Set data cost yang baru saja dibuat
-    setCreatedItemCost(newItemCost.data.item_cost);
-
-    const itemCost = newItemCost.data.item_cost;
+  const handleCostCreated = (newItemCost: { data: { item_cost?: string } }) => {
+    if (newItemCost && newItemCost.data && newItemCost.data.item_cost) {
+      setValue('item_cost', newItemCost.data.item_cost);
+    }
   };
-
-  const [headerText, setHeaderText] = useState(
-    'We are pleased to quote you the following :'
-  );
-  const [footerText, setFooterText] = useState(
-    'Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention.'
-  );
 
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
@@ -246,33 +227,6 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
     },
   });
 
-  async function fetchCostData() {
-    try {
-      const response = await fetch('http://localhost:8089/api/cost');
-      if (!response.ok) {
-        throw new Error('Failed to fetch customer data');
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching customer data:', error);
-      return [];
-    }
-  }
-
-  useEffect(() => {
-    fetchCostData()
-      .then((costData) => {
-        if (costData.length > 0) {
-          const firstItemCost = costData[0].item_cost;
-          setValue('item_cost', firstItemCost);
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }, []);
-
   const onSubmit: SubmitHandler<QuotationSchema> = (data) => {
     if (IS_DEV) {
       console.log('data =>', data);
@@ -330,7 +284,6 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
                         disabled
                         placeholder="~AUTO~"
-                        value="2023-10-05T03:17:44.892Z"
                       />
                       <InputText name="sales" mandatory />
                       <InputText name="subject" mandatory />
@@ -422,7 +375,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                       </div>
                       <InputNumber name="kurs" mandatory />
                       <div>
-                        <InputText name="item_cost" value={itemCostValue} />
+                        <InputText name="item_cost" />
                       </div>
                     </div>
                   </div>
@@ -622,7 +575,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
         </FormProvider>
       )}
 
-      <CreateCost onCostCreated={setItemCostValue} />
+      <CreateCost onCostCreated={handleCostCreated} />
     </div>
   );
 };
