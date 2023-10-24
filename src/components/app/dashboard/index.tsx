@@ -87,7 +87,6 @@ export default function Content() {
           (accumulator: any, cost: any) => accumulator + cost.price,
           0
         );
-        // Ubah total harga menjadi string dan hapus "0" di depannya.
         setTotalPrice(total.toString().replace(/^0+/, ''));
       })
       .catch((error) => {
