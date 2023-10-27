@@ -86,6 +86,22 @@ export default function Content() {
     dataCost();
   }, []);
 
+  const dataCost = () => {
+    fetch('http://localhost:8089/api/cost')
+      .then((response) => response.json())
+      .then((data) => {
+        setCostData(data.data);
+        const total = data.data.reduce(
+          (accumulator: any, cost: any) => accumulator + cost.price,
+          0
+        );
+        setTotalPrice(total.toString().replace(/^0+/, ''));
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
   return (
     <div className="grid">
       <div className="z-[99] mb-10 mt-5 flex items-center gap-3 font-semibold">
