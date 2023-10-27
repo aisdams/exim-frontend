@@ -25,6 +25,7 @@ import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import InputDisable from '@/components/forms/input-disable';
+import InputHidden from '@/components/forms/input-hidden';
 import InputText from '@/components/forms/input-text';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -141,7 +142,6 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
                   <Label>#No Jo:</Label>
                   <Label>JO Date:</Label>
                   <Label>Type:</Label>
-                  <Label>Customer:</Label>
                 </div>
 
                 <div className="grid gap-2">
@@ -160,7 +160,7 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
                     placeholder={quotationData?.data?.type || 'Loading...'}
                     disabled
                   />
-                  <InputDisable
+                  <InputHidden
                     name="customer_code"
                     disabled
                     placeholder={
@@ -206,8 +206,8 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
 
           {/* Buttons */}
           <div className="mt-5 flex items-center gap-2">
-            <Button className="bg-graySecondary">
-              <Link href="/quotation">Back</Link>
+            <Button className="bg-graySecondary" onClick={() => router.back()}>
+              Back
             </Button>
             <Button
               type="submit"

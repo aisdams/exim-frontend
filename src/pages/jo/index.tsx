@@ -171,7 +171,12 @@ const columnsDef = [
         <div>MBL/MAWB</div>
       </div>
     ),
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <div>
+        <div>{info.row.original.hbl}</div>
+        <div>{info.row.original.mbl}</div>
+      </div>
+    ),
   }),
   columnHelper.accessor('quo_no', {
     enableSorting: false,
@@ -391,9 +396,15 @@ export default function Index() {
 
   const table = useReactTable({
     columns,
-    data: searchValue
-      ? searchResults
-      : filteredData || JobOrdersQuery.data?.data || [],
+    data:
+      // filteredData.length > 0
+      //   ? filteredData
+      //   : searchValue
+      //   ? searchResults
+      //   : JobOrdersQuery.data?.data || [],
+      searchValue
+        ? searchResults
+        : filteredData || JobOrdersQuery.data?.data || [],
     pageCount: JobOrdersQuery.data?.pagination.total_page ?? -1,
 
     state: {
@@ -420,6 +431,7 @@ export default function Index() {
               router.pathname === '/jo' ? 'bg-blueHeaderCard' : 'bg-green-500'
             }`}
           >
+            {/* */}
             <Link href="/jo">Data JO</Link>
           </button>
           <button

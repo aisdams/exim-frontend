@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { lowerCase, startCase } from 'lodash';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -17,6 +18,7 @@ type InputDisableProps = {
   inputWrapperCN?: string;
   inputCN?: string;
   noErrorMessage?: boolean;
+  onTouched?: () => void;
 };
 
 const InputDisable: React.FC<InputDisableProps> = ({
@@ -26,66 +28,51 @@ const InputDisable: React.FC<InputDisableProps> = ({
   placeholder,
   disabled,
   defaultCase,
+  value,
   withLabel = true,
   containerCN,
   labelCN,
   inputWrapperCN,
   inputCN,
   noErrorMessage,
+  onTouched,
   ...props
 }) => {
-  const { register } = useFormContext();
-  const {
-    field,
-    fieldState: { error },
-  } = useController({ name });
+  const { register, setValue } = useFormContext();
 
-  let inputValue = field.value ?? '';
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (defaultCase) {
-      inputValue = e.target.value;
-      field.onChange(e.target.value);
-      return;
+  useEffect(() => {
+    if (value !== undefined) {
+      setValue(name, value);
     }
+  }, [name, value, setValue]);
 
-    //! UpperCase Logic
-    const { selectionStart, selectionEnd } = e.target;
-    e.target.value = e.target.value.toUpperCase();
-    e.target.setSelectionRange(selectionStart, selectionEnd);
-
-    inputValue = e.target.value;
-    field.onChange(e.target.value);
+  const handleBlur = () => {
+    if (onTouched) {
+      onTouched();
+    }
   };
-
   return (
     <div className={cn('relative', containerCN)}>
-      <div
+      <input
+        type="text"
+        {...register(name)}
+        value={value}
+        id={id || name}
         className={cn(
-          'relative flex items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary w-full',
-          inputWrapperCN
+          'h-9 w-full cursor-not-allowed bg-[#111522] px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
+          inputCN
         )}
-      >
-        <input
-          {...register(name)}
-          type="text"
-          value={inputValue}
-          id={id || name}
-          className={cn(
-            'h-9 w-full bg-[#111522] px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted cursor-not-allowed',
-            inputCN
-          )}
-          placeholder={
-            placeholder ||
-            label ||
-            `Enter ${lowerCase(name)}...` ||
-            'Type something...'
-          }
-          readOnly
-          onChange={onChange}
-          {...props}
-        />
-      </div>
+        placeholder={
+          !disabled
+            ? placeholder ||
+              label ||
+              `Enter ${lowerCase(name)}...` ||
+              'Type something...'
+            : undefined
+        }
+        disabled={disabled}
+        onBlur={handleBlur}
+      />
     </div>
   );
 };

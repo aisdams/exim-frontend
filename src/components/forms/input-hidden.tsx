@@ -18,6 +18,7 @@ type InputHiddenProps = {
   inputWrapperCN?: string;
   inputCN?: string;
   noErrorMessage?: boolean;
+  onTouched?: () => void;
 };
 
 const InputHidden: React.FC<InputHiddenProps> = ({
@@ -27,91 +28,51 @@ const InputHidden: React.FC<InputHiddenProps> = ({
   placeholder,
   disabled,
   defaultCase,
+  value,
   withLabel = true,
   containerCN,
   labelCN,
   inputWrapperCN,
   inputCN,
   noErrorMessage,
+  onTouched,
   ...props
 }) => {
-  const { register } = useFormContext();
-  const {
-    field,
-    fieldState: { error },
-  } = useController({ name });
-
-  const [shouldUpdateValue, setShouldUpdateValue] = useState(false);
-  const { setValue } = useFormContext();
-  const [newValue, setNewValue] = useState('');
+  const { register, setValue } = useFormContext();
 
   useEffect(() => {
-    if (shouldUpdateValue) {
-      setValue(name, newValue);
-      setShouldUpdateValue(false);
+    if (value !== undefined) {
+      setValue(name, value);
     }
-  }, [shouldUpdateValue, newValue]);
+  }, [name, value, setValue]);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (defaultCase) {
-      field.onChange(e.target.value);
-      return;
+  const handleBlur = () => {
+    if (onTouched) {
+      onTouched();
     }
-
-    //! UpperCase Logic
-    const { selectionStart, selectionEnd } = e.target;
-    e.target.value = e.target.value.toUpperCase();
-    e.target.setSelectionRange(selectionStart, selectionEnd);
-
-    setShouldUpdateValue(true);
-    setNewValue(e.target.value);
   };
-
-  const hiddenTextInput = useRef<HTMLInputElement>(null);
-
-  const handleTextClick = () => {
-    hiddenTextInput.current?.click();
-    console.log(hiddenTextInput.current);
-    console.log('Clicked!');
-  };
-
   return (
     <div className={cn('relative', containerCN)}>
-      <div
+      <input
+        type="hidden"
+        {...register(name)}
+        value={value}
+        id={id || name}
         className={cn(
-          'relative flex w-[300px] items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
-          inputWrapperCN
+          'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:bg-slate-200 dark:disabled:bg-slate-800',
+          inputCN
         )}
-      >
-        <input
-          {...register('hidden')}
-          type="hidden"
-          value={field.value ?? ''}
-          id={id || name}
-          className={cn(
-            'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:bg-slate-200 dark:disabled:bg-slate-800',
-            inputCN
-          )}
-          placeholder={
-            !disabled
-              ? placeholder ||
-                label ||
-                `Enter ${lowerCase(name)}...` ||
-                'Type something...'
-              : undefined
-          }
-          disabled={disabled}
-          onChange={onChange}
-          onWheelCapture={(e) => {
-            //! disable scroll onChange
-            e.currentTarget.blur();
-          }}
-          {...props}
-        />
-      </div>
-      {error?.message && (
-        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
-      )}
+        placeholder={
+          !disabled
+            ? placeholder ||
+              label ||
+              `Enter ${lowerCase(name)}...` ||
+              'Type something...'
+            : undefined
+        }
+        disabled={disabled}
+        onBlur={handleBlur}
+      />
     </div>
   );
 };

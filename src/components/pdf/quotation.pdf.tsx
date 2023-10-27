@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     fontSize: 9,
     fontWeight: 'bold',
-    width: '13%',
+    width: 'auto',
   },
   textHeadFour: {
     marginVertical: 10,

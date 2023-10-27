@@ -27,6 +27,7 @@ type InputSelectProps = {
   noPortal?: boolean;
   additionalOnChange?: (option: any) => void;
   additionalOnClear?: () => void;
+  onTouched?: () => void;
 };
 
 const InputSelect: React.FC<InputSelectProps> = ({
@@ -44,6 +45,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
   disabled,
   menuZIndex = 1,
   menuIsOpen = undefined,
+  onTouched,
   noPortal = false,
   additionalOnChange = () => {},
   additionalOnClear = () => {},
@@ -67,6 +69,11 @@ const InputSelect: React.FC<InputSelectProps> = ({
     additionalOnChange(option);
   };
 
+  const handleBlur = () => {
+    if (onTouched) {
+      onTouched();
+    }
+  };
   return (
     <div className="">
       <div className="">
@@ -98,6 +105,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
                   : null
               }
               components={animatedComponents}
+              onBlur={handleBlur}
               className="!w-[300px] rounded-md border border-muted-foreground bg-transparent dark:border-none dark:bg-black"
               classNamePrefix="select"
               theme={(theme) => ({

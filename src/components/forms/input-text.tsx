@@ -18,6 +18,7 @@ type InputTextProps = {
   inputWrapperCN?: string;
   inputCN?: string;
   noErrorMessage?: boolean;
+  onTouched?: () => void;
 };
 
 const InputText: React.FC<InputTextProps> = ({
@@ -34,6 +35,7 @@ const InputText: React.FC<InputTextProps> = ({
   inputWrapperCN,
   inputCN,
   noErrorMessage,
+  onTouched,
   ...props
 }) => {
   const { register } = useFormContext();
@@ -56,6 +58,11 @@ const InputText: React.FC<InputTextProps> = ({
     field.onChange(e.target.value);
   };
 
+  const handleBlur = () => {
+    if (onTouched) {
+      onTouched();
+    }
+  };
   return (
     <div className={cn('relative', containerCN)}>
       {/* {withLabel && (
@@ -92,12 +99,15 @@ const InputText: React.FC<InputTextProps> = ({
               : undefined
           }
           disabled={disabled}
+          onBlur={handleBlur}
           onChange={onChange}
           {...props}
         />
       </div>
       {!noErrorMessage && error?.message && (
-        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
+        <p className="text-white-600 text-xs tracking-wide">
+          {error.message} !
+        </p>
       )}
     </div>
   );

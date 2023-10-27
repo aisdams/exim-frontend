@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
-import { Cost } from '@/types';
+import { Cost, Quotation } from '@/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -23,6 +23,7 @@ import ReactTable from '@/components/table/react-table';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import * as CostService from '../../apis/cost.api';
+import * as quotationService from '../../apis/quotation.api';
 import InputNumber from '../forms/input-number';
 import InputText from '../forms/input-text';
 
@@ -67,13 +68,16 @@ type CostSchema = InferType<typeof Schema>;
 
 export default function CreateCost({
   onCostCreated,
+  itemCostValue,
 }: {
   onCostCreated: (newItemCost: any) => void;
+  itemCostValue: string | undefined;
 }) {
   const qc = useQueryClient();
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
   const [isCostModalOpen, setIsCostModalOpen] = useState(false);
+  const [selectedItemCost, setSelectedItemCost] = useState(itemCostValue);
 
   const methods = useForm<CostSchema>({
     mode: 'all',
@@ -91,7 +95,9 @@ export default function CreateCost({
   const fetchDataOptions = {
     page: pageIndex + 1,
     limit: pageSize,
+    item_cost: selectedItemCost,
   };
+  const { quo_no } = router.query;
 
   const fetchData = (fetchDataOptions: any, debouncedSearchValue: any) => {
     return CostService.getAll({
@@ -101,14 +107,18 @@ export default function CreateCost({
     });
   };
 
-  const costQuery = useQuery({
-    queryKey: ['cost', { fetchDataOptions, searchValue }],
+  const quotationQuery = useQuery({
+    queryKey: ['quotations', { fetchDataOptions, searchValue }],
     queryFn: () => fetchData(fetchDataOptions, searchValue),
     keepPreviousData: true,
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
+
+  useEffect(() => {
+    setSelectedItemCost(itemCostValue);
+  }, [itemCostValue]);
 
   const openCostModal = () => {
     setIsCostModalOpen(true);
@@ -139,8 +149,8 @@ export default function CreateCost({
 
   const table = useReactTable({
     columns,
-    data: costQuery.data?.data ?? [],
-    pageCount: costQuery.data?.pagination.total_page ?? -1,
+    data: quotationQuery.data?.data ?? [],
+    pageCount: quotationQuery.data?.pagination.total_page ?? -1,
     state: {
       pagination,
     },
@@ -159,6 +169,7 @@ export default function CreateCost({
       toast.success('Success, Cost has been added.');
       const { id } = router.query;
       router.push(`/quotation/edit/${id}`);
+      // router.reload();
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -188,7 +199,7 @@ export default function CreateCost({
           <h3>Create Cost</h3>
         </Button>
       </Link>
-      <ReactTable tableInstance={table} isLoading={costQuery.isFetching} />
+      <ReactTable tableInstance={table} isLoading={quotationQuery.isFetching} />
 
       {isCostModalOpen && (
         <div
@@ -239,8 +250,11 @@ export default function CreateCost({
                   </div>
                   {/* Buttons */}
                   <div className="mt-5 flex items-center gap-2">
-                    <Button className="bg-graySecondary">
-                      <Link href="/quotation">Back</Link>
+                    <Button
+                      className="bg-graySecondary"
+                      onClick={() => router.back()}
+                    >
+                      Back
                     </Button>
                     <Button
                       type="submit"

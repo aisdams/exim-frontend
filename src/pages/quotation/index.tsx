@@ -12,21 +12,15 @@ import {
 } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import {
-  Calendar,
-  CheckCircle2,
   CheckIcon,
   Command,
   Copy,
   Edit2,
-  MoreHorizontal,
   MoreVertical,
-  PackageSearch,
-  PlusCircle,
   PlusSquare,
   Printer,
   Search,
   Trash,
-  XCircle,
 } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { useSession } from 'next-auth/react';
@@ -34,8 +28,6 @@ import { toast } from 'react-toastify';
 
 import { cn, getErrMessage } from '@/lib/utils';
 import { DateRangePicker } from '@/components/forms/data-range-picker';
-import InputSearch from '@/components/forms/input-search';
-import ActionLink from '@/components/table/action-link';
 import ReactTable from '@/components/table/react-table';
 import {
   AlertDialog,
@@ -400,8 +392,6 @@ export default function Index() {
     periodOf: DateTime.fromJSDate(new Date()).minus({ months: 1 }).toJSDate(),
     periodUntil: new Date(),
   });
-  // console.log(periodOf, '-', periodUntil);
-  const debouncedSearchValue = useDebouncedValue(searchValue, 500);
 
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);

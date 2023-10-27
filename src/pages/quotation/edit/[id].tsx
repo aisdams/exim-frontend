@@ -22,6 +22,7 @@ import * as quotationService from '@/apis/quotation.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import CreateCost from '@/components/cost/create';
+import InputHidden from '@/components/forms/input-hidden';
 import InputNumber from '@/components/forms/input-number';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
@@ -124,11 +125,6 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
   const [itemCostValue, setItemCostValue] = useState('');
   const [submittedItemCost, setSubmittedItemCost] = useState('');
 
-  // const handleCostCreated = (newItemCost: { data: { item_cost: string } }) => {
-  //   if (newItemCost && newItemCost.data && newItemCost.data.item_cost) {
-  //     setValue('item_cost', newItemCost.data.item_cost);
-  //   }
-  // };
   const handleCostCreated = (newItemCost: { data: { item_cost?: string } }) => {
     if (newItemCost && newItemCost.data && newItemCost.data.item_cost) {
       setValue('item_cost', newItemCost.data.item_cost);
@@ -209,6 +205,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
       setValue('valheader', data.valheader);
       setValue('valfooter', data.valfooter);
       setValue('loading', data.loading);
+      setValue('item_cost', data.item_cost);
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -375,7 +372,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                       </div>
                       <InputNumber name="kurs" mandatory />
                       <div>
-                        <InputText name="item_cost" />
+                        <InputHidden name="item_cost" />
                       </div>
                     </div>
                   </div>
@@ -407,8 +404,11 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
             </div>
             {/* Buttons */}
             <div className="flex items-center gap-2">
-              <Button className="bg-graySecondary">
-                <Link href="/quotation">Back</Link>
+              <Button
+                className="bg-graySecondary"
+                onClick={() => router.back()}
+              >
+                Back
               </Button>
               <Button
                 type="submit"
@@ -575,7 +575,10 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
         </FormProvider>
       )}
 
-      <CreateCost onCostCreated={handleCostCreated} />
+      <CreateCost
+        onCostCreated={handleCostCreated}
+        itemCostValue={itemCostValue}
+      />
     </div>
   );
 };

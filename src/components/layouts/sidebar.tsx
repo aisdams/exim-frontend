@@ -67,7 +67,7 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <div>
+    <div className="!z-[20]">
       <div
         className={`h-screen w-auto bg-blueNav ${
           sidebarVisible ? 'rounded-r-[2rem] bg-blueNav ' : ''
@@ -120,7 +120,7 @@ export default function Sidebar() {
             }`}
           >
             <Image src={Logo} alt="" width={250} />
-            <div className="navigation lap- mt-4 grid gap-2">
+            <div className="navigation lap- !z-0 mt-4 grid gap-2">
               {sidebarData.map((sidebar, idx) => (
                 <NavigationMenu key={idx} className="childOne">
                   <NavigationMenuList className="childTwo">

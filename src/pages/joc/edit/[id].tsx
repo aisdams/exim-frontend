@@ -24,6 +24,7 @@ import yup from '@/lib/yup';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
+import CreateJO from '@/components/jo/create';
 import Loader from '@/components/table/loader';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -92,6 +93,7 @@ type JOCEditProps = {
 const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
   const router = useRouter();
   const qc = useQueryClient();
+  const [itemJOValue, setItemJOValue] = useState('');
   const methods = useForm<JOCSchema>({
     mode: 'all',
     defaultValues,
@@ -149,6 +151,12 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
       .catch((error) => {
         console.error('Error:', error);
       });
+  };
+
+  const handleJOCreated = (newItemJO: { data: { jo_no?: string } }) => {
+    if (newItemJO && newItemJO.data && newItemJO.data.jo_no) {
+      setValue('jo_no', newItemJO.data.jo_no);
+    }
   };
 
   const closeCustomerModal = () => {
@@ -213,284 +221,301 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
       ) : jocQuery.isLoadingError ? (
         <p className="text-red-600">Something went wrong!</p>
       ) : (
-        <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
-                <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
-                  <Command className="text-white" />
-                  <h1> Data Quotation</h1>
-                </div>
+        <>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
+                  <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
+                    <Command className="text-white" />
+                    <h1> Data JOC</h1>
+                  </div>
 
-                <div className="grid gap-3 px-3">
-                  <div className="grid grid-cols-[1fr_2fr]">
-                    <div className="grid gap-5">
-                      <Label>JOC NO :</Label>
-                      <Label>Date :</Label>
-                      <Label>Types :</Label>
-                      <Label>Vessel :</Label>
+                  <div className="grid gap-3 px-3">
+                    <div className="grid grid-cols-[1fr_2fr]">
+                      <div className="grid gap-5">
+                        <Label>JOC NO :</Label>
+                        <Label>Date :</Label>
+                        <Label>Types :</Label>
+                        <Label>Vessel :</Label>
+                      </div>
+                      <div className="grid gap-2">
+                        <Input
+                          name="joc_no"
+                          className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
+                          disabled
+                          placeholder={`${id}`}
+                        />
+                        <Input
+                          name="createdAt"
+                          className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
+                          disabled
+                          placeholder="~AUTO~"
+                        />
+                        <InputSelect
+                          name="type"
+                          options={[
+                            {
+                              value: 'Import',
+                              label: 'Import',
+                            },
+                            {
+                              value: 'Export',
+                              label: 'Export',
+                            },
+                            {
+                              value: 'Domestik',
+                              label: 'Domestik',
+                            },
+                          ]}
+                        />
+                        <InputText name="vessel" mandatory />
+                      </div>
                     </div>
-                    <div className="grid gap-2">
-                      <Input
-                        name="joc_no"
-                        className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
-                        disabled
-                        placeholder={`${id}`}
-                      />
-                      <Input
-                        name="createdAt"
-                        className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
-                        disabled
-                        placeholder="~AUTO~"
-                      />
-                      <InputSelect
-                        name="type"
-                        options={[
-                          {
-                            value: 'Import',
-                            label: 'Import',
-                          },
-                          {
-                            value: 'Export',
-                            label: 'Export',
-                          },
-                          {
-                            value: 'Domestik',
-                            label: 'Domestik',
-                          },
-                        ]}
-                      />
-                      <InputText name="vessel" mandatory />
+                  </div>
+                </div>
+                {/*  */}
+                <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
+                  <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
+                    <Command className="text-white" />
+                    <h1> Data Quotation</h1>
+                  </div>
+
+                  <div className="grid gap-3 px-3">
+                    <div className="grid grid-cols-[1fr_2fr]">
+                      <div className="grid gap-5">
+                        <Label>Loading :</Label>
+                        <Label>Discharge :</Label>
+                        <Label>no_container :</Label>
+                      </div>
+                      <div className="grid gap-2">
+                        <div className="flex gap-2">
+                          <InputTextNoErr
+                            name="loading"
+                            mandatory
+                            value={selectedPort ? selectedPort.port_name : ''}
+                          />
+                          <button
+                            type="button"
+                            className="
+                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
+                            onClick={openPortModal}
+                          >
+                            <Search className="w-4" />
+                          </button>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <InputTextNoErr
+                            name="discharge"
+                            mandatory
+                            value={
+                              selectedPortTwo ? selectedPortTwo.port_name : ''
+                            }
+                          />
+                          <button
+                            type="button"
+                            className="
+                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
+                  text-white dark:bg-blueLight"
+                            onClick={openPortTwoModal}
+                          >
+                            <Search className="w-4" />
+                          </button>
+                        </div>
+
+                        <InputText name="no_container" mandatory />
+                        <InputText
+                          name="jo_no"
+                          mandatory
+                          placeholder="Enter JO_NO from table"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              {/*  */}
-              <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
-                <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
-                  <Command className="text-white" />
-                  <h1> Data Quotation</h1>
-                </div>
+              {/* Buttons */}
+              <div className="flex items-center gap-2">
+                <Button
+                  className="bg-graySecondary"
+                  onClick={() => router.back()}
+                >
+                  Back
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={updatedJOCMutation.isLoading}
+                  className="bg-blueLight"
+                >
+                  {updatedJOCMutation.isLoading ? 'Loading...' : 'Save'}
+                </Button>
+              </div>
 
-                <div className="grid gap-3 px-3">
-                  <div className="grid grid-cols-[1fr_2fr]">
-                    <div className="grid gap-5">
-                      <Label>Loading :</Label>
-                      <Label>Discharge :</Label>
-                      <Label>no_container :</Label>
-                    </div>
-                    <div className="grid gap-2">
-                      <div className="flex gap-2">
-                        <InputTextNoErr
-                          name="loading"
-                          mandatory
-                          value={selectedPort ? selectedPort.port_name : ''}
-                        />
-                        <button
-                          type="button"
-                          className="
-                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
-                  text-white dark:bg-blueLight"
-                          onClick={openPortModal}
-                        >
-                          <Search className="w-4" />
-                        </button>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <InputTextNoErr
-                          name="discharge"
-                          mandatory
-                          value={
-                            selectedPortTwo ? selectedPortTwo.port_name : ''
-                          }
-                        />
-                        <button
-                          type="button"
-                          className="
-                  mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
-                  text-white dark:bg-blueLight"
-                          onClick={openPortTwoModal}
-                        >
-                          <Search className="w-4" />
-                        </button>
-                      </div>
-
-                      <InputText name="no_container" mandatory />
-                      <InputText name="jo_no" mandatory />
-                    </div>
+              {isCustomerModalOpen && (
+                <div
+                  style={{ overflow: 'hidden' }}
+                  className={`modal fixed inset-0 z-50 flex items-center justify-center ${
+                    isCustomerModalOpen ? 'open' : 'closed'
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-black opacity-75"></div>
+                  <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
+                    <Button
+                      className="absolute -top-9 right-0 !bg-transparent text-white"
+                      onClick={closeCustomerModal}
+                    >
+                      <h1 className="text-xl">X</h1>
+                    </Button>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="hover:!text-white">
+                            Partner Name
+                          </TableHead>
+                          <TableHead className="hover:!text-white">
+                            Unit
+                          </TableHead>
+                          <TableHead className="hover:!text-white">
+                            Add
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody className="text-black">
+                        {customerData.map((customer) => (
+                          <TableRow key={customer.customer_code}>
+                            <TableCell className="font-medium">
+                              {customer.partner_name}
+                            </TableCell>
+                            <TableCell className="font-medium">
+                              {customer.unit}
+                            </TableCell>
+                            <TableCell className="!h-2 !w-2 rounded-md">
+                              <Button
+                                className=""
+                                onClick={() => {
+                                  setSelectedCustomer(customer);
+                                  closeCustomerModal();
+                                }}
+                              >
+                                add
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </div>
                 </div>
-              </div>
-            </div>
-            {/* Buttons */}
-            <div className="flex items-center gap-2">
-              <Button className="bg-graySecondary">
-                <Link href="/quotation">Back</Link>
-              </Button>
-              <Button
-                type="submit"
-                disabled={updatedJOCMutation.isLoading}
-                className="bg-blueLight"
-              >
-                {updatedJOCMutation.isLoading ? 'Loading...' : 'Save'}
-              </Button>
-            </div>
+              )}
 
-            {isCustomerModalOpen && (
-              <div
-                style={{ overflow: 'hidden' }}
-                className={`modal fixed inset-0 z-50 flex items-center justify-center ${
-                  isCustomerModalOpen ? 'open' : 'closed'
-                }`}
-              >
-                <div className="absolute inset-0 bg-black opacity-75"></div>
-                <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
-                  <Button
-                    className="absolute -top-9 right-0 !bg-transparent text-white"
-                    onClick={closeCustomerModal}
-                  >
-                    <h1 className="text-xl">X</h1>
-                  </Button>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="hover:!text-white">
-                          Partner Name
-                        </TableHead>
-                        <TableHead className="hover:!text-white">
-                          Unit
-                        </TableHead>
-                        <TableHead className="hover:!text-white">Add</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="text-black">
-                      {customerData.map((customer) => (
-                        <TableRow key={customer.customer_code}>
-                          <TableCell className="font-medium">
-                            {customer.partner_name}
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            {customer.unit}
-                          </TableCell>
-                          <TableCell className="!h-2 !w-2 rounded-md">
-                            <Button
-                              className=""
-                              onClick={() => {
-                                setSelectedCustomer(customer);
-                                closeCustomerModal();
-                              }}
-                            >
-                              add
-                            </Button>
-                          </TableCell>
+              {isPortModalOpen && (
+                <div
+                  style={{ overflow: 'hidden' }}
+                  className={`modal fixed inset-0 z-50 flex items-center justify-center ${
+                    isPortModalOpen ? 'open' : 'closed'
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-black opacity-75"></div>
+                  <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
+                    <Button
+                      className="absolute -top-9 right-0 !bg-transparent text-white"
+                      onClick={closePortModal}
+                    >
+                      <h1 className="text-xl">X</h1>
+                    </Button>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="hover:!text-white">
+                            Port Name
+                          </TableHead>
+                          <TableHead className="hover:!text-white">
+                            Add
+                          </TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody className="text-black">
+                        {PortData.map((port) => (
+                          <TableRow key={port.port_code}>
+                            <TableCell className="font-medium">
+                              {port.port_name}
+                            </TableCell>
+                            <TableCell className="!h-2 !w-2 rounded-md">
+                              <Button
+                                className=""
+                                onClick={() => {
+                                  setSelectedPort(port);
+                                  closePortModal();
+                                }}
+                              >
+                                add
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {isPortModalOpen && (
-              <div
-                style={{ overflow: 'hidden' }}
-                className={`modal fixed inset-0 z-50 flex items-center justify-center ${
-                  isPortModalOpen ? 'open' : 'closed'
-                }`}
-              >
-                <div className="absolute inset-0 bg-black opacity-75"></div>
-                <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
-                  <Button
-                    className="absolute -top-9 right-0 !bg-transparent text-white"
-                    onClick={closePortModal}
-                  >
-                    <h1 className="text-xl">X</h1>
-                  </Button>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="hover:!text-white">
-                          Port Name
-                        </TableHead>
-                        <TableHead className="hover:!text-white">Add</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="text-black">
-                      {PortData.map((port) => (
-                        <TableRow key={port.port_code}>
-                          <TableCell className="font-medium">
-                            {port.port_name}
-                          </TableCell>
-                          <TableCell className="!h-2 !w-2 rounded-md">
-                            <Button
-                              className=""
-                              onClick={() => {
-                                setSelectedPort(port);
-                                closePortModal();
-                              }}
-                            >
-                              add
-                            </Button>
-                          </TableCell>
+              {isPortTwoModalOpen && (
+                <div
+                  style={{ overflow: 'hidden' }}
+                  className={`modal fixed inset-0 z-50 flex items-center justify-center ${
+                    isPortTwoModalOpen ? 'open' : 'closed'
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-black opacity-75"></div>
+                  <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
+                    <Button
+                      className="absolute -top-9 right-0 !bg-transparent text-white"
+                      onClick={closePortTwoModal}
+                    >
+                      <h1 className="text-xl">X</h1>
+                    </Button>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="hover:!text-white">
+                            Port Name
+                          </TableHead>
+                          <TableHead className="hover:!text-white">
+                            Add
+                          </TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody className="text-black">
+                        {PortData.map((port) => (
+                          <TableRow key={port.port_code}>
+                            <TableCell className="font-medium">
+                              {port.port_name}
+                            </TableCell>
+                            <TableCell className="!h-2 !w-2 rounded-md">
+                              <Button
+                                className=""
+                                onClick={() => {
+                                  setSelectedPortTwo(port);
+                                  closePortTwoModal();
+                                }}
+                              >
+                                add
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </form>
+          </FormProvider>
 
-            {isPortTwoModalOpen && (
-              <div
-                style={{ overflow: 'hidden' }}
-                className={`modal fixed inset-0 z-50 flex items-center justify-center ${
-                  isPortTwoModalOpen ? 'open' : 'closed'
-                }`}
-              >
-                <div className="absolute inset-0 bg-black opacity-75"></div>
-                <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
-                  <Button
-                    className="absolute -top-9 right-0 !bg-transparent text-white"
-                    onClick={closePortTwoModal}
-                  >
-                    <h1 className="text-xl">X</h1>
-                  </Button>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="hover:!text-white">
-                          Port Name
-                        </TableHead>
-                        <TableHead className="hover:!text-white">Add</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="text-black">
-                      {PortData.map((port) => (
-                        <TableRow key={port.port_code}>
-                          <TableCell className="font-medium">
-                            {port.port_name}
-                          </TableCell>
-                          <TableCell className="!h-2 !w-2 rounded-md">
-                            <Button
-                              className=""
-                              onClick={() => {
-                                setSelectedPortTwo(port);
-                                closePortTwoModal();
-                              }}
-                            >
-                              add
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            )}
-          </form>
-        </FormProvider>
+          <CreateJO onJOCreated={handleJOCreated} />
+        </>
       )}
     </div>
   );

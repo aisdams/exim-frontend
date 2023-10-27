@@ -84,7 +84,7 @@ body {
   border-radius: 50%;
   box-shadow: 35px 35px 0 10px white;
   pointer-events: none;
-  z-index: 1 !important;
+  z-index: 0 !important;
 }
 
 .childOne .childTwo .childThree .childFour.hovered .Link::after,
@@ -99,7 +99,7 @@ body {
   border-radius: 50%;
   box-shadow: 35px -35px 0 10px white;
   pointer-events: none;
-  z-index: 1 !important;
+  z-index: 0 !important;
 }
 
 .dark .childOne .childTwo .childThree .childFour.hovered .Link::before,

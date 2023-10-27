@@ -50,45 +50,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex h-screen dark:bg-[#262e4b]">
       <Sidebar />
-      <div className="z-50 flex flex-1 flex-col">
-        <Topbar />
-        <div className="flex-1 overflow-y-auto">
-          <div className="z-50 mx-6 mb-20 mt-8 overflow-y-auto">{children}</div>
+      <div className="flex flex-1 flex-col">
+        <div className="z-[99]">
+          <Topbar />
+        </div>
+        <div className="!z-[30] flex-1 overflow-y-auto">
+          <div className="mx-6 mb-20 mt-8 overflow-y-auto">{children}</div>
         </div>
         <Footer />
       </div>
     </div>
-    // <div className="relative flex min-h-screen font-sans text-sm">
-    //   <Sidebar />
-
-    //   <div
-    //     className={cn(
-    //       'w-full transition-[margin-left,max-width] duration-300',
-    //       sidebarType === 'vertical' && isMediumScreen
-    //         ? // medium up logic
-    //           (showSidebar && autoWidthMode) || !autoWidthMode
-    //           ? 'md:ml-[265px] md:max-w-[calc(100%-265px)]'
-    //           : (!showSidebar && !autoWidthMode) || autoWidthMode
-    //           ? 'ml-[75px] md:max-w-[calc(100%-75px)]'
-    //           : null
-    //         : // medium below logic
-    //           null
-    //     )}
-    //   >
-    //     <Topbar />
-
-    //     <div
-    //       className={cn(
-    //         'min-h-[calc(100vh-65px-33px)] bg-background p-4',
-    //         sidebarType === 'horizontal' && 'min-h-[calc(100vh-65px-32px-43px)]'
-    //       )}
-    //     >
-    //       {children}
-    //     </div>
-
-    //     <Footer />
-    //   </div>
-    // </div>
   );
 };
 

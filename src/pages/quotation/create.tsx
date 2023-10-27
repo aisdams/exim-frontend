@@ -261,7 +261,7 @@ export default function QuotationAdd() {
                       </button>
                     </div>
                     <div>
-                      <InputText name="customer_code" value={customerCode} />
+                      <InputHidden name="customer_code" value={customerCode} />
                     </div>
                     <InputText name="attn" mandatory />
                     <InputSelect
@@ -345,7 +345,8 @@ export default function QuotationAdd() {
                   <div className="w-full">
                     <InputTextArea
                       name="valheader"
-                      value="We are pleased to quote you the following"
+                      // value="We are pleased to quote you the following"
+                      placeholder="Enter your header"
                     />
                   </div>
                 </div>
@@ -355,7 +356,8 @@ export default function QuotationAdd() {
                   <div className="w-full">
                     <InputTextArea
                       name="valfooter"
-                      placeholder="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention."
+                      placeholder="Enter your footer"
+                      // value="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention."
                     />
                   </div>
                 </div>
@@ -364,8 +366,8 @@ export default function QuotationAdd() {
           </div>
           {/* Buttons */}
           <div className="flex items-center gap-2">
-            <Button className="bg-graySecondary">
-              <Link href="/quotation">Back</Link>
+            <Button className="bg-graySecondary" onClick={() => router.back()}>
+              Back
             </Button>
             <Button
               type="submit"

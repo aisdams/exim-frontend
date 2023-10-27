@@ -364,7 +364,7 @@ export default function QuotationDetail() {
                     <Label>Footer: </Label>
                     <Textarea
                       className="footer h-32"
-                      value="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention. "
+                      value="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention."
                     />{' '}
                   </div>
                 </div>
@@ -372,8 +372,11 @@ export default function QuotationDetail() {
             </div>
             {/* Buttons */}
             <div className="flex items-center gap-2">
-              <Button className="bg-graySecondary">
-                <Link href="/quotation">Back</Link>
+              <Button
+                className="bg-graySecondary"
+                onClick={() => router.back()}
+              >
+                Back
               </Button>
               <Button
                 type="submit"

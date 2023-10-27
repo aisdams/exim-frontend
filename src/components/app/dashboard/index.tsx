@@ -63,41 +63,32 @@ export default function Content() {
     },
   ];
 
-  // const dataCost = () => {
-  //   fetch('http://localhost:8089/api/cost')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setCostData(data.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error:', error);
-  //     });
-  // };
-
   useEffect(() => {
+    const dataCost = () => {
+      fetch('http://localhost:8089/api/cost')
+        .then((response) => response.json())
+        .then((data) => {
+          setCostData(data.data);
+
+          const total = data.data.reduce(
+            (accumulator: any, cost: any) =>
+              accumulator + parseFloat(cost.price),
+            0
+          );
+
+          setTotalPrice(total);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    };
+
     dataCost();
   }, []);
 
-  const dataCost = () => {
-    fetch('http://localhost:8089/api/cost')
-      .then((response) => response.json())
-      .then((data) => {
-        setCostData(data.data);
-        const total = data.data.reduce(
-          (accumulator: any, cost: any) => accumulator + cost.price,
-          0
-        );
-        // Ubah total harga menjadi string dan hapus "0" di depannya.
-        setTotalPrice(total.toString().replace(/^0+/, ''));
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  };
-
   return (
     <div className="grid">
-      <div className="mb-10 mt-5 flex items-center gap-3 font-semibold">
+      <div className="z-[99] mb-10 mt-5 flex items-center gap-3 font-semibold">
         <Home className="text-blueLight" />
         <h1>Dashboard</h1>
       </div>
@@ -105,7 +96,7 @@ export default function Content() {
         <div className="w-full gap-3 rounded-md border-2 border-graySecondary/50 p-3 pt-10 text-center font-bold text-darkBlue dark:bg-secondDarkBlue dark:text-white">
           <Truck className="mx-auto grid " size={34} />
           <p>Rp. {totalPrice}</p>
-          <h2>Lorem, ipsum dolor.</h2>
+          <h2>Total Price.</h2>
         </div>
 
         <div className="w-full rounded-md border-2 border-graySecondary/50 px-5 py-1 dark:bg-secondDarkBlue">

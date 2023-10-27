@@ -14,6 +14,7 @@ import * as JOCService from '@/apis/joc.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import InputDate from '@/components/forms/input-date';
+import InputDisable from '@/components/forms/input-disable';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
@@ -264,7 +265,7 @@ export default function create() {
                   </div>
                   <div className="grid gap-2">
                     <div className="flex gap-2">
-                      <InputText
+                      <InputTextNoErr
                         name="discharge"
                         value={selectedPortTwo ? selectedPortTwo.port_name : ''}
                       />
@@ -305,8 +306,8 @@ export default function create() {
 
           {/* Buttons */}
           <div className="mt-5 flex items-center gap-2">
-            <Button className="bg-graySecondary">
-              <Link href="/quotation">Back</Link>
+            <Button className="bg-graySecondary" onClick={() => router.back()}>
+              Back
             </Button>
             <Button
               type="submit"

@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useIsBelowSmallScreen, useMounted } from '@/hooks';
 import { MantineProvider } from '@mantine/core';
+import { NProgress } from '@tanem/react-nprogress';
 import { useTheme } from 'next-themes';
 import { ToastContainer } from 'react-toastify';
-import { NProgress } from '@tanem/react-nprogress';
 
 import useProgressBarStore from '@/zustand/use-progress-bar';
 import useSidebarStore from '@/zustand/use-sidebar';
@@ -88,7 +88,7 @@ export default function AppProvider({
         <NProgress isAnimating={isLoading}>
           {({ isFinished }) => (
             <div
-              className={`fixed top-0 left-0 w-full h-[6px] bg-purple-500 rounded-full z-50 transition-opacity ${
+              className={`fixed left-0 top-0 z-[999] h-[6px] w-full rounded-full bg-purple-500 transition-opacity ${
                 isFinished ? 'opacity-0' : 'opacity-100'
               }`}
             />

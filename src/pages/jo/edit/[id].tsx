@@ -351,8 +351,11 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                   </div>
 
                   <div className="grid">
-                    <Input name="quo_no" placeholder={id} value={id} />
-                    <Input placeholder="11-01-2023" disabled />
+                    <Input
+                      placeholder={JOData?.data?.quo_no || 'Loading...'}
+                      disabled
+                    />
+                    <Input placeholder="~AUTO~" disabled />
                     <Input
                       placeholder={JOData?.data?.sales || 'Loading...'}
                       disabled

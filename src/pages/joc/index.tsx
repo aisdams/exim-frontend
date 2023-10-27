@@ -154,7 +154,7 @@ const columnsDef = [
   }),
   columnHelper.display({
     id: 'jml',
-    header: 'JML JO',
+    header: 'JML',
     cell: (info) => {
       const { jo_no } = info.row.original;
 
