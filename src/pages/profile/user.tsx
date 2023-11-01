@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { User2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Avatar from 'public/img/avatar.png';
@@ -34,7 +35,9 @@ export default function Profile() {
               </div>
             </div>
 
-            <Button className="mt-5 bg-blue-500">Change Profile</Button>
+            <Button className="mt-5 bg-blue-500">
+              <Link href="/profile/change">Change Profile</Link>
+            </Button>
           </div>
         </div>
       </div>

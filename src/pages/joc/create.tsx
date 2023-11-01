@@ -176,7 +176,7 @@ export default function create() {
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mt-10 grid grid-cols-2 gap-3">
+          <div className="mt-10 grid gap-3 lg:grid-cols-2">
             <div className="grid h-max gap-2 rounded-sm pb-[4rem] dark:bg-graySecondary/50">
               <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                 <Command className="text-white" />

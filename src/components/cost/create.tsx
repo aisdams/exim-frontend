@@ -23,7 +23,7 @@ import ReactTable from '@/components/table/react-table';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import * as CostService from '../../apis/cost.api';
-import * as quotationService from '../../apis/quotation.api';
+import * as QuotationService from '../../apis/quotation.api';
 import InputNumber from '../forms/input-number';
 import InputText from '../forms/input-text';
 
@@ -43,24 +43,91 @@ const Schema = yup.object({
   note: yup.string().required(),
 });
 
-const columnHelper = createColumnHelper<Cost>();
+const columnHelper = createColumnHelper<Quotation>();
 
 const columnsDef = [
   columnHelper.accessor('item_cost', {
     header: 'Item Cost',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const itemCost = info.row.original.item_cost;
+      return itemCost ? itemCost : 'No Cost';
+    },
   }),
-  columnHelper.accessor('item_name', {
-    header: 'Item Name',
-    cell: (info) => info.getValue(),
+  columnHelper.accessor('loading', {
+    header: 'loading',
+    cell: (info) => {
+      return (
+        <>
+          <div>{info.row.original.loading}</div>
+        </>
+      );
+    },
   }),
-  columnHelper.accessor('qty', {
-    header: 'Qyt',
-    cell: (info) => info.getValue(),
+  columnHelper.accessor('item_cost', {
+    header: 'ITEM CODE',
+    cell: (info) => {
+      const [item_name, setItemName] = useState('');
+
+      useEffect(() => {
+        const id = info.row.original.item_cost;
+
+        CostService.getById(id).then((cost) => {
+          if (cost && cost.data && cost.data.item_name) {
+            setItemName(cost.data.item_name);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{item_name}</div>
+        </div>
+      );
+    },
   }),
-  columnHelper.accessor('unit', {
-    header: 'Unit',
-    cell: (info) => info.getValue(),
+  columnHelper.accessor('item_cost', {
+    header: 'QTY',
+    cell: (info) => {
+      const [qty, setItemName] = useState('');
+
+      useEffect(() => {
+        const id = info.row.original.item_cost;
+
+        CostService.getById(id).then((cost) => {
+          if (cost && cost.data && cost.data.qty) {
+            setItemName(cost.data.qty);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{qty}</div>
+        </div>
+      );
+    },
+  }),
+  columnHelper.accessor('item_cost', {
+    header: 'UNIT',
+    cell: (info) => {
+      const [unit, setUnit] = useState('');
+
+      useEffect(() => {
+        const id = info.row.original.item_cost;
+
+        CostService.getById(id).then((cost) => {
+          if (cost && cost.data && cost.data.unit) {
+            setUnit(cost.data.unit);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{unit}</div>
+        </div>
+      );
+    },
   }),
 ];
 
@@ -78,7 +145,10 @@ export default function CreateCost({
   const [searchValue, setSearchValue] = useState('');
   const [isCostModalOpen, setIsCostModalOpen] = useState(false);
   const [selectedItemCost, setSelectedItemCost] = useState(itemCostValue);
-
+  const [cost, setCost] = useState<any | null>(null);
+  const [QuoOptions, setQuoOptions] = useState<{ label: string; value: any }[]>(
+    []
+  );
   const methods = useForm<CostSchema>({
     mode: 'all',
     defaultValues,
@@ -92,29 +162,52 @@ export default function CreateCost({
   });
 
   const { handleSubmit, setValue, watch } = methods;
+
+  const { id } = router.query;
+
   const fetchDataOptions = {
     page: pageIndex + 1,
     limit: pageSize,
-    item_cost: selectedItemCost,
-  };
-  const { quo_no } = router.query;
-
-  const fetchData = (fetchDataOptions: any, debouncedSearchValue: any) => {
-    return CostService.getAll({
-      ...fetchDataOptions,
-      searchValue: debouncedSearchValue,
-      quo_no: debouncedSearchValue,
-    });
+    id,
   };
 
-  const quotationQuery = useQuery({
-    queryKey: ['quotations', { fetchDataOptions, searchValue }],
-    queryFn: () => fetchData(fetchDataOptions, searchValue),
+  const fetchData = () => {
+    let setId;
+    if (typeof id === 'string') {
+      setId = id;
+    } else if (Array.isArray(id)) {
+      setId = id[0];
+    } else {
+      throw new Error('Invalid ID');
+    }
+
+    if (setId) {
+      return QuotationService.getById(setId);
+    } else {
+      throw new Error('Invalid ID');
+    }
+  };
+
+  const quotationsQuery = useQuery({
+    queryKey: ['quotations'],
+    queryFn: fetchData,
     keepPreviousData: true,
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
+
+  useEffect(() => {
+    if (quotationsQuery.data?.data?.item_cost) {
+      CostService.getById(quotationsQuery.data.data.item_cost)
+        .then((res) => {
+          setCost(res.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching quotation data:', error);
+        });
+    }
+  }, [quotationsQuery.data?.data?.quo_no]);
 
   useEffect(() => {
     setSelectedItemCost(itemCostValue);
@@ -124,6 +217,7 @@ export default function CreateCost({
     setIsCostModalOpen(true);
   };
 
+  // alert(quotationsQuery);
   const closeCostModal = () => {
     setIsCostModalOpen(false);
   };
@@ -146,11 +240,9 @@ export default function CreateCost({
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
-
   const table = useReactTable({
     columns,
-    data: quotationQuery.data?.data ?? [],
-    pageCount: quotationQuery.data?.pagination.total_page ?? -1,
+    data: (quotationsQuery.data?.data || []) as Quotation[],
     state: {
       pagination,
     },
@@ -160,6 +252,8 @@ export default function CreateCost({
       deleteMutation: deleteCostMutation,
     },
   });
+
+  // console.log('Quotations data:', quotationsQuery.data?.data.discharge);
 
   const addCostMutation = useMutation({
     mutationFn: CostService.create,
@@ -188,6 +282,8 @@ export default function CreateCost({
     setIsCostModalOpen(false);
   };
 
+  console.log();
+
   return (
     <div className="mt-10">
       <Link href="#">
@@ -199,7 +295,72 @@ export default function CreateCost({
           <h3>Create Cost</h3>
         </Button>
       </Link>
-      <ReactTable tableInstance={table} isLoading={quotationQuery.isFetching} />
+
+      <table className="w-full">
+        <thead>
+          <tr className="border-y-2 border-graySecondary/50 transition-colors">
+            <th className="border-l-2 border-graySecondary/70 p-2 dark:border-white/30">
+              No
+            </th>
+            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+              ITEM COST
+            </th>
+            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+              ITEM NAME
+            </th>
+            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+              QYT
+            </th>
+            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+              UNIT
+            </th>
+          </tr>
+        </thead>
+        <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
+          <tr
+            className={cn(
+              'transition-colors hover:bg-muted/50 [&:last-child>td]:!border-b-0'
+            )}
+          >
+            <td className="border-b border-graySecondary/70 p-2 text-center font-semibold">
+              1
+            </td>
+            <td className="border-x-2 border-b border-graySecondary/70 p-2 text-center dark:border-white/30">
+              <div className="!grid">
+                {quotationsQuery.data?.data.item_cost
+                  ? quotationsQuery.data?.data.item_cost
+                  : 'No Data'}
+              </div>
+            </td>
+            <td className="border-x-2 border-b border-graySecondary/70 p-2 text-center dark:border-white/30">
+              <div className="!grid"> {cost ? cost.item_name : 'No Data'}</div>
+            </td>
+            <td className="border-x-2 border-b border-graySecondary/70 p-2 text-center dark:border-white/30">
+              <div className="!grid"> {cost ? cost.qty : 'No Data'}</div>
+            </td>
+            <td className="border-x-2 border-b border-graySecondary/70 p-2 text-center dark:border-white/30">
+              <div className="!grid"> {cost ? cost.unit : 'No Data'}</div>
+            </td>
+          </tr>
+
+          {/* No data info */}
+          {/* {quotationsQuery.data?.data.quo_no.length < 1 && ( */}
+          {table.getAllColumns().length < 1 && (
+            <tr className="">
+              <td
+                colSpan={table.getAllColumns().length + 1}
+                className="p-2 text-center"
+              >
+                No data found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      {/* <ReactTable
+        tableInstance={table}
+        isLoading={quotationsQuery.isFetching}
+      /> */}
 
       {isCostModalOpen && (
         <div

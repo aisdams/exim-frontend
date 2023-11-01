@@ -298,7 +298,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
       ) : (
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="mt-0 grid gap-10 lg:mt-10 lg:grid-cols-2">
               <div className="rounded-md border border-graySecondary">
                 <div className="flex w-full bg-blueHeaderCard p-2">
                   <Command />

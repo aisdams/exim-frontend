@@ -210,7 +210,7 @@ export default function QuotationAdd() {
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 lg:grid-cols-2">
             <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
               <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                 <Command className="text-white" />

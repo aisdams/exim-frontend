@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
+import { JobOrder } from '@/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Label } from '@radix-ui/react-label';
 import {
@@ -18,9 +19,12 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
 
+import * as JOService from '@/apis/jo.api';
 import * as JOCService from '@/apis/joc.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
+import InputMultiSelect from '@/components/forms/input-multiText';
+import InputMultiText from '@/components/forms/input-multiText';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
@@ -94,6 +98,14 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
   const router = useRouter();
   const qc = useQueryClient();
   const [itemJOValue, setItemJOValue] = useState('');
+  const [joOptions, setJOOptions] = useState<{ label: string; value: any }[]>(
+    []
+  );
+  const [isJOServiceOpen, setIsJOServiceOpen] = useState(false);
+  // const [selectedJOs, setSelectedJOs] = useState<
+  //   { label: string; value: any }[]
+  // >([]);
+
   const methods = useForm<JOCSchema>({
     mode: 'all',
     defaultValues,
@@ -104,12 +116,14 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
   const [isPortTwoModalOpen, setIsPortTwoModalOpen] = useState(false);
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [PortData, setPortData] = useState<Port[]>([]);
+  const [JOData, setJOData] = useState<JobOrder[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
   const [createdItemCost, setCreatedItemCost] = useState('');
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
+  const [selectedJOs, setSelectedJOs] = useState<JobOrder[]>([]);
   const { handleSubmit, setValue, watch } = methods;
   const openCustomerModal = () => {
     setIsCustomerModalOpen(true);
@@ -153,10 +167,51 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
       });
   };
 
+  const fetchJOOptions = async (jo_no: any) => {
+    try {
+      const response = await JOService.getAll(jo_no);
+      if (response && response.data) {
+        const options = response.data.map((jo: any) => ({
+          label: jo.jo_no,
+          value: jo.id,
+        }));
+        setJOOptions(options);
+      }
+    } catch (error) {
+      console.error('Error fetching JO options: ', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchJOOptions(id);
+  }, [id]);
+
+  const openJOService = () => {
+    setIsJOServiceOpen(true);
+
+    fetch('http://localhost:8089/api/jo')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data jo:', data.data);
+        setJOData(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+  const closeJOService = () => {
+    setIsJOServiceOpen(false);
+  };
+
   const handleJOCreated = (newItemJO: { data: { jo_no?: string } }) => {
     if (newItemJO && newItemJO.data && newItemJO.data.jo_no) {
       setValue('jo_no', newItemJO.data.jo_no);
     }
+  };
+
+  const handleAddJOToInputMultiText = (selectedJO: JobOrder) => {
+    setSelectedJOs((prevSelectedJOs) => [...prevSelectedJOs, selectedJO]);
   };
 
   const closeCustomerModal = () => {
@@ -224,7 +279,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
         <>
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-3 lg:grid-cols-2">
                 <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
                   <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                     <Command className="text-white" />
@@ -326,11 +381,23 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                         </div>
 
                         <InputText name="no_container" mandatory />
-                        <InputText
+                        <InputMultiText name="jo_no" />
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={openJOService}
+                            className='
+                  dark:bg-blueLight" mt-1 h-6 w-6 rounded-md bg-graySecondary px-1
+                  text-base text-white'
+                          >
+                            <Search className="w-4" />
+                          </button>
+                        </div>
+                        {/* <InputText
                           name="jo_no"
                           mandatory
                           placeholder="Enter JO_NO from table"
-                        />
+                        /> */}
                       </div>
                     </div>
                   </div>
@@ -513,6 +580,86 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
               )}
             </form>
           </FormProvider>
+
+          {isJOServiceOpen && (
+            <div
+              style={{ overflow: 'hidden' }}
+              className={`modal fixed inset-0 z-50 flex items-center justify-center ${
+                isJOServiceOpen ? 'open' : 'closed'
+              }`}
+            >
+              <div className="absolute inset-0 bg-black opacity-75"></div>
+              <div className="relative z-10 w-1/2 rounded-lg bg-white p-4 shadow-lg">
+                <Button
+                  className="absolute -top-9 right-0 !bg-transparent text-white"
+                  onClick={closeJOService}
+                >
+                  <h1 className="text-xl">X</h1>
+                </Button>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="hover:!text-white">JO No</TableHead>
+                      <TableHead className="hover:!text-white">
+                        Shipper
+                      </TableHead>
+                      <TableHead className="hover:!text-white">
+                        Consignee
+                      </TableHead>
+                      <TableHead className="hover:!text-white">Qty</TableHead>
+                      <TableHead className="hover:!text-white">
+                        Vessel
+                      </TableHead>
+                      <TableHead className="hover:!text-white">
+                        Gross Weight
+                      </TableHead>
+                      <TableHead className="hover:!text-white">
+                        Volume
+                      </TableHead>
+                      <TableHead className="hover:!text-white">Add</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="text-black">
+                    {JOData.map((JobOrder) => (
+                      <TableRow key={JobOrder.jo_no}>
+                        <TableCell className="font-medium">
+                          {JobOrder.jo_no}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {JobOrder.shipper}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {JobOrder.consignee}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {JobOrder.qty}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {JobOrder.vessel}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {JobOrder.gross_weight}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {JobOrder.volume}
+                        </TableCell>
+                        <TableCell className="!h-2 !w-2 rounded-md">
+                          <Button
+                            className=""
+                            onClick={() => {
+                              handleAddJOToInputMultiText(JobOrder);
+                            }}
+                          >
+                            add
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
 
           <CreateJO onJOCreated={handleJOCreated} />
         </>
