@@ -12,10 +12,11 @@ export type Quotation = {
   discharge: string;
   status: string;
   customer_code: string;
-  item_cost: string;
   valheader: string;
   valfooter: string;
   port_code: string | null;
+  port_code: string | null;
+  cost: string;
   createdAt: Date;
   updatedAt: Date | null;
   deletedAt: Date | null;
@@ -37,11 +38,23 @@ export type createQuotationInput = {
   customer_code: string | null;
 };
 
-export type updateQuotationInput = Omit<
-  createQuotationInput,
-  'customer_code',
-  'port_code'
->;
+export type updateQuotationInput = {
+  sales?: string | null;
+  subject?: string | null;
+  customer?: string | null;
+  customer_code?: string | null;
+  attn?: string | null;
+  type?: string | null;
+  delivery?: string | null;
+  kurs?: string | null;
+  loading?: string | null;
+  discharge?: string | null;
+  status?: string | null;
+  valheader: string | null;
+  valfooter: string | null;
+  customer_code: string | null;
+  cost?: string;
+};
 
 export type UpdateStatusInput = {
   status?: string | null;

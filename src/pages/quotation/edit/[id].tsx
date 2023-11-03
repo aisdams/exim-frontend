@@ -23,6 +23,7 @@ import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import CreateCost from '@/components/cost/create';
 import InputHidden from '@/components/forms/input-hidden';
+import InputMultiText from '@/components/forms/input-multiText';
 import InputNumber from '@/components/forms/input-number';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
@@ -205,7 +206,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
       setValue('valheader', data.valheader);
       setValue('valfooter', data.valfooter);
       setValue('loading', data.loading);
-      setValue('item_cost', data.item_cost);
+      setValue('item_cost', data.cost);
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -268,6 +269,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                       <Label>Loading :</Label>
                       <Label>Discharge :</Label>
                       <Label>Kurs :</Label>
+                      <Label>Item Cost :</Label>
                     </div>
                     <div className="grid gap-2">
                       <Input
@@ -372,7 +374,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                       </div>
                       <InputNumber name="kurs" mandatory />
                       <div>
-                        <InputHidden name="item_cost" />
+                        <InputMultiText name="cost" />
                       </div>
                     </div>
                   </div>
