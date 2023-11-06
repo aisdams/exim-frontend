@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IS_DEV } from '@/constants';
-import { Quotation } from '@/types';
+import { Cost, Quotation } from '@/types';
 import {
   Document,
   Font,
@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 import * as costService from '@/apis/cost.api';
+import * as CostService from '@/apis/cost.api';
 import * as customerService from '@/apis/customer.api';
 import * as quotationService from '@/apis/quotation.api';
 import { getErrMessage } from '@/lib/utils';
@@ -51,6 +52,8 @@ const styles = StyleSheet.create({
     borderLeft: '1px solid #000',
     borderRight: '1px solid #000',
     borderTop: '1px solid #000',
+    display: 'flex',
+    flexDirection: 'column',
   },
   tablePad: {
     borderBottom: '1px solid #000',
@@ -127,6 +130,24 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
+  amount: {
+    position: 'relative',
+  },
+  amountText: {
+    position: 'absolute',
+    borderLeft: '1px solid #000',
+    borderRight: '1px solid #000',
+    borderBottom: '1px solid #000',
+    backgroundColor: '#e1e3f5',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 167,
+    paddingHorizontal: 12,
+    top: 0,
+    right: '15%',
+    fontSize: 10,
+  },
   tableCell: {
     margin: 'auto',
     marginTop: 5,
@@ -192,11 +213,23 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
     },
   });
 
+  console.log(quo_no);
   const datenya = new Date(`${quotationQuery.data?.data.createdAt}`);
   const dateString = datenya.toDateString();
 
+  const [cost, setCost] = useState<Cost[]>([]);
+  const [costDataTwo, setCostDataTwo] = useState<any | null>(null);
   const [customer, setCustomer] = useState<any | null>(null);
-  const [cost, setCost] = useState<any | null>(null);
+
+  const costData = quotationQuery.data?.data?.cost;
+  let totalPrices = 0;
+
+  if (Array.isArray(costData)) {
+    totalPrices = costData.reduce((total, item) => {
+      const price = parseFloat(item.price);
+      return total + price;
+    }, 0);
+  }
 
   useEffect(() => {
     if (quotationQuery.data?.data?.customer_code) {
@@ -212,21 +245,16 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
   }, [quotationQuery.data?.data?.customer_code]);
 
   useEffect(() => {
-    if (quotationQuery.data?.data?.item_cost) {
-      costService
-        .getById(quotationQuery.data.data.item_cost)
+    if (quotationQuery.data?.data?.quo_no) {
+      CostService.getById(quotationQuery.data.data.quo_no)
         .then((res) => {
-          setCost(res.data);
+          setCostDataTwo(res.data);
         })
         .catch((error) => {
-          console.error('Error fetching customer data:', error);
+          console.error('Error fetching quotation data:', error);
         });
     }
-  }, [quotationQuery.data?.data?.item_cost]);
-
-  // ...
-
-  console.log('item_cost:', quotationQuery.data?.data?.item_cost);
+  }, [quotationQuery.data?.data?.quo_no]);
 
   return quotationQuery.isLoading ? (
     <div className="grid place-items-center">
@@ -315,33 +343,52 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
                 </View>
               </View>
               {/* Rows */}
-              <View style={[styles.tableRow, { fontWeight: 'normal' }]}>
-                <View style={[styles.tableCol, { width: '5%' }]}>
-                  <Text style={styles.tableCell}>1</Text>
-                </View>
-                <View style={[styles.tableCol, { width: '20%' }]}>
-                  <Text style={styles.tableCell}>
-                    {cost ? cost.item_name : ''}
-                  </Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>{cost ? cost.qty : ''}</Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>{cost ? cost.unit : ''}</Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>{cost ? cost.price : ''}</Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>{cost ? cost.price : ''}</Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>
-                    {quotationQuery.data.data.item_cost}
-                  </Text>
-                </View>
-              </View>
+
+              {Array.isArray(quotationQuery.data?.data?.cost) ? (
+                quotationQuery.data?.data?.cost.map(
+                  (item: any, index: number) => (
+                    <>
+                      <View
+                        style={[styles.tableRow, { fontWeight: 'normal' }]}
+                        key={index}
+                      >
+                        <View style={[styles.tableCol, { width: '5%' }]}>
+                          <Text style={styles.tableCell}>{index + 1}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '20%' }]}>
+                          <Text style={styles.tableCell}>{item.item_name}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '15%' }]}>
+                          <Text style={styles.tableCell}>{item.qty}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '15%' }]}>
+                          <Text style={styles.tableCell}>{item.unit}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '15%' }]}>
+                          <Text style={styles.tableCell}>{item.price}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '15%' }]}>
+                          <Text style={styles.tableCell}>Rp. {item.price}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '15%' }]}>
+                          <Text style={styles.tableCell}>{''}</Text>
+                        </View>
+                      </View>
+
+                      <View style={styles.amount}>
+                        <View style={styles.amountText}>
+                          <Text>Total:</Text>
+                          <Text>{totalPrices}</Text>
+                        </View>
+                      </View>
+                    </>
+                  )
+                )
+              ) : (
+                <tr>
+                  <td colSpan={4}>No cost data available</td>
+                </tr>
+              )}
             </View>
 
             <Text style={styles.textTableUnder}>

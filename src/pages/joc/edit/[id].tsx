@@ -381,7 +381,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                         </div>
 
                         <InputText name="no_container" mandatory />
-                        <InputMultiText name="jo_no" />
+                        <InputText name="jo_no" />
                         <div className="flex gap-2">
                           <button
                             type="button"

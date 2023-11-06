@@ -230,9 +230,9 @@ export default function CreateCost({
       <table className="w-full">
         <thead>
           <tr className="border-y-2 border-graySecondary/50 transition-colors">
-            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+            {/* <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
               Option
-            </th>
+            </th> */}
             <th className="border-l-2 border-graySecondary/70 p-2 dark:border-white/30">
               No
             </th>
@@ -251,14 +251,34 @@ export default function CreateCost({
           </tr>
         </thead>
         <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
-          {/*{quotationsQuery.data?.data.cost.map((item_cost: any, index: any) => (*/}
-          {/*    <tr key={index}>*/}
-          {/*      <td>{item_cost.item_name}</td>*/}
-          {/*      <td>{item_cost.qty}</td>*/}
-          {/*      <td>{item_cost.unit}</td>*/}
-          {/*    </tr>*/}
-          {/*))}*/}
-
+          {Array.isArray(quotationsQuery.data?.data?.cost) ? (
+            quotationsQuery.data?.data?.cost.map((item: any, index: number) => (
+              <tr
+                key={index}
+                className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30"
+              >
+                <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  {index + 1}
+                </td>
+                <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  {item.item_cost}
+                </td>
+                <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  {item.item_name}
+                </td>
+                <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  {item.qty}
+                </td>
+                <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  {item.unit}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={4}>No cost data available</td>
+            </tr>
+          )}
           {/* {setCost} */}
 
           {/* No data info */}

@@ -3,82 +3,103 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { cn } from '@/lib/utils';
 
-type InputTextAreaProps = {
+type InputTextProps = {
   label?: string;
   name: string;
   id?: string;
   placeholder?: string;
   disabled?: boolean;
-  value?: string;
   mandatory?: boolean;
+  defaultCase?: boolean;
+  value?: string | number;
+  withLabel?: boolean;
   containerCN?: string;
-  onChange?: any;
+  labelCN?: string;
   inputWrapperCN?: string;
   inputCN?: string;
+  noErrorMessage?: boolean;
 };
 
-const InputTextArea: React.FC<InputTextAreaProps> = ({
+const InputTextArea: React.FC<InputTextProps> = ({
   label,
   name,
   id,
   placeholder,
-  value,
   disabled,
-  inputCN,
   mandatory,
+  defaultCase,
+  withLabel = true,
   containerCN,
-  onChange,
+  labelCN,
   inputWrapperCN,
+  inputCN,
+  noErrorMessage,
   ...props
 }) => {
   const { register } = useFormContext();
+
   const {
     field,
     fieldState: { error },
   } = useController({ name });
 
-  // const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-  //   field.onChange(e.target.value);
-  // };
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (defaultCase) {
+      field.onChange(e.target.value);
+      return;
+    }
+
+    //! UpperCase Logic
+    const { selectionStart, selectionEnd } = e.target;
+    e.target.value = e.target.value.toUpperCase();
+    e.target.setSelectionRange(selectionStart, selectionEnd);
+
+    field.onChange(e.target.value);
+  };
 
   return (
     <div className={cn('relative', containerCN)}>
-      {/* <label htmlFor={id || name} className="mb-1 inline-block">
-        {label || startCase(name)}
-        {mandatory && <span className="text-[#f00]">*</span>}
-      </label> */}
+      {/* {withLabel && (
+        <label
+          htmlFor={id || name}
+          className={cn('mb-1 inline-block', labelCN)}
+        >
+          {label || startCase(name)}
+          {mandatory && <span className="text-[#f00]">*</span>}
+        </label>
+      )} */}
 
       <div
         className={cn(
-          'relative flex items-center overflow-hidden rounded-md border focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
+          'relative flex items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >
         <textarea
           {...register(name)}
-          value={field.value}
+          // type="text"
+          value={field.value ?? ''}
           id={id || name}
           className={cn(
-            'w-full bg-background p-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:bg-muted',
+            'h-[150px] w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
             inputCN
           )}
           placeholder={
             !disabled
               ? placeholder ||
-                placeholder ||
+                label ||
                 `Enter ${lowerCase(name)}...` ||
                 'Type something...'
               : undefined
           }
           disabled={disabled}
           // onChange={onChange}
-          rows={5}
           {...props}
         />
       </div>
-      {error?.message && (
-        <p className="text-xs text-red-600">{error.message}</p>
-      )}
+      {/* {!noErrorMessage && error?.message && (
+        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
+      )} */}
     </div>
   );
 };

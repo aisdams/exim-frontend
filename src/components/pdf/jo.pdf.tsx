@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IS_DEV } from '@/constants';
-import { JobOrder } from '@/types';
+import { Cost, JobOrder } from '@/types';
 import ImageLogo from '@public/img/boAvatar.png';
 import {
   Document,
@@ -14,8 +14,10 @@ import {
 } from '@react-pdf/renderer';
 import { useQuery } from '@tanstack/react-query';
 import { format, parse, parseISO } from 'date-fns';
+import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 
+import * as CostService from '@/apis/cost.api';
 import * as JOService from '@/apis/jo.api';
 import * as QuotationService from '@/apis/quotation.api';
 import { getErrMessage } from '@/lib/utils';
@@ -126,6 +128,7 @@ type JOPdfProps = {
 };
 
 const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
+  const { data: session } = useSession();
   //! get jo
   const joQuery = useQuery({
     queryKey: ['jo', jo_no],
@@ -135,6 +138,7 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
     },
   });
   const [quotation, setQuotation] = useState<any | null>(null);
+  const [cost, setCost] = useState<Cost | null>(null);
 
   useEffect(() => {
     if (joQuery.data?.data?.quo_no) {
@@ -147,6 +151,7 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
         });
     }
   }, [joQuery.data?.data?.quo_no]);
+
   const datenya = new Date(`${joQuery.data?.data.createdAt}`);
   const dateString = datenya.toDateString();
 
@@ -243,8 +248,12 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
                     ? quotation.discharge
                     : 'discharge tidak ditemukan'}
                 </Text>
-                <Text style={styles.tableDData}>{dateStringEtd}</Text>
-                <Text style={styles.tableDData}>{dateStringEta}</Text>
+                <Text style={styles.tableDData}>
+                  {dateStringEtd ? dateStringEtd : '-'}
+                </Text>
+                <Text style={styles.tableDData}>
+                  {dateStringEta ? dateStringEta : '-'}
+                </Text>
                 <Text style={styles.tableDData}>{joQuery.data.data.hbl}</Text>
                 <Text style={styles.tableDData}>{joQuery.data.data.mbl}</Text>
                 <Text style={styles.tableDData}>
@@ -272,7 +281,7 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
                 padding: 20,
               }}
             >
-              <Text style={{ fontSize: 8 }}>NOTE :</Text>
+              <Text style={{ fontSize: 8 }}>NOTE </Text>
             </View>
           </View>
 
@@ -289,7 +298,7 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
             <View>
               <Text style={{ fontSize: 10 }}>Created</Text>
               <Text style={{ fontSize: 10, marginTop: 80 }}>
-                ({joQuery.data.data.createdBy})
+                ({joQuery.data.data.createdBy} - {session?.user?.name})
               </Text>
             </View>
             <View

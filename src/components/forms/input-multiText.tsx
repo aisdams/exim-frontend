@@ -47,17 +47,12 @@ const InputMultiText: React.FC<InputMultiTextProps> = ({
   } = useController({ name });
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (defaultCase) {
-      field.onChange(e.target.value);
-      return;
-    }
+    const inputValues = e.target.value;
+    const valueArray = inputValues
+      .split(',') // Pisahkan berdasarkan koma
+      .map((item) => item.trim()); // Hapus spasi
 
-    //! UpperCase Logic
-    const { selectionStart, selectionEnd } = e.target;
-    e.target.value = e.target.value.toUpperCase();
-    e.target.setSelectionRange(selectionStart, selectionEnd);
-
-    field.onChange(e.target.value);
+    field.onChange(valueArray);
   };
 
   const handleBlur = () => {
@@ -79,7 +74,7 @@ const InputMultiText: React.FC<InputMultiTextProps> = ({
         <input
           {...register(name)}
           type="text"
-          value={field.value ?? (displayValue || '')}
+          value={displayValue || ''}
           id={id || name}
           className={cn(
             'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',

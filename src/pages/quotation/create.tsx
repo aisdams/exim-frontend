@@ -346,7 +346,6 @@ export default function QuotationAdd() {
                     <InputTextArea
                       name="valheader"
                       value="We are pleased to quote you the following"
-                      placeholder="Enter your header"
                     />
                   </div>
                 </div>
@@ -356,7 +355,6 @@ export default function QuotationAdd() {
                   <div className="w-full">
                     <InputTextArea
                       name="valfooter"
-                      placeholder="Enter your footer"
                       value="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention."
                     />
                   </div>

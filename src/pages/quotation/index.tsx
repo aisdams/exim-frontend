@@ -132,11 +132,11 @@ const columnsDef = [
         <div
           className={`rounded-md px-2 ${
             info.getValue() === 'InProgress'
-              ? 'bg-yellow-600'
+              ? 'bg-yellow-600 text-white'
               : info.getValue() === 'Executed'
-              ? 'bg-green-500'
+              ? 'bg-green-500 text-white'
               : info.getValue() === 'Cancel'
-              ? 'bg-red-600'
+              ? 'bg-red-600 text-white'
               : ''
           }`}
         >

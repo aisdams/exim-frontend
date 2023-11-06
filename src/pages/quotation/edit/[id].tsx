@@ -83,7 +83,7 @@ const defaultValues = {
   kurs: '',
   valheader: '',
   valfooter: '',
-  item_cost: '',
+  cost: '',
 };
 
 const Schema = yup.object({
@@ -98,7 +98,7 @@ const Schema = yup.object({
   kurs: yup.string().required(),
   valheader: yup.string().required(),
   valfooter: yup.string().required(),
-  item_cost: yup.string().required(),
+  cost: yup.string().required(),
 });
 
 type QuotationSchema = InferType<typeof Schema>;
@@ -126,9 +126,9 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
   const [itemCostValue, setItemCostValue] = useState('');
   const [submittedItemCost, setSubmittedItemCost] = useState('');
 
-  const handleCostCreated = (newItemCost: { data: { item_cost?: string } }) => {
-    if (newItemCost && newItemCost.data && newItemCost.data.item_cost) {
-      setValue('item_cost', newItemCost.data.item_cost);
+  const handleCostCreated = (newItemCost: { data: { cost?: string } }) => {
+    if (newItemCost && newItemCost.data && newItemCost.data.cost) {
+      setValue('cost', newItemCost.data.cost);
     }
   };
 
@@ -141,7 +141,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
     fetch('http://localhost:8089/api/customer')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Pelanggan:', data.data);
+        // console.log('Data Pelanggan:', data.data);
         setCustomerData(data.data);
       })
       .catch((error) => {
@@ -206,13 +206,23 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
       setValue('valheader', data.valheader);
       setValue('valfooter', data.valfooter);
       setValue('loading', data.loading);
-      setValue('item_cost', data.cost);
+      // if (typeof data.cost !== 'string') {
+      //   data.cost = JSON.stringify(data.cost);
+      // }
+
+      // const cleanCostString = data.cost.replace(/\\/g, '');
+
+      // try {
+      //   const costArray = JSON.parse(cleanCostString);
+      //   setValue('cost', costArray);
+      // } catch (error) {
+      //   console.error('Error parsing data.cost:', error);
+      // }
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
-
   const updatedQuotationMutation = useMutation({
     mutationFn: quotationService.updateById,
     onSuccess: () => {
@@ -231,8 +241,8 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
     }
 
     updatedQuotationMutation.mutate({ id, data });
-    const itemCostValue = data.item_cost;
-    console.log('item_cost value submitted:', data.item_cost);
+    const itemCostValue = data.cost;
+    console.log('cost value submitted:', data.cost);
   };
 
   return (
@@ -269,7 +279,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                       <Label>Loading :</Label>
                       <Label>Discharge :</Label>
                       <Label>Kurs :</Label>
-                      <Label>Item Cost :</Label>
+                      {/* <Label>Item Cost :</Label> */}
                     </div>
                     <div className="grid gap-2">
                       <Input
@@ -374,7 +384,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                       </div>
                       <InputNumber name="kurs" mandatory />
                       <div>
-                        <InputMultiText name="cost" />
+                        <InputText name="cost" />
                       </div>
                     </div>
                   </div>

@@ -111,7 +111,8 @@ const columnsDef = [
     header: 'NO MBL',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('joc_no', {
+  columnHelper.display({
+    id: 'loading',
     enableSorting: false,
     header: () => (
       <div>
@@ -119,12 +120,14 @@ const columnsDef = [
         <div>DISCHARGE</div>
       </div>
     ),
-    cell: (info) => (
-      <div>
-        <div>{info.row.original.loading}</div>
-        <div>{info.row.original.discharge}</div>
-      </div>
-    ),
+    cell: (info) => {
+      return (
+        <div>
+          <div>{info.row.original.loading}</div>
+          <div>{info.row.original.discharge}</div>
+        </div>
+      );
+    },
   }),
   columnHelper.accessor('eta', {
     header: () => (
