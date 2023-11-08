@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import bgLogis from 'public/img/bg-log.jpg';
 import bgImg from 'public/img/bg-log.jpg';
-import bgLogo from 'public/img/logo.png';
+import bgLogo from 'public/img/logo_neelo.png';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';

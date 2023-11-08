@@ -37,7 +37,7 @@ const App = ({
         <meta name="keywords" key="keywords" content="EXIM NELLO" />
         <link
           rel="shortcut icon"
-          href="https://dc552.4shared.com/img/xPIy_F32jq/s24/18b420571d8/favicon?async&rand=0.3338442054451418"
+          href="https://www.4shared.com/img/9E2N7MiLge/s25/18bacde1348/logo_neelo_2"
         />
       </Head>
       <QueryClientProvider client={qc}>

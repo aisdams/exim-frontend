@@ -337,12 +337,38 @@ export default function Index() {
   const [searchResults, setSearchResults] = useState<JobOrder[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [orderBy, setOrderBy] = useState('All');
-  const [orderByTwo, setOrderByTwo] = useState('Quo No');
+  const [orderByTwo, setOrderByTwo] = useState<keyof JobOrder>('jo_no');
   const [orderByThree, setOrderByThree] = useState('Quo No');
   const [isActive, SetIsActive] = useState('');
 
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
+
+  const handleSelectChange = (value: any) => {
+    setOrderByTwo(value);
+    filterData(value, searchValue);
+  };
+
+  const handleInputChange = (e: any) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    filterData(orderByTwo, value);
+  };
+
+  const filterData = (orderBy: keyof JobOrder, search: string) => {
+    if (orderBy && search) {
+      const filteredData = JobOrdersQuery.data?.data.filter(
+        (item: JobOrder) => {
+          const propertyValue = item[orderBy];
+          if (typeof propertyValue === 'string') {
+            return propertyValue.toLowerCase().includes(search.toLowerCase());
+          }
+          return false;
+        }
+      );
+      setSearchResults(filteredData || []);
+    }
+  };
 
   const [{ periodOf, periodUntil }, setDates] = useState({
     periodOf: DateTime.fromJSDate(new Date()).minus({ months: 1 }).toJSDate(),
@@ -474,17 +500,17 @@ export default function Index() {
               </div>
 
               <div className="grid gap-1">
-                <div className="flex gap-1">
-                  <Select value={orderByTwo} onValueChange={setOrderByTwo}>
+              <div className="flex gap-1">
+                  <Select value={orderByTwo} onValueChange={handleSelectChange}>
                     <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>
                     <SelectContent align="end" className="dark:text-black">
                       <SelectGroup>
-                        <SelectItem value="Quo No">JO No</SelectItem>
-                        <SelectItem value="Customer">Customer</SelectItem>
-                        <SelectItem value="Tipe">Tipe</SelectItem>
-                        <SelectItem value="Delivery">Delivery</SelectItem>
+                        <SelectItem value="jo_no">JO No</SelectItem>
+                        <SelectItem value="shipper">Shipper</SelectItem>
+                        <SelectItem value="consignee">Consignee</SelectItem>
+                        <SelectItem value="discharge">Discharge</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -493,8 +519,10 @@ export default function Index() {
                     type="text"
                     name=""
                     id=""
-                    placeholder="Search..."
+                    placeholder="Search...."
                     className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
+                    value={searchValue}
+                    onChange={handleInputChange}
                   />
                 </div>
 

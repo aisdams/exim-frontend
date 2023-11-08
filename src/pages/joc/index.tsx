@@ -361,11 +361,37 @@ export default function Index() {
   const [searchResults, setSearchResults] = useState<JOC[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [orderBy, setOrderBy] = useState('All');
-  const [orderByTwo, setOrderByTwo] = useState('JOC No');
+  const [orderByTwo, setOrderByTwo] = useState<keyof JOC>('joc_no');
   const [orderByThree, setOrderByThree] = useState('JOC No');
   const [isActive, SetIsActive] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
 
+  
+  const handleSelectChange = (value: any) => {
+    setOrderByTwo(value);
+    filterData(value, searchValue);
+  };
+
+  const handleInputChange = (e: any) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    filterData(orderByTwo, value);
+  };
+
+  const filterData = (orderBy: keyof JOC, search: string) => {
+    if (orderBy && search) {
+      const filteredData = jocQuery.data?.data.filter(
+        (item: JOC) => {
+          const propertyValue = item[orderBy];
+          if (typeof propertyValue === 'string') {
+            return propertyValue.toLowerCase().includes(search.toLowerCase());
+          }
+          return false;
+        }
+      );
+      setSearchResults(filteredData || []);
+    }
+  };
   const [{ periodOf, periodUntil }, setDates] = useState({
     periodOf: DateTime.fromJSDate(new Date()).minus({ months: 1 }).toJSDate(),
     periodUntil: new Date(),
@@ -532,16 +558,15 @@ export default function Index() {
 
               <div className="grid gap-1">
                 <div className="flex gap-1">
-                  <Select value={orderByTwo} onValueChange={setOrderByTwo}>
+                <Select value={orderByTwo} onValueChange={handleSelectChange}>
                     <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>
                     <SelectContent align="end" className="dark:text-black">
                       <SelectGroup>
-                        <SelectItem value="JOC No">JOC No</SelectItem>
-                        <SelectItem value="Customer">Customer</SelectItem>
-                        <SelectItem value="Tipe">Tipe</SelectItem>
-                        <SelectItem value="Delivery">Delivery</SelectItem>
+                        <SelectItem value="joc_no">JOC No</SelectItem>
+                        <SelectItem value="agent">Agent</SelectItem>
+                        <SelectItem value="vessel">Vessel</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -550,8 +575,10 @@ export default function Index() {
                     type="text"
                     name=""
                     id=""
-                    placeholder="Search..."
+                    placeholder="Search...."
                     className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
+                    value={searchValue}
+                    onChange={handleInputChange}
                   />
                 </div>
 

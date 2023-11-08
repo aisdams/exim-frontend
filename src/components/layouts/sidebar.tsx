@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Menu, X } from 'lucide-react';
-import Logo from 'public/img/logo.png';
+import Logo from 'public/img/logo_neelo.png';
 
 import sidebarData from '@/data/sidebar-data';
 import {

@@ -268,7 +268,7 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
         <Page size="A4" style={styles.page}>
           <View style={styles.headTI}>
             <Image
-              src="https://i.ibb.co/JmVLcR2/logo.png"
+              src="https://www.4shared.com/img/vmRC2Z1Zjq/s25/18bace30100/logo_neelo"
               style={styles.imgLogo}
             />
             <View style={styles.tableRow0}>
