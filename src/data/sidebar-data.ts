@@ -1,4 +1,4 @@
-import { LayoutDashboard, ClipboardEdit, Boxes } from 'lucide-react';
+import { Boxes, ClipboardEdit, LayoutDashboard } from 'lucide-react';
 
 const sidebarData = [
   {

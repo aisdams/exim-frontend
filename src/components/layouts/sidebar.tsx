@@ -31,18 +31,31 @@ export default function Sidebar() {
     }
   };
 
-  useEffect(() => {
-    const defaultActiveItem = sidebarData[isActive];
-  }, [isActive]);
+  const handleSidebarItemClick = (idx: any) => {
+    setIsActive(idx);
+    localStorage.setItem('activeIndex', String(idx));
+  };
 
-  // useEffect(() => {
-  //   const activeIndex = sidebarData.findIndex((item) =>
-  //     router.pathname.startsWith(item.link)
-  //   );
-  //   if (activeIndex !== -1) {
-  //     setIsActive(activeIndex);
-  //   }
-  // }, [router.pathname]);
+  useEffect(() => {
+    const storedIndex = localStorage.getItem('activeIndex');
+    if (storedIndex !== null) {
+      setIsActive(Number(storedIndex));
+    } else {
+      setIsActive(0);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (router.asPath !== '/') {
+      const activeIndex = sidebarData.findIndex(
+        (item) => router.asPath === item.link
+      );
+      if (activeIndex !== -1) {
+        setIsActive(activeIndex);
+        localStorage.setItem('activeIndex', String(activeIndex));
+      }
+    }
+  }, [router.asPath]);
 
   useEffect(() => {
     const list = document.querySelectorAll(
@@ -94,6 +107,7 @@ export default function Sidebar() {
                 onClick={handleToggleSidebar}
               />
             )}
+
             <div className="absolute left-2 top-[6.9rem] grid gap-[32px]">
               {sidebarData.map((sidebar, idx) => (
                 <button
@@ -101,7 +115,7 @@ export default function Sidebar() {
                   className={`flex w-full px-2 text-lg ${
                     isActive === idx ? 'border-l-[3px] border-white' : ''
                   }`}
-                  onClick={() => setIsActive(idx)}
+                  onClick={() => handleSidebarItemClick(idx)}
                 >
                   <Link href={sidebar.link}>
                     {' '}

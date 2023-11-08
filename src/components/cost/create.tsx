@@ -184,7 +184,7 @@ export default function CreateCost({
   console.log('Quotations data:', quotationsQuery.data?.data.cost);
 
   const addCostMutation = useMutation({
-    mutationFn: CostService.create,
+    mutationFn: CostService.createCostQuo,
     onSuccess: (newItemCost) => {
       onCostCreated(newItemCost);
       qc.invalidateQueries(['cost']);
@@ -225,8 +225,9 @@ export default function CreateCost({
       </Link>
       {/* <ReactTable
         tableInstance={table}
-        isLoading={quotationsQuery.isFetching}
+        isLoading={quotationsQuery.isFetching} 
       /> */}
+
       <table className="w-full">
         <thead>
           <tr className="border-y-2 border-graySecondary/50 transition-colors">

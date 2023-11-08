@@ -17,4 +17,12 @@ export type createCostInput = {
   note?: string | null;
 };
 
+export type createCostQuoInput = {
+  item_name?: string | null;
+  qty?: string | null;
+  unit?: string | null;
+  price?: string | null;
+  note?: string | null;
+}
+
 export type updateCostInput = Omit<createCostInput>;

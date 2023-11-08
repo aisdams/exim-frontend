@@ -1,5 +1,5 @@
 import React from 'react';
-import { lowerCase, startCase } from 'lodash';
+import { lowerCase } from 'lodash';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { cn } from '@/lib/utils';
@@ -20,6 +20,7 @@ type InputMultiTextProps = {
   inputCN?: string;
   noErrorMessage?: boolean;
   onTouched?: () => void;
+  control?: any;
 };
 
 const InputMultiText: React.FC<InputMultiTextProps> = ({
@@ -46,11 +47,24 @@ const InputMultiText: React.FC<InputMultiTextProps> = ({
     fieldState: { error },
   } = useController({ name });
 
+  const convertInputStringToArray = (inputString: string): string[] => {
+    try {
+      const parsedArray = JSON.parse(inputString);
+      if (
+        Array.isArray(parsedArray) &&
+        parsedArray.every((item) => typeof item === 'string')
+      ) {
+        return parsedArray;
+      }
+    } catch (error) {
+      console.error('Input tidak dalam format yang valid');
+    }
+    return [];
+  };
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValues = e.target.value;
-    const valueArray = inputValues
-      .split(',') // Pisahkan berdasarkan koma
-      .map((item) => item.trim()); // Hapus spasi
+    const valueArray = convertInputStringToArray(inputValues);
 
     field.onChange(valueArray);
   };
@@ -61,7 +75,7 @@ const InputMultiText: React.FC<InputMultiTextProps> = ({
     }
   };
 
-  const displayValue = Array.isArray(value) ? value.join(', ') : value;
+  const displayValue = Array.isArray(value) ? JSON.stringify(value) : value;
 
   return (
     <div className={cn('relative', containerCN)}>

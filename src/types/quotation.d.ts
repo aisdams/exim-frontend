@@ -53,7 +53,6 @@ export type updateQuotationInput = {
   valheader: string | null;
   valfooter: string | null;
   customer_code: string | null;
-  cost?: string;
 };
 
 export type UpdateStatusInput = {

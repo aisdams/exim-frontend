@@ -378,7 +378,7 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
                       <View style={styles.amount}>
                         <View style={styles.amountText}>
                           <Text>Total:</Text>
-                          <Text>{totalPrices}</Text>
+                          <Text>Rp. {totalPrices}</Text>
                         </View>
                       </View>
                     </>
@@ -406,7 +406,7 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
             <View style={styles.textFinally}>
               <Text style={styles.textS}>{quotationQuery.data.data.sales}</Text>
               <View style={styles.viewHr} />
-              <Text>Mobile : 0893</Text>
+              <Text>Mobile : 08123456789</Text>
               <Text>Email : b@yahoo.com</Text>
             </View>
           </View>

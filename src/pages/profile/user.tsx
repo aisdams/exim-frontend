@@ -16,7 +16,7 @@ export default function Profile() {
   return (
     <div>
       <h1>User Profile</h1>
-      <div className="w-[40%] rounded-xl border border-graySecondary/50 dark:bg-secondDarkBlue">
+      <div className="w-max rounded-xl border border-graySecondary/50 px-10 dark:bg-secondDarkBlue">
         <div className="flex gap-5 p-5">
           <div className="">
             <Image src={Avatar} alt="" width={100} height={100} />

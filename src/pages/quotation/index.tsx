@@ -382,7 +382,8 @@ export default function Index() {
   const [statusesKey, setStatusesKey] = useState<string[]>([]);
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [orderBy, setOrderBy] = useState('All');
-  const [orderByTwo, setOrderByTwo] = useState('Quo No');
+  // const [orderByTwo, setOrderByTwo] = useState('quo_no');
+  const [orderByTwo, setOrderByTwo] = useState<keyof Quotation>('quo_no');
   const [orderByThree, setOrderByThree] = useState('Quo No');
   const [searchResults, setSearchResults] = useState<Quotation[]>([]);
   const [searchValue, setSearchValue] = useState('');
@@ -392,6 +393,32 @@ export default function Index() {
     periodOf: DateTime.fromJSDate(new Date()).minus({ months: 1 }).toJSDate(),
     periodUntil: new Date(),
   });
+
+  const handleSelectChange = (value: any) => {
+    setOrderByTwo(value);
+    filterData(value, searchValue);
+  };
+
+  const handleInputChange = (e: any) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    filterData(orderByTwo, value);
+  };
+
+  const filterData = (orderBy: keyof Quotation, search: string) => {
+    if (orderBy && search) {
+      const filteredData = quotationsQuery.data?.data.filter(
+        (item: Quotation) => {
+          const propertyValue = item[orderBy];
+          if (typeof propertyValue === 'string') {
+            return propertyValue.toLowerCase().includes(search.toLowerCase());
+          }
+          return false;
+        }
+      );
+      setSearchResults(filteredData || []);
+    }
+  };
 
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
@@ -533,16 +560,16 @@ export default function Index() {
 
               <div className="grid gap-1">
                 <div className="flex gap-1">
-                  <Select value={orderByTwo} onValueChange={setOrderByTwo}>
+                  <Select value={orderByTwo} onValueChange={handleSelectChange}>
                     <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>
                     <SelectContent align="end" className="dark:text-black">
                       <SelectGroup>
-                        <SelectItem value="Quo No">Quo No</SelectItem>
-                        <SelectItem value="Customer">Customer</SelectItem>
-                        <SelectItem value="Tipe">Tipe</SelectItem>
-                        <SelectItem value="Delivery">Delivery</SelectItem>
+                        <SelectItem value="quo_no">Quo No</SelectItem>
+                        <SelectItem value="customer">Customer</SelectItem>
+                        <SelectItem value="type">Type</SelectItem>
+                        <SelectItem value="delivery">Delivery</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -554,16 +581,7 @@ export default function Index() {
                     placeholder="Search...."
                     className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
                     value={searchValue}
-                    onChange={(e) => {
-                      setSearchValue(e.target.value);
-                      const filteredData = quotationsQuery.data?.data.filter(
-                        (item) =>
-                          item.quo_no
-                            .toLowerCase()
-                            .includes(e.target.value.toLowerCase())
-                      );
-                      setSearchResults(filteredData || []);
-                    }}
+                    onChange={handleInputChange}
                   />
                 </div>
 

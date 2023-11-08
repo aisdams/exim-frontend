@@ -83,7 +83,6 @@ const defaultValues = {
   kurs: '',
   valheader: '',
   valfooter: '',
-  cost: '',
 };
 
 const Schema = yup.object({
@@ -98,7 +97,6 @@ const Schema = yup.object({
   kurs: yup.string().required(),
   valheader: yup.string().required(),
   valfooter: yup.string().required(),
-  cost: yup.string().required(),
 });
 
 type QuotationSchema = InferType<typeof Schema>;
@@ -134,7 +132,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
 
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
-  const { handleSubmit, setValue, watch, register } = methods;
+  const { handleSubmit, setValue, watch, register, control } = methods;
   const openCustomerModal = () => {
     setIsCustomerModalOpen(true);
 
@@ -383,9 +381,6 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         </button>
                       </div>
                       <InputNumber name="kurs" mandatory />
-                      <div>
-                        <InputText name="cost" />
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -396,7 +391,6 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                   <Command className="text-white" />
                   <h1> Data Quotation</h1>
                 </div>
-
                 <div className="px-3">
                   <div className="mb-5 flex gap-2">
                     <Label>Header: </Label>

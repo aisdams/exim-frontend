@@ -8,11 +8,21 @@ import {
 
 import { axios } from '@/lib/axios';
 import { generateSearchQuery } from '@/lib/utils';
+import { createCostQuoInput } from '../types/cost';
 
 export const create = async (payload: createCostInput) => {
   const res = await axios.post('/cost', payload);
 
   return res.data;
+};
+
+export const createCostQuo = async (id: string, payload: createCostQuoInput) => {
+  try {
+    const res = await axios.post(`/cost/${id}`, payload);
+    return res.data;
+  } catch (error) {
+    throw new Error(`Gagal membuat data: ${error}`);
+  }
 };
 
 export const getAll = async ({
