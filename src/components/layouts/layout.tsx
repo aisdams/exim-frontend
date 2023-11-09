@@ -49,12 +49,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen dark:bg-[#262e4b]">
-      <Sidebar />
+      <div className="z-30">
+        <Sidebar />
+      </div>
       <div className="flex flex-1 flex-col">
-        <div className="z-[99]">
+        <div className="z-[20]">
           <Topbar />
         </div>
-        <div className="!z-[30] flex-1 overflow-y-auto">
+        <div className="!z-30 flex-1 overflow-y-auto">
           <div className="mx-6 mb-20 mt-8 overflow-y-auto">{children}</div>
         </div>
         <Footer />

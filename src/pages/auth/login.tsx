@@ -114,7 +114,7 @@ const Login: NextPageCustomLayout = () => {
         <div className="px-5 py-10">
           <Image src={bgLogo} alt="" />
           <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="">
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-10">
               <InputText
                 name="email"
                 label="Email"

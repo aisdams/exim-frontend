@@ -72,15 +72,15 @@ export default function Sidebar() {
       this.classList.add('hovered');
     }
 
-    list.forEach((item) => item.addEventListener('mouseover', activeLink));
+    list.forEach((item) => item.addEventListener('click', activeLink));
 
     return () => {
-      list.forEach((item) => item.removeEventListener('mouseover', activeLink));
+      list.forEach((item) => item.removeEventListener('click', activeLink));
     };
   }, []);
 
   return (
-    <div className="!z-[20]">
+    <div className="!z-[5]">
       <div
         className={`h-screen w-auto bg-blueNav ${
           sidebarVisible ? 'rounded-r-[2rem] bg-blueNav ' : ''
@@ -133,8 +133,13 @@ export default function Sidebar() {
               sidebarVisible ? '' : 'hidden'
             }`}
           >
-            <Image src={Logo} alt="" width={250} />
-            <div className="navigation lap- !z-0 mt-4 grid gap-2">
+            <Image
+              src={Logo}
+              alt=""
+              width={150}
+              className="ml-4 dark:brightness-0 dark:invert-[1]"
+            />
+            <div className="navigation lap- !z-0 mt-14 grid gap-2">
               {sidebarData.map((sidebar, idx) => (
                 <NavigationMenu key={idx} className="childOne">
                   <NavigationMenuList className="childTwo">

@@ -139,6 +139,8 @@ export default function Content() {
           height={350}
         />
       </div>
+
+      {/* list jo dan joc */}
     </div>
   );
 }

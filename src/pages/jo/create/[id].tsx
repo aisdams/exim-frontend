@@ -206,7 +206,11 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
 
           {/* Buttons */}
           <div className="mt-5 flex items-center gap-2">
-            <Button className="bg-graySecondary" onClick={() => router.back()}>
+            <Button
+              className="bg-graySecondary"
+              onClick={() => router.back()}
+              type="button"
+            >
               Back
             </Button>
             <Button

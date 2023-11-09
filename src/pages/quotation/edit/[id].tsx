@@ -126,7 +126,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
 
   const handleCostCreated = (newItemCost: { data: { cost?: string } }) => {
     if (newItemCost && newItemCost.data && newItemCost.data.cost) {
-      setValue('cost', newItemCost.data.cost);
+      // setValue('cost', newItemCost.data.cost);
     }
   };
 
@@ -239,8 +239,8 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
     }
 
     updatedQuotationMutation.mutate({ id, data });
-    const itemCostValue = data.cost;
-    console.log('cost value submitted:', data.cost);
+    // const itemCostValue = data.cost;
+    // console.log('cost value submitted:', data.cost);
   };
 
   return (
@@ -413,6 +413,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
               <Button
                 className="bg-graySecondary"
                 onClick={() => router.back()}
+                type="button"
               >
                 Back
               </Button>

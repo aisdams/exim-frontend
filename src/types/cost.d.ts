@@ -11,18 +11,18 @@ export type Cost = {
   deletedAt: Date | null;
 };
 
-export type createCostInput = {
-  qty?: string | null;
-  unit?: string | null;
-  note?: string | null;
-};
-
 export type createCostQuoInput = {
   item_name?: string | null;
   qty?: string | null;
   unit?: string | null;
   price?: string | null;
   note?: string | null;
-}
+};
+
+export type createCostInput = {
+  qty?: string | null;
+  unit?: string | null;
+  note?: string | null;
+};
 
 export type updateCostInput = Omit<createCostInput>;

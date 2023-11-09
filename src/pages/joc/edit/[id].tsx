@@ -381,18 +381,6 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                         </div>
 
                         <InputText name="no_container" mandatory />
-                        <InputText name="jo_no" />
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={openJOService}
-                            className='
-                  dark:bg-blueLight" mt-1 h-6 w-6 rounded-md bg-graySecondary px-1
-                  text-base text-white'
-                          >
-                            <Search className="w-4" />
-                          </button>
-                        </div>
                         {/* <InputText
                           name="jo_no"
                           mandatory
@@ -408,6 +396,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                 <Button
                   className="bg-graySecondary"
                   onClick={() => router.back()}
+                  type="button"
                 >
                   Back
                 </Button>

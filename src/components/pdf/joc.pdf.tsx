@@ -150,9 +150,9 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
   }, [jocQuery.data?.data?.customer_code]);
 
   useEffect(() => {
-    if (jocQuery.data?.data?.jo_no) {
+    if (jocQuery.data?.data?.joc_no) {
       joService
-        .getById(jocQuery.data.data.jo_no)
+        .getById(jocQuery.data.data.joc_no)
         .then((res) => {
           setJO(res.data);
         })
@@ -246,7 +246,7 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                   <Text style={styles.tableCell}>CUSTOMER</Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>NO BL</Text>
+                  <Text style={styles.tableCell}>NO MBL</Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
                   <Text style={styles.tableCell}>DISCHARGE</Text>
@@ -259,33 +259,42 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                 </View>
               </View>
               {/* Rows */}
-              <View style={[styles.tableRow, { fontWeight: 'normal' }]}>
-                <View style={[styles.tableCol, { width: '5%' }]}>
-                  <Text style={styles.tableCell}>1</Text>
+              {Array.isArray(jocQuery.data?.data?.jo) ? (
+                jocQuery.data?.data?.jo.map((item: any, index: number) => (
+                  <>
+                    <View
+                      style={[styles.tableRow, { fontWeight: 'normal' }]}
+                      key={index}
+                    >
+                      <View style={[styles.tableCol, { width: '5%' }]}>
+                        <Text style={styles.tableCell}>{index + 1}</Text>
+                      </View>
+                      <View style={[styles.tableCol, { width: '20%' }]}>
+                        <Text style={styles.tableCell}>{item.joc_no}</Text>
+                      </View>
+                      <View style={[styles.tableCol, { width: '15%' }]}>
+                        <Text style={styles.tableCell}>{item.shipper}</Text>
+                      </View>
+                      <View style={[styles.tableCol, { width: '15%' }]}>
+                        <Text style={styles.tableCell}>{item.mbl}</Text>
+                      </View>
+                      <View style={[styles.tableCol, { width: '15%' }]}>
+                        <Text style={styles.tableCell}>{item.discharge}</Text>
+                      </View>
+                      <View style={[styles.tableCol, { width: '15%' }]}>
+                        <Text style={styles.tableCell}>0</Text>
+                      </View>
+                      <View style={[styles.tableCol, { width: '15%' }]}>
+                        <Text style={styles.tableCell}>{''}</Text>
+                      </View>
+                    </View>
+                  </>
+                ))
+              ) : (
+                <View>
+                  <td colSpan={4}>No cost data available</td>
                 </View>
-                <View style={[styles.tableCol, { width: '20%' }]}>
-                  <Text style={styles.tableCell}>{jo ? jo.jo_no : ''}</Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>
-                    {jocQuery.data.data.agent}
-                  </Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>ONEYBKKCBP13454</Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>
-                    {jocQuery.data.data.discharge}
-                  </Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}></Text>
-                </View>
-                <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>0</Text>
-                </View>
-              </View>
+              )}
             </View>
           </View>
 

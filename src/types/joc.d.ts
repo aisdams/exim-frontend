@@ -12,6 +12,7 @@ export type JOC = {
   type?: string;
   quo_no: string | null;
   jo_no: string;
+  jo: string;
   customer_code: string | null;
   createdBy: string;
   createdAt: Date;

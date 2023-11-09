@@ -204,10 +204,8 @@ export default function QuotationAdd() {
   return (
     <div className="ml-3 overflow-hidden">
       <div className="mb-4 flex gap-3 ">
-        <Command className="text-blueLight" />
         <h1 className="">Add Quotation</h1>
       </div>
-
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
           <div className="grid gap-3 lg:grid-cols-2">
@@ -364,7 +362,11 @@ export default function QuotationAdd() {
           </div>
           {/* Buttons */}
           <div className="flex items-center gap-2">
-            <Button className="bg-graySecondary" onClick={() => router.back()}>
+            <Button
+              className="bg-graySecondary"
+              onClick={() => router.back()}
+              type="button"
+            >
               Back
             </Button>
             <Button

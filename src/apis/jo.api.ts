@@ -1,9 +1,11 @@
+import { useRouter } from 'next/router';
 import {
-  JobOrder,
   createJobOrderInput,
-  updateJobOrderInput,
+  createJOforJOCInput,
+  JobOrder,
   Pagination,
   Res,
+  updateJobOrderInput,
 } from '@/types';
 
 import { axios } from '@/lib/axios';
@@ -30,6 +32,21 @@ export const getAll = async ({
 export const getById = async (id: string): Promise<Res<JobOrder>> => {
   const res = await axios.get(`/jo/${id}`);
   return res.data;
+};
+
+export const createJOforJOC = async ({
+  data,
+  joc_no,
+}: {
+  data: createJOforJOCInput;
+  joc_no: string;
+}) => {
+  try {
+    const res = await axios.post(`/jo/${joc_no}`, data);
+    return res.data;
+  } catch (error) {
+    throw new Error(`Gagal membuat data: ${error}`);
+  }
 };
 
 export const updateById = async ({

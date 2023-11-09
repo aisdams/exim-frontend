@@ -40,6 +40,15 @@ export type createJobOrderInput = {
   port_code?: string | null;
 };
 
+export type createJOforJOCInput = {
+  shipper?: string | null;
+  consignee?: string | null;
+  qty?: string | null;
+  vessel?: string | null;
+  gross_weight?: string | null;
+  volume?: string | null;
+};
+
 export type updateJobOrderInput = Omit<
   createJobOrderInput,
   'jo_date',

@@ -266,7 +266,6 @@ const columnsDef = [
             <Button
               variant="ghost"
               className="mx-auto grid h-8 w-8 items-center justify-center p-0 data-[state=open]:bg-muted"
-              //
             >
               <span className="sr-only">Open menu</span>
               <MoreVertical className="mx-auto grid h-4 w-4 items-center justify-center" />

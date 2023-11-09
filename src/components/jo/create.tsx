@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
-import { Customer, JobOrder, Port } from '@/types';
+import { Customer, JobOrder, JOC, Port } from '@/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -32,6 +32,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import * as JOService from '../../apis/jo.api';
+import * as JOCService from '../../apis/joc.api';
 import InputNumber from '../forms/input-number';
 import InputSearch from '../forms/input-search';
 import InputText from '../forms/input-text';
@@ -56,7 +57,7 @@ const Schema = yup.object({
   volume: yup.string().required(),
 });
 
-const columnHelper = createColumnHelper<JobOrder>();
+const columnHelper = createColumnHelper<JOC>();
 
 const copyJo = (jo_no: any) => {
   navigator.clipboard
@@ -87,37 +88,13 @@ const columnsDef = [
       );
     },
   }),
-  columnHelper.accessor('jo_no', {
+  columnHelper.accessor('joc_no', {
     header: 'JO No',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('shipper', {
-    header: 'Shipper',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('consignee', {
-    header: 'Consignee',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('qty', {
-    header: 'QTY',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('vessel', {
-    header: 'Vessel',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('gross_weight', {
-    header: 'gross_weight',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('volume', {
-    header: 'volume',
     cell: (info) => info.getValue(),
   }),
 ];
 
-type CostSchema = InferType<typeof Schema>;
+type JOSchema = InferType<typeof Schema>;
 
 export default function CreateJO({
   onJOCreated,
@@ -127,24 +104,27 @@ export default function CreateJO({
   const qc = useQueryClient();
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
-  const [searchResults, setSearchResults] = useState<JobOrder[]>([]);
+  const [searchResults, setSearchResults] = useState<JOC[]>([]);
   const [isJOModalOpen, setIsJOModalOpen] = useState(false);
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [PortData, setPortData] = useState<Port[]>([]);
+  const [JOData, setJOData] = useState<any | null>(null);
   const [isPortModalOpen, setIsPortModalOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
 
-  const methods = useForm<CostSchema>({
+  const methods = useForm<JOSchema>({
     mode: 'all',
     defaultValues,
     resolver: yupResolver(Schema),
   });
   const columns = useMemo(() => columnsDef, []);
   const defaultData = useMemo(() => [], []);
+
+  const { id } = router.query;
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 15,
@@ -156,23 +136,46 @@ export default function CreateJO({
     limit: pageSize,
   };
 
-  const fetchData = (fetchDataOptions: any, debouncedSearchValue: any) => {
-    return JOService.getAll({
-      ...fetchDataOptions,
-      searchValue: debouncedSearchValue,
-      quo_no: debouncedSearchValue,
-    });
+  const fetchData = () => {
+    let setId;
+    if (typeof id === 'string') {
+      setId = id;
+    } else if (Array.isArray(id)) {
+      setId = id[0];
+    } else {
+      throw new Error('Invalid ID');
+    }
+
+    if (setId) {
+      return JOCService.getById(setId);
+    } else {
+      throw new Error('Invalid ID');
+    }
   };
 
-  const jobOrderQuery = useQuery({
-    queryKey: ['jo', { fetchDataOptions, searchValue }],
-    queryFn: () => fetchData(fetchDataOptions, searchValue),
+  const jocQuery = useQuery({
+    queryKey: ['joc'],
+    queryFn: fetchData,
     keepPreviousData: true,
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
 
+  useEffect(() => {
+    if (jocQuery.data?.data?.joc_no) {
+      JOService.getById(jocQuery.data.data.joc_no)
+        .then((res) => {
+          setJOData(res.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching JO data:', error);
+        });
+    }
+  }, [jocQuery.data?.data?.joc_no]);
+
+  console.log(jocQuery.data?.data.joc_no);
+  console.log(jocQuery.data?.data.jo);
   const openCustomerModal = () => {
     setIsCustomerModalOpen(true);
 
@@ -228,7 +231,7 @@ export default function CreateJO({
   const deleteCostMutation = useMutation({
     mutationFn: JOService.deleteById,
     onSuccess: () => {
-      qc.invalidateQueries(['cost']);
+      qc.invalidateQueries(['jo']);
       toast.success('JO deleted successfully.');
     },
     onError: (err) => {
@@ -238,8 +241,7 @@ export default function CreateJO({
 
   const table = useReactTable({
     columns,
-    data: searchValue ? searchResults : jobOrderQuery.data?.data ?? [],
-    pageCount: jobOrderQuery.data?.pagination.total_page ?? -1,
+    data: (jocQuery.data?.data || []) as JOC[],
     state: {
       pagination,
     },
@@ -253,10 +255,9 @@ export default function CreateJO({
   console.log(searchValue);
 
   const addJOMutation = useMutation({
-    mutationFn: JOService.create,
-    onSuccess: (newItemJO) => {
-      onJOCreated(newItemJO);
-      qc.invalidateQueries(['cost']);
+    mutationFn: JOService.createJOforJOC,
+    onSuccess: () => {
+      qc.invalidateQueries(['jo']);
       toast.success('Success, JO has been added.');
       const { id } = router.query;
       router.reload();
@@ -267,12 +268,15 @@ export default function CreateJO({
     },
   });
 
-  const onSubmit: SubmitHandler<CostSchema> = (data) => {
+  const onSubmit: SubmitHandler<JOSchema> = (data) => {
     if (IS_DEV) {
       console.log('data =>', data);
     }
 
-    addJOMutation.mutate(data);
+    const { id } = router.query;
+    const parsedQuoNo = Array.isArray(id) ? id[0] : id;
+
+    addJOMutation.mutate({ data, joc_no: parsedQuoNo || '' });
 
     onJOCreated(data);
 
@@ -292,25 +296,95 @@ export default function CreateJO({
       </Link>
 
       <div className="">
-        <Input
-          type="text"
-          name=""
-          id=""
-          placeholder="Search...."
-          className="my-5 w-[300px] rounded-md border border-graySecondary !bg-transparent dark:border-white"
-          value={searchValue}
-          onChange={(e) => {
-            setSearchValue(e.target.value);
-            const filteredData = jobOrderQuery.data?.data.filter((item) =>
-              item.jo_no.toLowerCase().includes(e.target.value.toLowerCase())
-            );
-            setSearchResults(filteredData || []);
-          }}
-        />
-        <ReactTable
-          tableInstance={table}
-          isLoading={jobOrderQuery.isFetching}
-        />
+        <Button
+          className="mb-5 w-max gap-2 bg-green-600 px-2 py-4 text-white"
+          onClick={openJOModal}
+        >
+          <PlusSquare className="h-5" />
+          <h3>Create JobOrder</h3>
+        </Button>
+
+        {/* <ReactTable tableInstance={table} isLoading={jocQuery.isFetching} /> */}
+        <table className="w-full">
+          <thead>
+            <tr className="border-y-2 border-graySecondary/50 transition-colors">
+              {/* <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+              Option
+            </th> */}
+              <th className="border-l-2 border-graySecondary/70 p-2 dark:border-white/30">
+                No
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                JOC NO
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                TYPE
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                NO MBL
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                AGENT
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                VESSEL
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                NO CONTAINER
+              </th>
+            </tr>
+          </thead>
+          <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
+            {Array.isArray(jocQuery.data?.data?.jo) ? (
+              jocQuery.data?.data?.jo.map((item: any, index: number) => (
+                <tr
+                  key={index}
+                  className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30"
+                >
+                  <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                    {index + 1}
+                  </td>
+                  <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                    {item.shipper}
+                  </td>
+                  <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                    {item.consignee}
+                  </td>
+                  <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                    {item.qty}
+                  </td>
+                  <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                    {item.hbl}
+                  </td>
+                  <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                    {item.vessel}
+                  </td>
+                  <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                    {item.name_of_goods}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4}>No cost data available</td>
+              </tr>
+            )}
+            {/* {setCost} */}
+
+            {/* No data info */}
+            {/* {quotationsQuery.data?.data.quo_no.length < 1 && ( */}
+            {table.getAllColumns().length < 1 && (
+              <tr className="">
+                <td
+                  colSpan={table.getAllColumns().length + 1}
+                  className="p-2 text-center"
+                >
+                  No data found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
       {isJOModalOpen && (

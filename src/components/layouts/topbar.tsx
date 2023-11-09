@@ -100,24 +100,6 @@ export default function Topbar() {
           <Maximize />
         </div>
 
-        <div className="relative flex">
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2">
-              <Bell />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="mr-5 w-40 rounded-lg shadow-lg dark:text-black">
-              <DropdownMenuLabel>News</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Team</DropdownMenuItem>
-              <DropdownMenuItem>Subscription</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <div className="bullet absolute right-1 h-2 w-2 rounded-full bg-red-600"></div>
-        </div>
-
         <div className="relative">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 dark:text-white">

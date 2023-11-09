@@ -1,28 +1,19 @@
 import {
   Cost,
   createCostInput,
-  updateCostInput,
+  createCostQuoInput,
   Pagination,
   Res,
+  updateCostInput,
 } from '@/types';
 
 import { axios } from '@/lib/axios';
 import { generateSearchQuery } from '@/lib/utils';
-import { createCostQuoInput } from '../types/cost';
 
 export const create = async (payload: createCostInput) => {
   const res = await axios.post('/cost', payload);
 
   return res.data;
-};
-
-export const createCostQuo = async (id: string, payload: createCostQuoInput) => {
-  try {
-    const res = await axios.post(`/cost/${id}`, payload);
-    return res.data;
-  } catch (error) {
-    throw new Error(`Gagal membuat data: ${error}`);
-  }
 };
 
 export const getAll = async ({
@@ -52,6 +43,21 @@ export const updateById = async ({
   const res = await axios.put(`/cost/${id}`, data);
 
   return res.data;
+};
+
+export const createCostQuo = async ({
+  data,
+  quo_no,
+}: {
+  data: createCostQuoInput;
+  quo_no: string;
+}) => {
+  try {
+    const res = await axios.post(`/cost/${quo_no}`, data);
+    return res.data;
+  } catch (error) {
+    throw new Error(`Gagal membuat data: ${error}`);
+  }
 };
 
 export const deleteById = async (id: string) => {

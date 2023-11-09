@@ -14,9 +14,11 @@ import {
 } from '@tanstack/react-table';
 import { Command, PlusSquare } from 'lucide-react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { InferType } from 'yup';
+import { InferType, string } from 'yup';
 
+import { axios } from '@/lib/axios';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import ReactTable from '@/components/table/react-table';
@@ -69,6 +71,7 @@ export default function CreateCost({
 }) {
   const qc = useQueryClient();
   const router = useRouter();
+  // const { quo_no } = useParams();
   const [searchValue, setSearchValue] = useState('');
   const [isCostModalOpen, setIsCostModalOpen] = useState(false);
   const [selectedItemCost, setSelectedItemCost] = useState(itemCostValue);
@@ -92,7 +95,8 @@ export default function CreateCost({
   const { handleSubmit, setValue, watch } = methods;
 
   const { id } = router.query;
-  console.log(id);
+  // console.log(id);
+
   const fetchDataOptions = {
     page: pageIndex + 1,
     limit: pageSize,
@@ -168,6 +172,7 @@ export default function CreateCost({
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
+
   const table = useReactTable({
     columns,
     data: (quotationsQuery.data?.data || []) as Quotation[],
@@ -185,15 +190,15 @@ export default function CreateCost({
 
   const addCostMutation = useMutation({
     mutationFn: CostService.createCostQuo,
-    onSuccess: (newItemCost) => {
-      onCostCreated(newItemCost);
+    onSuccess: () => {
       qc.invalidateQueries(['cost']);
       toast.success('Success, Cost has been added.');
+
       const { id } = router.query;
-      router.push(`/quotation/edit/${id}`);
-      // router.reload();
+      router.reload();
+      // router.push(`/quotation/edit/${id}`);
     },
-    onError: (err) => {
+    onError: (err: any) => {
       toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
@@ -202,8 +207,10 @@ export default function CreateCost({
     if (IS_DEV) {
       console.log('data =>', data);
     }
+    const { id } = router.query;
+    const parsedQuoNo = Array.isArray(id) ? id[0] : id;
 
-    addCostMutation.mutate(data);
+    addCostMutation.mutate({ data, quo_no: parsedQuoNo || '' });
 
     onCostCreated(data);
 
