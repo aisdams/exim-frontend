@@ -33,8 +33,8 @@ import {
 } from '@/components/ui/table';
 import * as JOService from '../../apis/jo.api';
 import * as JOCService from '../../apis/joc.api';
+import InputHidden from '../forms/input-hidden';
 import InputNumber from '../forms/input-number';
-import InputSearch from '../forms/input-search';
 import InputText from '../forms/input-text';
 import InputTextNoErr from '../forms/input-text-noerr';
 import { Input } from '../ui/input';
@@ -46,6 +46,8 @@ const defaultValues = {
   vessel: '',
   gross_weight: '',
   volume: '',
+  customer_code: '',
+  quo_no: 'QUO-230001',
 };
 
 const Schema = yup.object({
@@ -55,6 +57,8 @@ const Schema = yup.object({
   vessel: yup.string().required(),
   gross_weight: yup.string().required(),
   volume: yup.string().required(),
+  customer_code: yup.string().required(),
+  quo_no: yup.string().nullable(),
 });
 
 const columnHelper = createColumnHelper<JOC>();
@@ -114,6 +118,8 @@ export default function CreateJO({
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
+  const [customerCode, setCustomerCode] = useState('');
+  const [portCode, setPortCode] = useState('');
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
 
   const methods = useForm<JOSchema>({
@@ -174,8 +180,6 @@ export default function CreateJO({
     }
   }, [jocQuery.data?.data?.joc_no]);
 
-  console.log(jocQuery.data?.data.joc_no);
-  console.log(jocQuery.data?.data.jo);
   const openCustomerModal = () => {
     setIsCustomerModalOpen(true);
 
@@ -189,6 +193,14 @@ export default function CreateJO({
         console.error('Error:', error);
       });
   };
+
+  useEffect(() => {
+    if (selectedCustomer) {
+      setCustomerCode(selectedCustomer.customer_code);
+    } else {
+      setCustomerCode('');
+    }
+  }, [selectedCustomer]);
 
   const closeCustomerModal = () => {
     setIsCustomerModalOpen(false);
@@ -207,6 +219,13 @@ export default function CreateJO({
         console.error('Error:', error);
       });
   };
+  useEffect(() => {
+    if (selectedPort) {
+      setPortCode(selectedPort.port_code);
+    } else {
+      setPortCode('');
+    }
+  }, [selectedPort]);
 
   const closePortModal = () => {
     setIsPortModalOpen(false);
@@ -335,8 +354,8 @@ export default function CreateJO({
             </tr>
           </thead>
           <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
-            {Array.isArray(jocQuery.data?.data?.jo) ? (
-              jocQuery.data?.data?.jo.map((item: any, index: number) => (
+            {Array.isArray(jocQuery.data?.data?.joborder) ? (
+              jocQuery.data?.data?.joborder.map((item: any, index: number) => (
                 <tr
                   key={index}
                   className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30"
@@ -422,6 +441,12 @@ export default function CreateJO({
                       </div>
 
                       <div className="grid justify-end gap-3">
+                        <div className="hidden">
+                          <InputHidden
+                            name="customer_code"
+                            value={customerCode}
+                          />
+                        </div>
                         <div className="flex gap-2">
                           <InputTextNoErr
                             name="shipper"
@@ -440,6 +465,7 @@ export default function CreateJO({
                             <Search className="w-4" />
                           </button>
                         </div>
+
                         <div className="flex gap-2">
                           <InputTextNoErr
                             name="consignee"
@@ -523,6 +549,13 @@ export default function CreateJO({
                         className=""
                         onClick={() => {
                           setSelectedCustomer(customer);
+                          const customerCodeInput = document.querySelector(
+                            'input[name="customer_code"]'
+                          );
+                          if (customerCodeInput) {
+                            (customerCodeInput as HTMLInputElement).value =
+                              customer.customer_code;
+                          }
                           closeCustomerModal();
                         }}
                       >
@@ -570,6 +603,13 @@ export default function CreateJO({
                         className=""
                         onClick={() => {
                           setSelectedPort(port);
+                          const portCodeInput = document.querySelector(
+                            'input[name="port_code"]'
+                          );
+                          if (portCodeInput) {
+                            (portCodeInput as HTMLInputElement).value =
+                              port.port_code;
+                          }
                           closePortModal();
                         }}
                       >

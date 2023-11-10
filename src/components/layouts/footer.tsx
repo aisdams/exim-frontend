@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <div className="absolute bottom-0 right-0 !z-30 mx-auto flex w-full justify-center bg-blueNav text-left text-white">
+    <div className="absolute bottom-0 right-0 !z-20 mx-auto flex w-full justify-center bg-blueNav text-left text-white">
       <h1>
         Copyright © 2021
         <span>

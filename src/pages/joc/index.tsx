@@ -33,7 +33,6 @@ import { toast } from 'react-toastify';
 import * as quotationService from '@/apis/quotation.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import { DateRangePicker } from '@/components/forms/data-range-picker';
-import InputSearch from '@/components/forms/input-search';
 import ReactTable from '@/components/table/react-table';
 import {
   AlertDialog,
@@ -175,11 +174,11 @@ const columnsDef = [
         <div
           className={`rounded-md px-2 ${
             info.getValue() === 'InProgress'
-              ? 'bg-yellow-600'
+              ? 'bg-yellow-600 text-white'
               : info.getValue() === 'Executed'
-              ? 'bg-green-500'
+              ? 'bg-green-500 text-white'
               : info.getValue() === 'Cancel'
-              ? 'bg-red-600'
+              ? 'bg-red-600 text-white'
               : ''
           }`}
         >
@@ -366,7 +365,6 @@ export default function Index() {
   const [isActive, SetIsActive] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
 
-  
   const handleSelectChange = (value: any) => {
     setOrderByTwo(value);
     filterData(value, searchValue);
@@ -380,15 +378,13 @@ export default function Index() {
 
   const filterData = (orderBy: keyof JOC, search: string) => {
     if (orderBy && search) {
-      const filteredData = jocQuery.data?.data.filter(
-        (item: JOC) => {
-          const propertyValue = item[orderBy];
-          if (typeof propertyValue === 'string') {
-            return propertyValue.toLowerCase().includes(search.toLowerCase());
-          }
-          return false;
+      const filteredData = jocQuery.data?.data.filter((item: JOC) => {
+        const propertyValue = item[orderBy];
+        if (typeof propertyValue === 'string') {
+          return propertyValue.toLowerCase().includes(search.toLowerCase());
         }
-      );
+        return false;
+      });
       setSearchResults(filteredData || []);
     }
   };
@@ -558,7 +554,7 @@ export default function Index() {
 
               <div className="grid gap-1">
                 <div className="flex gap-1">
-                <Select value={orderByTwo} onValueChange={handleSelectChange}>
+                  <Select value={orderByTwo} onValueChange={handleSelectChange}>
                     <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>

@@ -47,6 +47,8 @@ export type createJOforJOCInput = {
   vessel?: string | null;
   gross_weight?: string | null;
   volume?: string | null;
+  quo_no?: string | null;
+  customer_code?: string | null;
 };
 
 export type updateJobOrderInput = Omit<

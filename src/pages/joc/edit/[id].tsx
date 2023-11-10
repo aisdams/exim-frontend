@@ -77,7 +77,6 @@ const defaultValues = {
   loading: '',
   discharge: '',
   no_container: '',
-  jo_no: '',
 };
 
 const Schema = yup.object({
@@ -86,7 +85,6 @@ const Schema = yup.object({
   loading: yup.string().required(),
   discharge: yup.string().required(),
   no_container: yup.string().required(),
-  jo_no: yup.string().required(),
 });
 
 type JOCSchema = InferType<typeof Schema>;
@@ -206,7 +204,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
 
   const handleJOCreated = (newItemJO: { data: { jo_no?: string } }) => {
     if (newItemJO && newItemJO.data && newItemJO.data.jo_no) {
-      setValue('jo_no', newItemJO.data.jo_no);
+      // setValue('jo_no', newItemJO.data.jo_no);
     }
   };
 

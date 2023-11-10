@@ -249,10 +249,10 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
                     : 'discharge tidak ditemukan'}
                 </Text>
                 <Text style={styles.tableDData}>
-                  {dateStringEtd ? dateStringEtd : '-'}
+                  {dateStringEtd ? !dateStringEtd : '-'}
                 </Text>
                 <Text style={styles.tableDData}>
-                  {dateStringEta ? dateStringEta : '-'}
+                  {dateStringEta ? !dateStringEta : '-'}
                 </Text>
                 <Text style={styles.tableDData}>{joQuery.data.data.hbl}</Text>
                 <Text style={styles.tableDData}>{joQuery.data.data.mbl}</Text>

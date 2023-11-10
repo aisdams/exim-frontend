@@ -97,7 +97,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
                 <tr
                   key={row.id}
                   className={cn(
-                    'transition-colors hover:bg-muted/50 [&:last-child>td]:!border-b-0'
+                    'transition-colors hover:bg-muted/50 [&:last-child>td]:!border-b-2'
                   )}
                 >
                   <td className="border-b border-graySecondary/70 p-2 text-center font-semibold">

@@ -259,37 +259,39 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                 </View>
               </View>
               {/* Rows */}
-              {Array.isArray(jocQuery.data?.data?.jo) ? (
-                jocQuery.data?.data?.jo.map((item: any, index: number) => (
-                  <>
-                    <View
-                      style={[styles.tableRow, { fontWeight: 'normal' }]}
-                      key={index}
-                    >
-                      <View style={[styles.tableCol, { width: '5%' }]}>
-                        <Text style={styles.tableCell}>{index + 1}</Text>
+              {Array.isArray(jocQuery.data?.data?.joborder) ? (
+                jocQuery.data?.data?.joborder.map(
+                  (item: any, index: number) => (
+                    <>
+                      <View
+                        style={[styles.tableRow, { fontWeight: 'normal' }]}
+                        key={index}
+                      >
+                        <View style={[styles.tableCol, { width: '5%' }]}>
+                          <Text style={styles.tableCell}>{index + 1}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '20%' }]}>
+                          <Text style={styles.tableCell}>{item.jo_no}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '15%' }]}>
+                          <Text style={styles.tableCell}>{item.shipper}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '15%' }]}>
+                          <Text style={styles.tableCell}>{item.mbl}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '15%' }]}>
+                          <Text style={styles.tableCell}>{item.discharge}</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '15%' }]}>
+                          <Text style={styles.tableCell}>0</Text>
+                        </View>
+                        <View style={[styles.tableCol, { width: '15%' }]}>
+                          <Text style={styles.tableCell}>{''}</Text>
+                        </View>
                       </View>
-                      <View style={[styles.tableCol, { width: '20%' }]}>
-                        <Text style={styles.tableCell}>{item.joc_no}</Text>
-                      </View>
-                      <View style={[styles.tableCol, { width: '15%' }]}>
-                        <Text style={styles.tableCell}>{item.shipper}</Text>
-                      </View>
-                      <View style={[styles.tableCol, { width: '15%' }]}>
-                        <Text style={styles.tableCell}>{item.mbl}</Text>
-                      </View>
-                      <View style={[styles.tableCol, { width: '15%' }]}>
-                        <Text style={styles.tableCell}>{item.discharge}</Text>
-                      </View>
-                      <View style={[styles.tableCol, { width: '15%' }]}>
-                        <Text style={styles.tableCell}>0</Text>
-                      </View>
-                      <View style={[styles.tableCol, { width: '15%' }]}>
-                        <Text style={styles.tableCell}>{''}</Text>
-                      </View>
-                    </View>
-                  </>
-                ))
+                    </>
+                  )
+                )
               ) : (
                 <View>
                   <td colSpan={4}>No cost data available</td>

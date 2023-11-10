@@ -164,7 +164,8 @@ const columnsDef = [
       );
     },
   }),
-  columnHelper.accessor('hbl', {
+  columnHelper.display({
+    id: 'hbl',
     header: () => (
       <div>
         <div>HBL/HAWB</div>
@@ -500,7 +501,7 @@ export default function Index() {
               </div>
 
               <div className="grid gap-1">
-              <div className="flex gap-1">
+                <div className="flex gap-1">
                   <Select value={orderByTwo} onValueChange={handleSelectChange}>
                     <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                       <SelectValue placeholder="Order by" className="" />

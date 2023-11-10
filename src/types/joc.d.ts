@@ -12,7 +12,7 @@ export type JOC = {
   type?: string;
   quo_no: string | null;
   jo_no: string;
-  jo: string;
+  joborder: string;
   customer_code: string | null;
   createdBy: string;
   createdAt: Date;
@@ -42,5 +42,4 @@ export type updateJOCInput = {
   no_container?: string | null;
   loading: string | null;
   discharge: string | null;
-  jo_no: string | null;
 };

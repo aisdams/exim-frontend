@@ -52,11 +52,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
   Select,
   SelectContent,
   SelectGroup,
@@ -568,7 +563,7 @@ export default function Index() {
                         <SelectItem value="quo_no">Quo No</SelectItem>
                         <SelectItem value="customer">Customer</SelectItem>
                         <SelectItem value="type">Type</SelectItem>
-                        <SelectItem value="delivery">Delivery</SelectItem>
+                        <SelectItem value="loading">loading</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>

@@ -282,13 +282,13 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                     <div className="grid gap-2">
                       <Input
                         name="quo_no"
-                        className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
+                        className="w-[300px] border-2 border-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-black disabled:select-none disabled:bg-muted dark:border-none  dark:!bg-black dark:placeholder:text-muted-foreground"
                         disabled
                         placeholder={`${id}`}
                       />
                       <Input
                         name="createdAt"
-                        className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
+                        className="w-[300px] border-2 border-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-black disabled:select-none disabled:bg-muted dark:border-none  dark:!bg-black dark:placeholder:text-muted-foreground"
                         disabled
                         placeholder="~AUTO~"
                       />
