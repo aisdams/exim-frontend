@@ -13,6 +13,7 @@ type InputTextAreaProps = {
   containerCN?: string;
   inputWrapperCN?: string;
   inputCN?: string;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 const InputTextArea: React.FC<InputTextAreaProps> = ({
@@ -25,6 +26,7 @@ const InputTextArea: React.FC<InputTextAreaProps> = ({
   containerCN,
   inputWrapperCN,
   inputCN,
+  onChange,
   ...props
 }) => {
   const { register } = useFormContext();
@@ -33,15 +35,17 @@ const InputTextArea: React.FC<InputTextAreaProps> = ({
     fieldState: { error },
   } = useController({ name });
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const internalOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     field.onChange(e.target.value);
+    if (onChange) {
+      onChange(e);
+    }
   };
-
   return (
     <div className={cn('relative', containerCN)}>
-      <label htmlFor={id || name} className='mb-1 inline-block'>
+      <label htmlFor={id || name} className="mb-1 inline-block">
         {label || startCase(name)}
-        {mandatory && <span className='text-[#f00]'>*</span>}
+        {mandatory && <span className="text-[#f00]">*</span>}
       </label>
 
       <div
@@ -73,7 +77,7 @@ const InputTextArea: React.FC<InputTextAreaProps> = ({
         />
       </div>
       {error?.message && (
-        <p className='text-xs tracking-wide text-red-600'>{error.message}</p>
+        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
       )}
     </div>
   );

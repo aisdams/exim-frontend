@@ -18,6 +18,7 @@ type InputTextProps = {
   inputWrapperCN?: string;
   inputCN?: string;
   noErrorMessage?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 const InputTextArea: React.FC<InputTextProps> = ({
@@ -43,7 +44,7 @@ const InputTextArea: React.FC<InputTextProps> = ({
     fieldState: { error },
   } = useController({ name });
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (defaultCase) {
       field.onChange(e.target.value);
       return;

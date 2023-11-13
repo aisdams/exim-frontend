@@ -146,7 +146,7 @@ export default function Sidebar() {
                     <NavigationMenuItem className="childThree">
                       <Link href={sidebar.link} className="childFour">
                         <NavigationMenuTrigger
-                          className={`Link h-12 w-[17rem] !justify-normal rounded-l-full !text-left text-lg text-white hover:!bg-white hover:text-[#4a5ea6] dark:text-white dark:hover:!bg-[#262e4b] ${
+                          className={`Link h-12 w-[17rem] !justify-normal rounded-l-full !text-left text-lg text-white hover:text-[#4a5ea6] dark:text-white ${
                             isActive === idx
                               ? '!bg-white !text-[#4a5ea6] transition-all duration-300 ease-linear dark:!bg-[#262e4b] dark:!text-white'
                               : ''

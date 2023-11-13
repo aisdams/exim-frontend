@@ -215,15 +215,15 @@ const columnsDef = [
       );
     },
   }),
-  columnHelper.accessor('etd', {
-    header: () => (
-      <div>
-        <div>ETD</div>
-        <div>ETA</div>
-      </div>
-    ),
-    cell: (info) => info.getValue(),
-  }),
+  // columnHelper.accessor('etd', {
+  //   header: () => (
+  //     <div>
+  //       <div>ETD</div>
+  //       <div>ETA</div>
+  //     </div>
+  //   ),
+  //   cell: (info) => info.getValue(),
+  // }),
   columnHelper.accessor('createdBy', {
     header: 'CREATED',
     cell: (info) => info.getValue(),
@@ -424,14 +424,12 @@ export default function Index() {
   const table = useReactTable({
     columns,
     data:
-      // filteredData.length > 0
-      //   ? filteredData
-      //   : searchValue
-      //   ? searchResults
-      //   : JobOrdersQuery.data?.data || [],
-      searchValue
+      filteredData.length > 0
+        ? filteredData
+        : searchValue
         ? searchResults
-        : filteredData || JobOrdersQuery.data?.data || [],
+        : JobOrdersQuery.data?.data || [],
+
     pageCount: JobOrdersQuery.data?.pagination.total_page ?? -1,
 
     state: {

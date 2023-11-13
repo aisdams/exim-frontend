@@ -284,7 +284,12 @@ export default function CreateCost({
             ))
           ) : (
             <tr>
-              <td colSpan={4}>No cost data available</td>
+              <td
+                colSpan={table.getAllColumns().length + 1}
+                className="p-2 text-center"
+              >
+                No data found.
+              </td>
             </tr>
           )}
           {/* {setCost} */}

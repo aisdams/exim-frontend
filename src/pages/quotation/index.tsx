@@ -267,17 +267,15 @@ const columnsDef = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="font-normal">
-            {status !== 'Executed' && (
-              <DropdownMenuItem className="p-0">
-                <Link
-                  href={`/quotation/edit/${quo_no}`}
-                  className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
-                >
-                  <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                  Edit
-                </Link>
-              </DropdownMenuItem>
-            )}
+            <DropdownMenuItem className="p-0">
+              <Link
+                href={`/quotation/edit/${quo_no}`}
+                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+              >
+                <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                Edit
+              </Link>
+            </DropdownMenuItem>
             {status !== 'Executed' && (
               <DropdownMenuItem
                 className="p-0"
@@ -319,51 +317,53 @@ const columnsDef = [
                 </AlertDialog>
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-              className="p-0"
-            >
-              <AlertDialog open={open} onOpenChange={setOpen}>
-                <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
-                  <Trash className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                  Delete
-                </AlertDialogTrigger>
+            {status !== 'Executed' && (
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+                className="p-0"
+              >
+                <AlertDialog open={open} onOpenChange={setOpen}>
+                  <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
+                    <Trash className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                    Delete
+                  </AlertDialogTrigger>
 
-                <AlertDialogContent className="font-sans">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you sure absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your data from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className="font-sans">
-                      Cancel
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={(e) => {
-                        e.preventDefault();
+                  <AlertDialogContent className="font-sans">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you sure absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your data from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="font-sans">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={(e) => {
+                          e.preventDefault();
 
-                        deleteQuotationMutation?.mutate(quo_no, {
-                          onSuccess: () => {
-                            setOpen(false);
-                          },
-                        });
-                      }}
-                    >
-                      {deleteQuotationMutation?.isLoading
-                        ? 'Loading...'
-                        : 'Continue'}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </DropdownMenuItem>
+                          deleteQuotationMutation?.mutate(quo_no, {
+                            onSuccess: () => {
+                              setOpen(false);
+                            },
+                          });
+                        }}
+                      >
+                        {deleteQuotationMutation?.isLoading
+                          ? 'Loading...'
+                          : 'Continue'}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );

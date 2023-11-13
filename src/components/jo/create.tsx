@@ -334,22 +334,19 @@ export default function CreateJO({
                 No
               </th>
               <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                JOC NO
-              </th>
-              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                TYPE
-              </th>
-              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                NO MBL
+                JO NO
               </th>
               <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
                 AGENT
               </th>
               <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                VESSEL
+                CONSIGNEE
               </th>
               <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                NO CONTAINER
+                QTY
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                NO MBL
               </th>
             </tr>
           </thead>
@@ -364,6 +361,9 @@ export default function CreateJO({
                     {index + 1}
                   </td>
                   <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                    {item.jo_no}
+                  </td>
+                  <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
                     {item.shipper}
                   </td>
                   <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
@@ -373,13 +373,7 @@ export default function CreateJO({
                     {item.qty}
                   </td>
                   <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                    {item.hbl}
-                  </td>
-                  <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                    {item.vessel}
-                  </td>
-                  <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                    {item.name_of_goods}
+                    {item.mbl}
                   </td>
                 </tr>
               ))

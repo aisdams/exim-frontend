@@ -101,6 +101,7 @@ export default function QuotationAdd() {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
+
   const [headerText, setHeaderText] = useState(
     'We are pleased to quote you the following :'
   );
@@ -336,14 +337,14 @@ export default function QuotationAdd() {
                 <Command className="text-white" />
                 <h1> Data Quotation</h1>
               </div>
-
               <div className="px-3">
                 <div className="mb-5 flex w-full gap-2">
                   <Label>Header: </Label>
                   <div className="w-full">
                     <InputTextArea
                       name="valheader"
-                      value="We are pleased to quote you the following"
+                      value={headerText}
+                      onChange={handleHeaderChange}
                     />
                   </div>
                 </div>
@@ -353,7 +354,8 @@ export default function QuotationAdd() {
                   <div className="w-full">
                     <InputTextArea
                       name="valfooter"
-                      value="Will be happy to supply and any further information you may need and trust that you call on us to fill your order which will receive our prompt and careful attention."
+                      value={footerText}
+                      onChange={handleFooterChange}
                     />
                   </div>
                 </div>
