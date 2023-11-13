@@ -12,7 +12,7 @@ import {
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-import { Command, Copy, PlusSquare, Search } from 'lucide-react';
+import { Command, Copy, PlusSquare, Search, Trash } from 'lucide-react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InferType } from 'yup';
@@ -20,6 +20,17 @@ import { InferType } from 'yup';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import ReactTable from '@/components/table/react-table';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
@@ -107,6 +118,7 @@ export default function CreateJO({
 }) {
   const qc = useQueryClient();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState<JOC[]>([]);
   const [isJOModalOpen, setIsJOModalOpen] = useState(false);
@@ -277,11 +289,12 @@ export default function CreateJO({
     [pageIndex, pageSize]
   );
 
-  const deleteCostMutation = useMutation({
+  const deleteJOMutation = useMutation({
     mutationFn: JOService.deleteById,
     onSuccess: () => {
       qc.invalidateQueries(['jo']);
       toast.success('JO deleted successfully.');
+      router.reload();
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -297,7 +310,7 @@ export default function CreateJO({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     meta: {
-      deleteMutation: deleteCostMutation,
+      deleteMutation: deleteJOMutation,
     },
   });
 
@@ -378,6 +391,9 @@ export default function CreateJO({
               <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
                 NO MBL
               </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                OPTION
+              </th>
             </tr>
           </thead>
           <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
@@ -404,6 +420,55 @@ export default function CreateJO({
                   </td>
                   <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
                     {item.mbl}
+                  </td>
+                  <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                      }}
+                      className="p-0"
+                    >
+                      <AlertDialog open={open} onOpenChange={setOpen}>
+                        <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
+                          <div className="flex items-center text-white hover:text-darkBlue">
+                            <Trash className="mr-2 h-4 w-4" />
+                            <p className="text-xl font-normal">Delete</p>
+                          </div>
+                        </AlertDialogTrigger>
+
+                        <AlertDialogContent className="font-sans">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you sure absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently delete your data from our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="font-sans">
+                              Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={(e) => {
+                                e.preventDefault();
+
+                                deleteJOMutation?.mutate(item.jo_no, {
+                                  onSuccess: () => {
+                                    setOpen(false);
+                                  },
+                                });
+                              }}
+                            >
+                              {deleteJOMutation?.isLoading
+                                ? 'Loading...'
+                                : 'Continue'}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </button>
                   </td>
                 </tr>
               ))

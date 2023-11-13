@@ -12,7 +12,7 @@ import {
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-import { Command, PlusSquare } from 'lucide-react';
+import { Command, PlusSquare, Trash } from 'lucide-react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -22,6 +22,17 @@ import { axios } from '@/lib/axios';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import ReactTable from '@/components/table/react-table';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import * as CostService from '../../apis/cost.api';
@@ -76,6 +87,7 @@ export default function CreateCost({
   const [isCostModalOpen, setIsCostModalOpen] = useState(false);
   const [selectedItemCost, setSelectedItemCost] = useState(itemCostValue);
   const [cost, setCost] = useState<any | null>([]);
+  const [open, setOpen] = useState(false);
   const [costData, setCostData] = useState<any | null>(null);
   const [QuoOptions, setQuoOptions] = useState<{ label: string; value: any }[]>(
     []
@@ -167,6 +179,7 @@ export default function CreateCost({
     onSuccess: () => {
       qc.invalidateQueries(['cost']);
       toast.success('Cost deleted successfully.');
+      router.reload();
     },
     onError: (err) => {
       toast.error(`Error, ${getErrMessage(err)}`);
@@ -256,6 +269,9 @@ export default function CreateCost({
             <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
               UNIT
             </th>
+            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+              OPTION
+            </th>
           </tr>
         </thead>
         <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
@@ -279,6 +295,55 @@ export default function CreateCost({
                 </td>
                 <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
                   {item.unit}
+                </td>
+                <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                    }}
+                    className="p-0"
+                  >
+                    <AlertDialog open={open} onOpenChange={setOpen}>
+                      <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
+                        <div className="flex items-center text-white hover:text-darkBlue">
+                          <Trash className="mr-2 h-4 w-4" />
+                          <p className="text-xl font-normal">Delete</p>
+                        </div>
+                      </AlertDialogTrigger>
+
+                      <AlertDialogContent className="font-sans">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you sure absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your data from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className="font-sans">
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={(e) => {
+                              e.preventDefault();
+
+                              deleteCostMutation?.mutate(item.item_cost, {
+                                onSuccess: () => {
+                                  setOpen(false);
+                                },
+                              });
+                            }}
+                          >
+                            {deleteCostMutation?.isLoading
+                              ? 'Loading...'
+                              : 'Continue'}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </button>
                 </td>
               </tr>
             ))
