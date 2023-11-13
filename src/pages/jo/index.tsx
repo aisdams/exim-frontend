@@ -574,7 +574,14 @@ export default function Index() {
         </div>
       </div>
 
-      <ReactTable tableInstance={table} isLoading={JobOrdersQuery.isFetching} />
+      <div className="grid">
+        <div className="!overflow-x-scroll">
+          <ReactTable
+            tableInstance={table}
+            isLoading={JobOrdersQuery.isFetching}
+          />
+        </div>
+      </div>
     </>
   );
 }

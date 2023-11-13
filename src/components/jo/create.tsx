@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IS_DEV } from '@/constants';
-import { Customer, JobOrder, JOC, Port } from '@/types';
+import { Customer, JobOrder, JOC, Port, Quotation } from '@/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -47,7 +47,7 @@ const defaultValues = {
   gross_weight: '',
   volume: '',
   customer_code: '',
-  quo_no: 'QUO-230001',
+  quo_no: '',
 };
 
 const Schema = yup.object({
@@ -110,16 +110,22 @@ export default function CreateJO({
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState<JOC[]>([]);
   const [isJOModalOpen, setIsJOModalOpen] = useState(false);
+  const [JOData, setJOData] = useState<any | null>(null);
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [customerData, setCustomerData] = useState<Customer[]>([]);
-  const [PortData, setPortData] = useState<Port[]>([]);
-  const [JOData, setJOData] = useState<any | null>(null);
   const [isPortModalOpen, setIsPortModalOpen] = useState(false);
+  const [PortData, setPortData] = useState<Port[]>([]);
+  const [isQuotationModalOpen, setIsQuotationModalOpen] = useState(false);
+  const [QuotationData, setQuotationData] = useState<Quotation[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
   const [customerCode, setCustomerCode] = useState('');
   const [portCode, setPortCode] = useState('');
+  const [quotationCode, setQuotationCode] = useState('');
+  const [selectedQuotation, setSelectedQuotation] = useState<Quotation | null>(
+    null
+  );
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
 
   const methods = useForm<JOSchema>({
@@ -231,6 +237,30 @@ export default function CreateJO({
     setIsPortModalOpen(false);
   };
 
+  const openQuotationModal = () => setIsQuotationModalOpen(true);
+  {
+    fetch('http://localhost:8089/api/quotation')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data Quotation:', data.data);
+        setQuotationData(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
+  useEffect(() => {
+    if (selectedQuotation) {
+      setQuotationCode(selectedQuotation.quo_no);
+    } else {
+      setQuotationCode('');
+    }
+  }, [selectedQuotation]);
+
+  const closeQuotationModal = () => {
+    setIsQuotationModalOpen(false);
+  };
   const openJOModal = () => {
     setIsJOModalOpen(true);
   };
@@ -440,6 +470,7 @@ export default function CreateJO({
                             name="customer_code"
                             value={customerCode}
                           />
+                          <InputHidden name="quo_no" value={quotationCode} />
                         </div>
                         <div className="flex gap-2">
                           <InputTextNoErr
@@ -463,13 +494,17 @@ export default function CreateJO({
                         <div className="flex gap-2">
                           <InputTextNoErr
                             name="consignee"
-                            value={selectedPort ? selectedPort.port_name : ''}
+                            value={
+                              selectedQuotation
+                                ? selectedQuotation.discharge
+                                : ''
+                            }
                           />
                           <button
                             className="
           mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
           text-white dark:bg-blueLight"
-                            onClick={openPortModal}
+                            onClick={openQuotationModal}
                           >
                             <Search className="w-4" />
                           </button>
@@ -605,6 +640,64 @@ export default function CreateJO({
                               port.port_code;
                           }
                           closePortModal();
+                        }}
+                      >
+                        add
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      )}
+
+      {isQuotationModalOpen && (
+        <div
+          style={{ overflow: 'hidden' }}
+          className={`modal fixed inset-0 z-50 flex items-center justify-center ${
+            isQuotationModalOpen ? 'open' : 'closed'
+          }`}
+        >
+          <div className="absolute inset-0 bg-black opacity-75"></div>
+          <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
+            <Button
+              className="absolute -top-9 right-0 !bg-transparent text-white"
+              onClick={closeQuotationModal}
+            >
+              <h1 className="text-xl">X</h1>
+            </Button>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="hover:!text-white">Type</TableHead>
+                  <TableHead className="hover:!text-white">Delivery</TableHead>
+                  <TableHead className="hover:!text-white">Add</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="text-black">
+                {QuotationData.map((quotation) => (
+                  <TableRow key={quotation.type}>
+                    <TableCell className="font-medium">
+                      {quotation.type}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {quotation.discharge}
+                    </TableCell>
+                    <TableCell className="!h-2 !w-2 rounded-md">
+                      <Button
+                        className=""
+                        onClick={() => {
+                          setSelectedQuotation(quotation);
+                          const quotationCodeInput = document.querySelector(
+                            'input[name="quo_no"]'
+                          );
+                          if (quotationCodeInput) {
+                            (quotationCodeInput as HTMLInputElement).value =
+                              quotation.quo_no;
+                          }
+                          closeQuotationModal();
                         }}
                       >
                         add
