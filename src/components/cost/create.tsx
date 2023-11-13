@@ -306,8 +306,7 @@ export default function CreateCost({
                     <AlertDialog open={open} onOpenChange={setOpen}>
                       <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
                         <div className="flex items-center text-white hover:text-darkBlue">
-                          <Trash className="mr-2 h-4 w-4" />
-                          <p className="text-xl font-normal">Delete</p>
+                          <Trash className="mr-2 h-3.5 w-3.5" />
                         </div>
                       </AlertDialogTrigger>
 
