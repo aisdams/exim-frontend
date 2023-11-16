@@ -3,39 +3,28 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { cn } from '@/lib/utils';
 
-type InputTextProps = {
+type InputNumberNoLProps = {
   label?: string;
   name: string;
   id?: string;
   placeholder?: string;
   disabled?: boolean;
   mandatory?: boolean;
-  defaultCase?: boolean;
-  value?: string | number;
-  withLabel?: boolean;
   containerCN?: string;
-  labelCN?: string;
   inputWrapperCN?: string;
   inputCN?: string;
-  noErrorMessage?: boolean;
-  onTouched?: () => void;
 };
 
-const InputText: React.FC<InputTextProps> = ({
+const InputNumberNoL: React.FC<InputNumberNoLProps> = ({
   label,
   name,
   id,
   placeholder,
   disabled,
   mandatory,
-  defaultCase,
-  withLabel = true,
   containerCN,
-  labelCN,
   inputWrapperCN,
   inputCN,
-  noErrorMessage,
-  onTouched,
   ...props
 }) => {
   const { register } = useFormContext();
@@ -45,35 +34,15 @@ const InputText: React.FC<InputTextProps> = ({
   } = useController({ name });
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (defaultCase) {
-      field.onChange(e.target.value);
-      return;
-    }
-
-    //! UpperCase Logic
-    const { selectionStart, selectionEnd } = e.target;
-    e.target.value = e.target.value.toUpperCase();
-    e.target.setSelectionRange(selectionStart, selectionEnd);
-
     field.onChange(e.target.value);
   };
 
-  const handleBlur = () => {
-    if (onTouched) {
-      onTouched();
-    }
-  };
   return (
     <div className={cn('relative', containerCN)}>
-      {withLabel && (
-        <label
-          htmlFor={id || name}
-          className={cn('mb-1 inline-block text-black', labelCN)}
-        >
-          {label || startCase(name)}
-          {mandatory && <span className="text-[#f00]">*</span>}
-        </label>
-      )}
+      {/* <label htmlFor={id || name} className='mb-1 inline-block'>
+        {label || startCase(name)}
+        {mandatory && <span className='text-[#f00]'>*</span>}
+      </label> */}
 
       <div
         className={cn(
@@ -83,11 +52,11 @@ const InputText: React.FC<InputTextProps> = ({
       >
         <input
           {...register(name)}
-          type="text"
+          type="number"
           value={field.value ?? ''}
           id={id || name}
           className={cn(
-            'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
+            'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:bg-slate-200 dark:disabled:bg-slate-800',
             inputCN
           )}
           placeholder={
@@ -99,18 +68,21 @@ const InputText: React.FC<InputTextProps> = ({
               : undefined
           }
           disabled={disabled}
-          onBlur={handleBlur}
           onChange={onChange}
+          onWheelCapture={(e) => {
+            //! disable scroll onChange
+            e.currentTarget.blur();
+          }}
           {...props}
         />
       </div>
-      {!noErrorMessage && error?.message && (
+      {error?.message && (
         <p className="text-xs tracking-wide text-red-600 dark:text-white">
-          {error.message} !
+          {error.message}
         </p>
       )}
     </div>
   );
 };
 
-export default InputText;
+export default InputNumberNoL;

@@ -153,6 +153,20 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 10,
   },
+  tableECell: {
+    display: 'flex',
+    flexDirection: 'row',
+    borderLeft: '1px solid #000',
+    borderRight: '1px solid #000',
+    borderBottom: '1px solid #000',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '10px',
+    paddingVertical: '5px',
+    width: '100%',
+    marginHorizontal: 'auto',
+  },
   header: {
     fontSize: 12,
     textAlign: 'center',
@@ -385,9 +399,9 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
                   )
                 )
               ) : (
-                <tr>
-                  <td colSpan={4}>No cost data available</td>
-                </tr>
+                <View style={styles.tableECell}>
+                  <Text>No cost data available</Text>
+                </View>
               )}
             </View>
 

@@ -117,6 +117,20 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 8,
   },
+  tableECell: {
+    display: 'flex',
+    flexDirection: 'row',
+    borderLeft: '1px solid #000',
+    borderRight: '1px solid #000',
+    borderBottom: '1px solid #000',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '10px',
+    paddingVertical: '5px',
+    width: '100%',
+    marginHorizontal: 'auto',
+  },
 });
 
 type JOCPdfProps = {
@@ -293,8 +307,8 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                   )
                 )
               ) : (
-                <View>
-                  <td colSpan={4}>No cost data available</td>
+                <View style={styles.tableECell}>
+                  <Text>No JOC data available</Text>
                 </View>
               )}
             </View>

@@ -56,8 +56,8 @@ const ReactTable: React.FC<ReactTableProps> = ({
           </SelectContent>
         </Select>
       </div>
-      <div className="react-table-wrapper mb-2 overflow-x-auto rounded-md border dark:bg-secondDarkBlue">
-        <table className="w-full">
+      <div className="react-table-wrapper mb-2 !overflow-x-auto rounded-md border dark:bg-secondDarkBlue">
+        <table className="w-full table-auto">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr

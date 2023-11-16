@@ -518,84 +518,44 @@ export default function CreateJO({
               <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)} className="py-5">
                   <div>
-                    <div className="flex  gap-3">
-                      <div className="grid w-full gap-2 text-black">
-                        <Label>Shipper </Label>
-                        <Label>consignee</Label>
-                        <Label>Qyt</Label>
-                        <Label>Vessel</Label>
-                        <Label>gross_weight</Label>
-                        <Label>Volume</Label>
-                      </div>
-
-                      <div className="grid justify-end gap-3">
-                        <div className="hidden">
-                          <InputHidden
-                            name="customer_code"
-                            value={customerCode}
-                          />
-                          <InputHidden name="quo_no" value={quotationCode} />
-                        </div>
-                        <div className="flex gap-2">
-                          <InputTextNoErr
-                            name="shipper"
-                            value={
-                              selectedCustomer
-                                ? selectedCustomer.partner_name
-                                : ''
-                            }
-                          />
-                          <button
-                            className="
-          mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
-          text-white dark:bg-blueLight"
-                            onClick={openCustomerModal}
-                          >
-                            <Search className="w-4" />
-                          </button>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <InputTextNoErr
-                            name="consignee"
-                            value={
-                              selectedQuotation
-                                ? selectedQuotation.discharge
-                                : ''
-                            }
-                          />
-                          <button
-                            className="
-          mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
-          text-white dark:bg-blueLight"
-                            onClick={openQuotationModal}
-                          >
-                            <Search className="w-4" />
-                          </button>
-                        </div>
-                        <InputNumber name="qty" />
-                        <InputText name="vessel" />
-                        <InputNumber name="gross_weight" />
-                        <InputNumber name="volume" />
-                      </div>
+                    <div className="hidden">
+                      <InputHidden name="customer_code" value={customerCode} />
+                      <InputHidden name="quo_no" value={quotationCode} />
                     </div>
+                    <div className="flex gap-2">
+                      <InputText
+                        name="shipper"
+                        value={
+                          selectedCustomer ? selectedCustomer.partner_name : ''
+                        }
+                      />
+                      <button
+                        className=" mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base text-white dark:bg-blueLight"
+                        onClick={openCustomerModal}
+                      >
+                        <Search className="w-4" />
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <InputText
+                        name="consignee"
+                        value={
+                          selectedQuotation ? selectedQuotation.discharge : ''
+                        }
+                      />
+                      <button
+                        className=" mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base text-white dark:bg-blueLight"
+                        onClick={openQuotationModal}
+                      >
+                        <Search className="w-4" />
+                      </button>
+                    </div>
+                    <InputNumber name="qty" />
+                    <InputText name="vessel" />
+                    <InputNumber name="gross_weight" />
+                    <InputNumber name="volume" />
                   </div>
-                  {/* Buttons */}
-                  <div className="mt-5 flex items-center gap-2">
-                    <Button
-                      className="bg-graySecondary"
-                      onClick={() => router.back()}
-                    >
-                      LBack
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={addJOMutation.isLoading}
-                      className="bg-blueLight"
-                    >
-                      {addJOMutation.isLoading ? 'Loading...' : 'Save'}
-                    </Button>
-                  </div>
+                  <div>. </div>
                 </form>
               </FormProvider>
             </div>

@@ -424,12 +424,10 @@ export default function Index() {
   const table = useReactTable({
     columns,
     data:
-      filteredData.length > 0
-        ? filteredData
-        : searchValue
+      // filteredData.length >= 0
+      searchValue
         ? searchResults
-        : JobOrdersQuery.data?.data || [],
-
+        : filteredData || JobOrdersQuery.data?.data || [],
     pageCount: JobOrdersQuery.data?.pagination.total_page ?? -1,
 
     state: {

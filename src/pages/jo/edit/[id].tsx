@@ -23,7 +23,9 @@ import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import InputDate from '@/components/forms/input-date';
 import InputDisable from '@/components/forms/input-disable';
+import InputTextNoLabel from '@/components/forms/input-nolabel';
 import InputNumber from '@/components/forms/input-number';
+import InputNumberNoL from '@/components/forms/input-number-noL';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
 import Loader from '@/components/table/loader';
@@ -380,7 +382,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 <Label>Name of Goods</Label>
               </div>
 
-              <div className="grid">
+              <div className="grid gap-6">
                 <div className="flex gap-2">
                   <InputTextNoErr
                     name="shipper"
@@ -413,23 +415,23 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 </div>
                 <InputDate name="etd" />
                 <InputDate name="eta" />
-                <InputText name="hbl" />
-                <InputText name="mbl" />
-                <InputText name="vessel" />
+                <InputTextNoLabel name="hbl" />
+                <InputTextNoLabel name="mbl" />
+                <InputTextNoLabel name="vessel" />
                 <div className="flex">
-                  <InputNumber name="qty" />
+                  <InputNumberNoL name="qty" />
                 </div>
                 <div className="flex gap-3">
-                  <InputText name="gross_weight" />
+                  <InputTextNoLabel name="gross_weight" />
                   KGS
                 </div>
-                <InputText name="volume" />
-                <InputText name="name_of_goods" />
+                <InputTextNoLabel name="volume" />
+                <InputTextNoLabel name="name_of_goods" />
               </div>
             </div>
 
             <div className="my-3 flex items-center gap-2">
-              <Button className="bg-graySecondary">
+              <Button className="bg-graySecondary" type="button">
                 <Link href="/jo">Back</Link>
               </Button>
               <Button

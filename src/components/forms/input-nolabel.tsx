@@ -3,7 +3,7 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { cn } from '@/lib/utils';
 
-type InputTextProps = {
+type InputTextNoLabelProps = {
   label?: string;
   name: string;
   id?: string;
@@ -21,7 +21,7 @@ type InputTextProps = {
   onTouched?: () => void;
 };
 
-const InputText: React.FC<InputTextProps> = ({
+const InputTextNoLabel: React.FC<InputTextNoLabelProps> = ({
   label,
   name,
   id,
@@ -65,15 +65,12 @@ const InputText: React.FC<InputTextProps> = ({
   };
   return (
     <div className={cn('relative', containerCN)}>
-      {withLabel && (
-        <label
-          htmlFor={id || name}
-          className={cn('mb-1 inline-block text-black', labelCN)}
-        >
+      {/* {withLabel && (
+        <label className={cn('mb-1 inline-block text-black', labelCN)}>
           {label || startCase(name)}
           {mandatory && <span className="text-[#f00]">*</span>}
         </label>
-      )}
+      )} */}
 
       <div
         className={cn(
@@ -113,4 +110,4 @@ const InputText: React.FC<InputTextProps> = ({
   );
 };
 
-export default InputText;
+export default InputTextNoLabel;

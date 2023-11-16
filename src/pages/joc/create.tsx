@@ -15,6 +15,7 @@ import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import InputDate from '@/components/forms/input-date';
 import InputDisable from '@/components/forms/input-disable';
+import InputTextNoLabel from '@/components/forms/input-nolabel';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
@@ -186,11 +187,26 @@ export default function create() {
               <div className="grid gap-3 px-3">
                 <div className="grid grid-cols-[1fr_2fr]">
                   <div className="grid gap-5">
-                    <Label>Type : </Label>
-                    <Label>No MBL :</Label>
-                    <Label>Vessel :</Label>
-                    <Label>Agent :</Label>
-                    <Label>Loading :</Label>
+                    <Label>
+                      Type{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      No MBL{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      Vessel{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      Agent{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      Loading{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
                   </div>
                   <div className="grid gap-2">
                     <InputSelect
@@ -210,8 +226,8 @@ export default function create() {
                         },
                       ]}
                     />
-                    <InputText name="no_mbl" mandatory />
-                    <InputText name="vessel" mandatory />
+                    <InputTextNoLabel name="no_mbl" />
+                    <InputTextNoLabel name="vessel" />
                     <div className="flex gap-2">
                       <InputTextNoErr
                         name="agent"
@@ -258,10 +274,20 @@ export default function create() {
               <div className="grid gap-3 px-3">
                 <div className="grid grid-cols-[1fr_2fr]">
                   <div className="grid gap-5">
-                    <Label>Discharge :</Label>
-                    <Label>ETD :</Label>
-                    <Label>ETA :</Label>
-                    <Label>No Container :</Label>
+                    <Label>
+                      Discharge{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      ETD <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      ETA <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      No Container{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
                   </div>
                   <div className="grid gap-2">
                     <div className="flex gap-2">

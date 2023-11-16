@@ -22,7 +22,9 @@ import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import InputDate from '@/components/forms/input-date';
 import InputHidden from '@/components/forms/input-hidden';
+import InputTextNoLabel from '@/components/forms/input-nolabel';
 import InputNumber from '@/components/forms/input-number';
+import InputNumberNoL from '@/components/forms/input-number-noL';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
@@ -220,16 +222,43 @@ export default function QuotationAdd() {
                 <div className="grid grid-cols-[1fr_2fr]">
                   <div className="grid gap-5">
                     <Label>Date :</Label>
-                    <Label>Sales :</Label>
-                    <Label>Subject :</Label>
-                    <Label>Customer :</Label>
-                    {/* <Label>Customer Code :</Label> */}
-                    <Label>Attn :</Label>
-                    <Label>Type :</Label>
-                    <Label>Delivery :</Label>
-                    <Label>Loading :</Label>
-                    <Label>Discharge :</Label>
-                    <Label>Kurs :</Label>
+                    <Label>
+                      Sales{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      Subject{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      Customer{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    {/* <Label>Customer Code</Label> */}
+                    <Label>
+                      Attn{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      Type{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      Delivery{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      Loading{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      Discharge{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
+                    <Label>
+                      Kurs{' '}
+                      <span className="text-[#f00] dark:text-white">*</span>
+                    </Label>
                   </div>
                   <div className="grid gap-2">
                     <Input
@@ -239,8 +268,8 @@ export default function QuotationAdd() {
                       placeholder="~AUTO~"
                       // value="2023-10-05T03:17:44.892Z"
                     />
-                    <InputText name="sales" mandatory />
-                    <InputText name="subject" mandatory />
+                    <InputTextNoLabel name="sales" mandatory />
+                    <InputTextNoLabel name="subject" mandatory />
                     <div className="flex gap-2">
                       <InputTextNoErr
                         name="customer"
@@ -262,7 +291,7 @@ export default function QuotationAdd() {
                     <div>
                       <InputHidden name="customer_code" value={customerCode} />
                     </div>
-                    <InputText name="attn" mandatory />
+                    <InputTextNoLabel name="attn" mandatory />
                     <InputSelect
                       name="type"
                       options={[
@@ -326,7 +355,7 @@ export default function QuotationAdd() {
                         <Search className="w-4" />
                       </button>
                     </div>
-                    <InputNumber name="kurs" mandatory />
+                    <InputNumberNoL name="kurs" />
                   </div>
                 </div>
               </div>

@@ -18,18 +18,55 @@ import Topbar from './topbar';
 export default function Sidebar() {
   const [isActive, setIsActive] = useState(0);
   // const [isActive, setIsActive] = useState(-1);
-  const [sidebarVisible, setSidebarVisible] = useState(true);
-  const [menuIcon, setMenuIcon] = useState('Menu');
+  const [sidebarVisible, setSidebarVisible] = useState(
+    localStorage.getItem('sidebarVisible') === 'true'
+  );
+  const [menuIcon, setMenuIcon] = useState(
+    localStorage.getItem('sidebarVisible') === 'true' ? 'X' : 'Menu'
+  );
+
   const router = useRouter();
 
-  const handleToggleSidebar = () => {
-    setSidebarVisible(!sidebarVisible);
-    if (sidebarVisible) {
-      setMenuIcon('X');
+  useEffect(() => {
+    const storedActiveIndex = localStorage.getItem('activeIndex');
+    if (storedActiveIndex) {
+      setIsActive(parseInt(storedActiveIndex));
     } else {
-      setMenuIcon('Menu');
+      setIsActive(0);
     }
+  }, []);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      const currentRoute = router.pathname;
+      const activeIndex = sidebarData.findIndex(
+        (item) => item.link === currentRoute
+      );
+      if (activeIndex !== -1) {
+        setIsActive(activeIndex);
+        localStorage.setItem('activeIndex', String(activeIndex));
+      }
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.pathname, sidebarData]);
+
+  const handleToggleSidebar = () => {
+    const newSidebarVisible = !sidebarVisible;
+    setSidebarVisible(newSidebarVisible);
+    localStorage.setItem('sidebarVisible', JSON.stringify(newSidebarVisible));
+    setMenuIcon(newSidebarVisible ? 'Menu' : 'X');
   };
+
+  useEffect(() => {
+    if (!sidebarVisible) {
+      setMenuIcon('X');
+    }
+  }, [sidebarVisible]);
 
   const handleSidebarItemClick = (idx: any) => {
     setIsActive(idx);
@@ -37,25 +74,8 @@ export default function Sidebar() {
   };
 
   useEffect(() => {
-    const storedIndex = localStorage.getItem('activeIndex');
-    if (storedIndex !== null) {
-      setIsActive(Number(storedIndex));
-    } else {
-      setIsActive(0);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (router.asPath !== '/') {
-      const activeIndex = sidebarData.findIndex(
-        (item) => router.asPath === item.link
-      );
-      if (activeIndex !== -1) {
-        setIsActive(activeIndex);
-        localStorage.setItem('activeIndex', String(activeIndex));
-      }
-    }
-  }, [router.asPath]);
+    const defaultActiveItem = sidebarData[isActive];
+  }, localStorage[isActive]);
 
   useEffect(() => {
     const list = document.querySelectorAll(
@@ -167,3 +187,5 @@ export default function Sidebar() {
     </div>
   );
 }
+
+//

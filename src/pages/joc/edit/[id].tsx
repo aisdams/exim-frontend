@@ -25,6 +25,7 @@ import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import InputMultiSelect from '@/components/forms/input-multiText';
 import InputMultiText from '@/components/forms/input-multiText';
+import InputTextNoLabel from '@/components/forms/input-nolabel';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
@@ -322,7 +323,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                             },
                           ]}
                         />
-                        <InputText name="vessel" mandatory />
+                        <InputTextNoLabel name="vessel" />
                       </div>
                     </div>
                   </div>
@@ -333,7 +334,6 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                     <Command className="text-white" />
                     <h1> Data Quotation</h1>
                   </div>
-
                   <div className="grid gap-3 px-3">
                     <div className="grid grid-cols-[1fr_2fr]">
                       <div className="grid gap-5">
@@ -378,7 +378,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                           </button>
                         </div>
 
-                        <InputText name="no_container" mandatory />
+                        <InputTextNoLabel name="no_container" />
                         {/* <InputText
                           name="jo_no"
                           mandatory

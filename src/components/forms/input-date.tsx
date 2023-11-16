@@ -90,7 +90,9 @@ const InputDate: React.FC<InputDateProps> = ({
         )}
       </div>
       {error?.message && (
-        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
+        <p className="text-xs tracking-wide text-red-600 dark:text-white">
+          {error.message}
+        </p>
       )}
     </div>
   );

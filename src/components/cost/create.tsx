@@ -53,7 +53,7 @@ const Schema = yup.object({
   qty: yup.string().required(),
   unit: yup.string().required(),
   price: yup.string().required(),
-  note: yup.string().required(),
+  note: yup.string().nullable(),
 });
 
 const columnHelper = createColumnHelper<Quotation>();
@@ -395,29 +395,25 @@ export default function CreateCost({
                 <h1>Add Data Cost</h1>
               </div>
               <FormProvider {...methods}>
-                <form onSubmit={handleSubmit(onSubmit)} className="py-5">
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="mx-auto grid justify-center py-5"
+                >
                   <div>
-                    <div className="flex  gap-3">
-                      <div className="grid w-full gap-2 text-black">
-                        {/* <Label>Item Cost </Label> */}
-                        <Label>Item Name </Label>
-                        <Label>Qyt</Label>
-                        <Label>Unit</Label>
-                        <Label>Price</Label>
-                        <Label>Note</Label>
-                      </div>
-
-                      <div className="grid justify-end gap-3">
-                        <InputText name="item_name" />
-                        <div className="flex">
-                          <InputNumber name="qty" />
-                        </div>
-                        <InputNumber name="unit" />
-                        <div className="flex">
-                          <InputNumber name="price" />
-                        </div>
-                        <InputText name="note" />
-                      </div>
+                    <div className="mb-3">
+                      <InputText name="item_name" mandatory />
+                    </div>
+                    <div className="mb-3">
+                      <InputNumber name="qty" mandatory />
+                    </div>
+                    <div className="mb-3">
+                      <InputNumber name="unit" mandatory />
+                    </div>
+                    <div className="mb-3">
+                      <InputNumber name="price" mandatory />
+                    </div>
+                    <div>
+                      <InputText name="note" />
                     </div>
                   </div>
                   {/* Buttons */}
