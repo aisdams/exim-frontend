@@ -1,6 +1,7 @@
 import React from 'react';
 import { lowerCase } from 'lodash';
 import { useController, useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 import { cn } from '@/lib/utils';
 
@@ -57,7 +58,7 @@ const InputMultiText: React.FC<InputMultiTextProps> = ({
         return parsedArray;
       }
     } catch (error) {
-      console.error('Input tidak dalam format yang valid');
+      toast.error('Input tidak dalam format yang valid');
     }
     return [];
   };

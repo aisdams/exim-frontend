@@ -82,14 +82,19 @@ export default function Sidebar() {
       '.childOne .childTwo .childThree .childFour'
     );
 
-    const firstItem = list[0];
-    firstItem.classList.add('hovered');
+    let firstItem = list[0];
+    const isClicked = localStorage.getItem('isClicked');
+
+    if (!isClicked) {
+      firstItem.classList.add('hovered');
+    }
 
     function activeLink(this: HTMLElement) {
       list.forEach((item) => {
         item.classList.remove('hovered');
       });
       this.classList.add('hovered');
+      localStorage.setItem('isClicked', 'true');
     }
 
     list.forEach((item) => item.addEventListener('click', activeLink));
@@ -166,7 +171,7 @@ export default function Sidebar() {
                     <NavigationMenuItem className="childThree">
                       <Link href={sidebar.link} className="childFour">
                         <NavigationMenuTrigger
-                          className={`Link h-12 w-[17rem] !justify-normal rounded-l-full !text-left text-lg text-white hover:text-[#4a5ea6] dark:text-white ${
+                          className={`Link h-12 w-[14rem] !justify-normal rounded-l-full !text-left text-lg text-white hover:text-[#4a5ea6] dark:text-white ${
                             isActive === idx
                               ? '!bg-white !text-[#4a5ea6] transition-all duration-300 ease-linear dark:!bg-[#262e4b] dark:!text-white'
                               : ''

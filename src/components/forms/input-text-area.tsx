@@ -77,7 +77,9 @@ const InputTextArea: React.FC<InputTextAreaProps> = ({
         />
       </div>
       {error?.message && (
-        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
+        <p className="text-xs tracking-wide text-red-600 dark:text-[#e8af46]">
+          {error.message}
+        </p>
       )}
     </div>
   );

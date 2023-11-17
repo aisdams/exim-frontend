@@ -46,10 +46,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   imgLogo: {
-    width: 220,
-    height: 80,
+    width: 120,
+    height: 30,
   },
-  // IN HEREEE
+
   tableRow0: {
     borderLeft: '1px solid #000',
     borderRight: '1px solid #000',
@@ -147,7 +147,7 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
           setQuotation(res.data);
         })
         .catch((error) => {
-          console.error('Error fetching quotation data:', error);
+          toast.error('Error fetching quotation data:', error);
         });
     }
   }, [joQuery.data?.data?.quo_no]);
@@ -248,12 +248,8 @@ const JOPdf: React.FC<JOPdfProps> = ({ jo_no }) => {
                     ? quotation.discharge
                     : 'discharge tidak ditemukan'}
                 </Text>
-                <Text style={styles.tableDData}>
-                  {dateStringEtd ? !dateStringEtd == '---'}
-                </Text>
-                <Text style={styles.tableDData}>
-                  {dateStringEta ? !dateStringEta == '---'}
-                </Text>
+                <Text style={styles.tableDData}>{dateStringEtd}</Text>
+                <Text style={styles.tableDData}>{dateStringEta}</Text>
                 <Text style={styles.tableDData}>{joQuery.data.data.hbl}</Text>
                 <Text style={styles.tableDData}>{joQuery.data.data.mbl}</Text>
                 <Text style={styles.tableDData}>

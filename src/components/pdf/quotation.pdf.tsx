@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   imgLogo: {
-    width: 220,
-    height: 80,
+    width: 120,
+    height: 30,
   },
   // IN HEREEE
   tableRow0: {

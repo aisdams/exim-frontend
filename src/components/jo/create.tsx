@@ -47,7 +47,7 @@ import * as JOCService from '../../apis/joc.api';
 import InputHidden from '../forms/input-hidden';
 import InputNumber from '../forms/input-number';
 import InputText from '../forms/input-text';
-import InputTextNoErr from '../forms/input-text-noerr';
+import InputTextNoErrLable from '../forms/input-text-noerrlabel';
 import { Input } from '../ui/input';
 
 const defaultValues = {
@@ -81,7 +81,7 @@ const copyJo = (jo_no: any) => {
       toast.success(`copied to clipboard.`);
     })
     .catch((error) => {
-      console.error('Failed to copy JO No: ', error);
+      toast.error('Failed to copy JO No: ', error);
     });
 };
 const columnsDef = [
@@ -193,7 +193,7 @@ export default function CreateJO({
           setJOData(res.data);
         })
         .catch((error) => {
-          console.error('Error fetching JO data:', error);
+          toast.error('Error fetching JO data:', error);
         });
     }
   }, [jocQuery.data?.data?.joc_no]);
@@ -204,7 +204,6 @@ export default function CreateJO({
     fetch('http://localhost:8089/api/customer')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Customer:', data.data);
         setCustomerData(data.data);
       })
       .catch((error) => {
@@ -230,7 +229,6 @@ export default function CreateJO({
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data.data);
         setPortData(data.data);
       })
       .catch((error) => {
@@ -254,7 +252,6 @@ export default function CreateJO({
     fetch('http://localhost:8089/api/quotation')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Quotation:', data.data);
         setQuotationData(data.data);
       })
       .catch((error) => {
@@ -313,8 +310,6 @@ export default function CreateJO({
       deleteMutation: deleteJOMutation,
     },
   });
-
-  console.log(searchValue);
 
   const addJOMutation = useMutation({
     mutationFn: JOService.createJOforJOC,
@@ -397,7 +392,8 @@ export default function CreateJO({
             </tr>
           </thead>
           <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
-            {Array.isArray(jocQuery.data?.data?.joborder) ? (
+            {Array.isArray(jocQuery.data?.data?.joborder) &&
+            jocQuery.data?.data?.joborder.length > 0 ? (
               jocQuery.data?.data?.joborder.map((item: any, index: number) => (
                 <tr
                   key={index}
@@ -430,8 +426,8 @@ export default function CreateJO({
                     >
                       <AlertDialog open={open} onOpenChange={setOpen}>
                         <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
-                          <div className="flex items-center text-white hover:text-darkBlue">
-                            <Trash className="mr-2 h-3.5 w-3.5" />
+                          <div className="flex items-center rounded-md bg-red-600 px-2 py-2 hover:bg-transparent">
+                            <Trash className="h-4 w-4" />
                           </div>
                         </AlertDialogTrigger>
 
@@ -472,8 +468,8 @@ export default function CreateJO({
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan={4}>No cost data available</td>
+              <tr className="mx-0 grid items-center justify-center border-b-2">
+                <td className=" text-center">No JO data available</td>
               </tr>
             )}
             {/* {setCost} */}
@@ -502,7 +498,7 @@ export default function CreateJO({
           }`}
         >
           <div className="absolute inset-0 bg-black opacity-75"></div>
-          <div className="relative z-10 w-2/5 rounded-lg bg-white px-1 pt-1 shadow-lg">
+          <div className="relative z-10 w-1/3 rounded-lg bg-white px-1 pt-1 shadow-lg">
             <Button
               className="absolute -top-9 right-0 !bg-transparent text-white"
               onClick={closeJOModal}
@@ -516,46 +512,66 @@ export default function CreateJO({
                 <h1>Add Data Cost</h1>
               </div>
               <FormProvider {...methods}>
-                <form onSubmit={handleSubmit(onSubmit)} className="py-5">
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="mx-auto grid items-center justify-center py-5"
+                >
                   <div>
                     <div className="hidden">
                       <InputHidden name="customer_code" value={customerCode} />
                       <InputHidden name="quo_no" value={quotationCode} />
                     </div>
                     <div className="flex gap-2">
-                      <InputText
+                      <InputTextNoErrLable
                         name="shipper"
                         value={
                           selectedCustomer ? selectedCustomer.partner_name : ''
                         }
+                        mandatory
                       />
                       <button
-                        className=" mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base text-white dark:bg-blueLight"
+                        className=" mt-8 h-6 w-6 rounded-md bg-graySecondary px-1 text-base text-white dark:bg-blueLight"
                         onClick={openCustomerModal}
                       >
                         <Search className="w-4" />
                       </button>
                     </div>
                     <div className="flex gap-2">
-                      <InputText
+                      <InputTextNoErrLable
                         name="consignee"
                         value={
                           selectedQuotation ? selectedQuotation.discharge : ''
                         }
+                        mandatory
                       />
                       <button
-                        className=" mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base text-white dark:bg-blueLight"
+                        className=" mt-8 h-6 w-6 rounded-md bg-graySecondary px-1 text-base text-white dark:bg-blueLight"
                         onClick={openQuotationModal}
                       >
                         <Search className="w-4" />
                       </button>
                     </div>
-                    <InputNumber name="qty" />
-                    <InputText name="vessel" />
-                    <InputNumber name="gross_weight" />
-                    <InputNumber name="volume" />
+                    <InputNumber name="qty" mandatory />
+                    <InputText name="vessel" mandatory />
+                    <InputNumber name="gross_weight" mandatory />
+                    <InputNumber name="volume" mandatory />
                   </div>
-                  <div>. </div>
+                  {/* Buttons */}
+                  <div className="mt-5 flex items-center gap-2">
+                    <Button
+                      className="bg-graySecondary"
+                      onClick={() => router.back()}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={addJOMutation.isLoading}
+                      className="bg-blueLight"
+                    >
+                      {addJOMutation.isLoading ? 'Loading...' : 'Save'}
+                    </Button>
+                  </div>
                 </form>
               </FormProvider>
             </div>

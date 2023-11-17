@@ -24,7 +24,9 @@ import yup from '@/lib/yup';
 import CreateCost from '@/components/cost/create';
 import InputHidden from '@/components/forms/input-hidden';
 import InputMultiText from '@/components/forms/input-multiText';
+import InputTextNoLabel from '@/components/forms/input-nolabel';
 import InputNumber from '@/components/forms/input-number';
+import InputNumberNoL from '@/components/forms/input-number-noL';
 import InputSelect from '@/components/forms/input-select';
 import InputText from '@/components/forms/input-text';
 import InputTextNoErr from '@/components/forms/input-text-noerr';
@@ -268,15 +270,42 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                     <div className="grid gap-5">
                       <Label>Quo No :</Label>
                       <Label>Date :</Label>
-                      <Label>Sales :</Label>
-                      <Label>Subject :</Label>
-                      <Label>Customer :</Label>
-                      <Label>Attn :</Label>
-                      <Label>Type :</Label>
-                      <Label>Delivery :</Label>
-                      <Label>Loading :</Label>
-                      <Label>Discharge :</Label>
-                      <Label>Kurs :</Label>
+                      <Label>
+                        Sales{' '}
+                        <span className="text-[#f00] dark:text-white">*</span>
+                      </Label>
+                      <Label>
+                        Subject{' '}
+                        <span className="text-[#f00] dark:text-white">*</span>
+                      </Label>
+                      <Label>
+                        Customer{' '}
+                        <span className="text-[#f00] dark:text-white">*</span>
+                      </Label>
+                      <Label>
+                        Attn{' '}
+                        <span className="text-[#f00] dark:text-white">*</span>
+                      </Label>
+                      <Label>
+                        Type{' '}
+                        <span className="text-[#f00] dark:text-white">*</span>
+                      </Label>
+                      <Label>
+                        Delivery{' '}
+                        <span className="text-[#f00] dark:text-white">*</span>
+                      </Label>
+                      <Label>
+                        Loading{' '}
+                        <span className="text-[#f00] dark:text-white">*</span>
+                      </Label>
+                      <Label>
+                        Discharge{' '}
+                        <span className="text-[#f00] dark:text-white">*</span>
+                      </Label>
+                      <Label>
+                        Kurs{' '}
+                        <span className="text-[#f00] dark:text-white">*</span>
+                      </Label>
                       {/* <Label>Item Cost :</Label> */}
                     </div>
                     <div className="grid gap-2">
@@ -292,10 +321,10 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         disabled
                         placeholder="~AUTO~"
                       />
-                      <InputText name="sales" mandatory />
-                      <InputText name="subject" mandatory />
+                      <InputTextNoLabel name="sales" mandatory />
+                      <InputTextNoLabel name="subject" mandatory />
                       <div className="flex gap-2">
-                        <InputText
+                        <InputTextNoLabel
                           name="customer"
                           mandatory
                           value={
@@ -314,7 +343,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                           <Search className="w-4" />
                         </button>
                       </div>
-                      <InputText name="attn" mandatory />
+                      <InputTextNoLabel name="attn" mandatory />
                       <InputSelect
                         name="type"
                         options={[
@@ -346,7 +375,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         ]}
                       />
                       <div className="flex gap-2">
-                        <InputText
+                        <InputTextNoLabel
                           name="loading"
                           mandatory
                           value={selectedPort ? selectedPort.port_name : ''}
@@ -380,7 +409,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                           <Search className="w-4" />
                         </button>
                       </div>
-                      <InputNumber name="kurs" mandatory />
+                      <InputNumberNoL name="kurs" mandatory />
                     </div>
                   </div>
                 </div>

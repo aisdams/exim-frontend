@@ -106,7 +106,6 @@ export default function create() {
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data.data);
         setPortData(data.data);
       })
       .catch((error) => {
@@ -161,10 +160,6 @@ export default function create() {
   });
 
   const onSubmit: SubmitHandler<JOCSchema> = (data) => {
-    if (IS_DEV) {
-      console.log('data =>', data);
-    }
-
     addJOCMutation.mutate(data);
   };
 

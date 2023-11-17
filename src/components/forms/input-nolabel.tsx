@@ -102,7 +102,7 @@ const InputTextNoLabel: React.FC<InputTextNoLabelProps> = ({
         />
       </div>
       {!noErrorMessage && error?.message && (
-        <p className="text-xs tracking-wide text-red-600 dark:text-white">
+        <p className="text-xs tracking-wide text-red-600 dark:text-[#e8af46]">
           {error.message} !
         </p>
       )}

@@ -139,7 +139,6 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
       throw new Error('jo harus menjadi string');
     }
   });
-  console.log(JOData);
 
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
   const [selectedPortTwo, setSelectedPortTwo] = useState<Port | null>(null);
@@ -168,7 +167,6 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data.data);
         setPortData(data.data);
       })
       .catch((error) => {
@@ -186,7 +184,6 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data.data);
         setPortData(data.data);
       })
       .catch((error) => {
@@ -204,7 +201,6 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data.data);
         setPortData(data.data);
       })
       .catch((error) => {
@@ -273,10 +269,6 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
   });
 
   const onSubmit: SubmitHandler<JoSchema> = (data) => {
-    if (IS_DEV) {
-      console.log('data =>', data);
-    }
-
     updatedJOMutation.mutate({ id, data });
 
     // resetField('shipper');
@@ -422,10 +414,10 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                   <InputNumberNoL name="qty" />
                 </div>
                 <div className="flex gap-3">
-                  <InputTextNoLabel name="gross_weight" />
+                  <InputNumberNoL name="gross_weight" />
                   KGS
                 </div>
-                <InputTextNoLabel name="volume" />
+                <InputNumberNoL name="volume" />
                 <InputTextNoLabel name="name_of_goods" />
               </div>
             </div>

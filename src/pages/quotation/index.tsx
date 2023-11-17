@@ -208,14 +208,14 @@ const columnsDef = [
       const { quo_no } = info.row.original;
 
       return (
-        <Button>
-          <Link href={`/quotation/print/${quo_no}`} target="_blank">
+        <Link href={`/quotation/print/${quo_no}`} target="_blank">
+          <Button>
             <Printer
               size={15}
               className="mx-auto grid items-center justify-center dark:text-white"
             />
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       );
     },
   }),

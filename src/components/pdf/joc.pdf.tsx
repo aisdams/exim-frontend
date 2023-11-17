@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   imgLogo: {
-    width: 220,
-    height: 80,
+    width: 120,
+    height: 30,
   },
   // IN HEREEE
   tableRow0: {
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '10px',
+    fontSize: '9px',
     paddingVertical: '5px',
     width: '100%',
     marginHorizontal: 'auto',
@@ -273,7 +273,8 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                 </View>
               </View>
               {/* Rows */}
-              {Array.isArray(jocQuery.data?.data?.joborder) ? (
+              {Array.isArray(jocQuery.data?.data?.joborder) &&
+              jocQuery.data?.data?.joborder.length > 0 ? (
                 jocQuery.data?.data?.joborder.map(
                   (item: any, index: number) => (
                     <>

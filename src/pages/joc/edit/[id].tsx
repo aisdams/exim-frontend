@@ -144,7 +144,6 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data.data);
         setPortData(data.data);
       })
       .catch((error) => {
@@ -158,7 +157,6 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data.data);
         setPortData(data.data);
       })
       .catch((error) => {

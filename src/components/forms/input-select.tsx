@@ -25,9 +25,9 @@ type InputSelectProps = {
   menuZIndex?: number;
   menuIsOpen?: boolean | undefined;
   noPortal?: boolean;
+  onTouched?: () => void;
   additionalOnChange?: (option: any) => void;
   additionalOnClear?: () => void;
-  onTouched?: () => void;
 };
 
 const InputSelect: React.FC<InputSelectProps> = ({
@@ -44,8 +44,8 @@ const InputSelect: React.FC<InputSelectProps> = ({
   noClear,
   disabled,
   menuZIndex = 1,
-  menuIsOpen = undefined,
   onTouched,
+  menuIsOpen = undefined,
   noPortal = false,
   additionalOnChange = () => {},
   additionalOnClear = () => {},
@@ -58,6 +58,12 @@ const InputSelect: React.FC<InputSelectProps> = ({
     fieldState: { error },
   } = useController({ name });
 
+  const handleBlur = () => {
+    if (onTouched) {
+      onTouched();
+    }
+  };
+
   const selectedValue = options?.find(
     (option: any) => String(option[optionValue]) === String(field.value)
   );
@@ -69,11 +75,6 @@ const InputSelect: React.FC<InputSelectProps> = ({
     additionalOnChange(option);
   };
 
-  const handleBlur = () => {
-    if (onTouched) {
-      onTouched();
-    }
-  };
   return (
     <div className="">
       <div className="">
@@ -113,7 +114,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
                 colors: {
                   ...theme.colors,
                   primary: 'hsl(var(--primary))',
-                  primary25: '#4783b7',
+                  primary25: 'hsl(var(--primary))',
                   neutral0: 'transparent',
                   neutral20: '#525255',
                   neutral80: 'white',
@@ -121,7 +122,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
               })}
               menuPortalTarget={noPortal ? undefined : document.body}
               styles={{
-                menuPortal: (base) => ({ ...base, zIndex: 999 || 10 }),
+                menuPortal: (base) => ({ ...base, zIndex: menuZIndex || 10 }),
                 control: (baseStyles, state) => ({
                   ...baseStyles,
                   height: '36px',
@@ -135,7 +136,9 @@ const InputSelect: React.FC<InputSelectProps> = ({
                   opacity: state.isDisabled ? '0.5' : '1',
                   pointerEvents: state.isDisabled ? 'auto' : 'auto',
                   '&:hover': {
-                    color: state.isDisabled ? '#fff' : '#fff',
+                    color: state.isDisabled
+                      ? 'hsl(var(--input))'
+                      : 'hsl(0, 0%, 70%)',
                   },
                 }),
                 menu: (provided) => ({
@@ -156,16 +159,16 @@ const InputSelect: React.FC<InputSelectProps> = ({
                   ...provided,
                   padding: 0,
                   paddingBlock: '0.4rem',
-                  zIndex: 40,
+                  paddingInline: '0.5rem',
                   fontSize: '0.875rem',
                   fontWeight: 400,
                   borderRadius: '0.25rem',
                   color:
                     isSelected || isFocused
                       ? 'white'
-                      : `${isDark ? '#fff' : 'black'}`,
+                      : `${isDark ? '#FAFAFA' : 'black'}`,
                   '&:hover': {
-                    backgroundColor: 'dark:#000',
+                    backgroundColor: 'hsl(var(--primary))',
                     color: 'white',
                   },
                 }),
@@ -206,7 +209,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
           {!noClear && field.value && !disabled && (
             <button
               type="button"
-              className="absolute right-[4.3rem] top-[50%] grid h-[20px] w-[20px] translate-y-[-50%] cursor-pointer place-items-center rounded-full bg-slate-400 text-sm transition-all hover:bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600"
+              className="absolute right-[12rem] top-[50%] grid h-[20px] w-[20px] translate-y-[-50%] cursor-pointer place-items-center rounded-full bg-slate-400 text-sm transition-all hover:bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600"
               onClick={() => {
                 setValue(name, '', {
                   shouldValidate: true,
@@ -220,7 +223,9 @@ const InputSelect: React.FC<InputSelectProps> = ({
         </div>
       </div>
       {error?.message && (
-        <p className="text-xs tracking-wide text-red-600">{error.message}</p>
+        <p className="text-xs text-red-600 dark:text-[#e8af46]">
+          {error.message}
+        </p>
       )}
     </div>
   );

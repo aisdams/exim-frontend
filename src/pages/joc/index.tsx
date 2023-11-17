@@ -194,14 +194,14 @@ const columnsDef = [
       const { joc_no } = info.row.original;
 
       return (
-        <Button>
-          <Link href={`/joc/print/${joc_no}`} target="_blank">
+        <Link href={`/joc/print/${joc_no}`} target="_blank">
+          <Button>
             <Printer
               size={15}
               className="mx-auto grid items-center justify-center dark:text-white"
             />
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       );
     },
   }),

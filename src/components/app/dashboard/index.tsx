@@ -283,10 +283,10 @@ export default function Content() {
         <h1>Dashboard</h1>
       </div>
       <div className="mb-5 grid gap-5 lg:grid-cols-[1fr_2fr_1fr]">
-        <div className="w-full gap-3 rounded-md border-2 border-graySecondary/50 p-3 pt-10 text-center font-bold text-darkBlue dark:bg-secondDarkBlue dark:text-white">
+        <div className="w-full gap-3 rounded-md border-2 border-graySecondary/50 p-3 pt-10 text-center  text-darkBlue dark:bg-secondDarkBlue dark:text-white">
           <Truck className="mx-auto grid " size={34} />
           <p>Rp. {totalPrice}</p>
-          <h2>Total Price.</h2>
+          <h2 className="font-bold">Total Price.</h2>
         </div>
 
         <div className="w-full rounded-md border-2 border-graySecondary/50 px-5 py-1 dark:bg-secondDarkBlue">

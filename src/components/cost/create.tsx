@@ -107,7 +107,6 @@ export default function CreateCost({
   const { handleSubmit, setValue, watch } = methods;
 
   const { id } = router.query;
-  // console.log(id);
 
   const fetchDataOptions = {
     page: pageIndex + 1,
@@ -148,7 +147,7 @@ export default function CreateCost({
           setCostData(res.data);
         })
         .catch((error) => {
-          console.error('Error fetching quotation data:', error);
+          toast.error('Error fetching quotation data:', error);
         });
     }
   }, [quotationsQuery.data?.data?.quo_no]);
@@ -199,8 +198,6 @@ export default function CreateCost({
     },
   });
 
-  console.log('Quotations data:', quotationsQuery.data?.data.cost);
-
   const addCostMutation = useMutation({
     mutationFn: CostService.createCostQuo,
     onSuccess: () => {
@@ -217,9 +214,9 @@ export default function CreateCost({
   });
 
   const onSubmit: SubmitHandler<CostSchema> = (data) => {
-    if (IS_DEV) {
-      console.log('data =>', data);
-    }
+    // if (IS_DEV) {
+    //   console.log('data =>', data);
+    // }
     const { id } = router.query;
     const parsedQuoNo = Array.isArray(id) ? id[0] : id;
 
@@ -229,8 +226,6 @@ export default function CreateCost({
 
     setIsCostModalOpen(false);
   };
-
-  console.log();
 
   return (
     <div className="mt-10">
@@ -275,7 +270,8 @@ export default function CreateCost({
           </tr>
         </thead>
         <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
-          {Array.isArray(quotationsQuery.data?.data?.cost) ? (
+          {Array.isArray(quotationsQuery.data?.data?.cost) &&
+          quotationsQuery.data?.data?.cost.length > 0 ? (
             quotationsQuery.data?.data?.cost.map((item: any, index: number) => (
               <tr
                 key={index}
@@ -305,8 +301,8 @@ export default function CreateCost({
                   >
                     <AlertDialog open={open} onOpenChange={setOpen}>
                       <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
-                        <div className="flex items-center text-white hover:text-darkBlue">
-                          <Trash className="mr-2 h-3.5 w-3.5" />
+                        <div className="flex items-center rounded-md bg-red-600 px-2 py-2 hover:bg-transparent">
+                          <Trash className="h-4 w-4" />
                         </div>
                       </AlertDialogTrigger>
 
@@ -381,7 +377,7 @@ export default function CreateCost({
           }`}
         >
           <div className="absolute inset-0 bg-black opacity-75"></div>
-          <div className="relative z-10 w-2/5 rounded-lg bg-white px-1 pt-1 shadow-lg">
+          <div className="relative z-10 w-1/3 rounded-lg bg-white px-1 pt-1 shadow-lg">
             <Button
               className="absolute -top-9 right-0 !bg-transparent text-white"
               onClick={closeCostModal}

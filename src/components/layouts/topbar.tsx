@@ -49,7 +49,7 @@ export default function Topbar() {
       elem
         .requestFullscreen()
         .then(() => {
-          console.log('Success');
+          // console.log('Success');
         })
         .catch((error) => {
           console.error('Error entering fullscreen mode:', error);

@@ -88,8 +88,6 @@ const Login: NextPageCustomLayout = () => {
       .finally(() => setIsLoading(false));
   };
 
-  console.log(isLoading);
-
   // useEffect(() => {
   //   if (status === 'authenticated')
   //     getUserByEmailMutation.mutate(watch('email'));
