@@ -238,7 +238,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
       setValue('no_container', data.no_container);
     },
     onError: (err) => {
-      toast.error(`Error, ${getErrMessage(err)}`);
+      console.log(`Error, ${getErrMessage(err)}`);
     },
   });
 
@@ -250,7 +250,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
       router.push('/joc');
     },
     onError: (err) => {
-      toast.error(`Error, ${getErrMessage(err)}`);
+      console.log(`Error, ${getErrMessage(err)}`);
     },
   });
 
@@ -277,7 +277,7 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
               <div className="grid gap-3 lg:grid-cols-2">
-                <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
+                <div className="grid gap-2 rounded-sm border-2 border-graySecondary/70 pb-4 dark:border-none dark:bg-graySecondary/50">
                   <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                     <Command className="text-white" />
                     <h1> Data JOC</h1>
@@ -294,13 +294,13 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                       <div className="grid gap-2">
                         <Input
                           name="joc_no"
-                          className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
+                          className="w-[300px] border border-black bg-transparent px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-black disabled:select-none disabled:bg-muted dark:border-none dark:!bg-black dark:placeholder:text-muted-foreground"
                           disabled
                           placeholder={`${id}`}
                         />
                         <Input
                           name="createdAt"
-                          className="w-[300px] border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground  disabled:select-none disabled:bg-muted"
+                          className="w-[300px] border border-black bg-transparent px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-black disabled:select-none disabled:bg-muted dark:border-none dark:!bg-black dark:placeholder:text-muted-foreground"
                           disabled
                           placeholder="~AUTO~"
                         />
@@ -327,8 +327,8 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                   </div>
                 </div>
                 {/*  */}
-                <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
-                  <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
+                <div className="grid gap-2 rounded-sm border-2 border-graySecondary/70 pb-4 dark:border-none dark:bg-graySecondary/50">
+                  <div className="flex h-max gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                     <Command className="text-white" />
                     <h1> Data Quotation</h1>
                   </div>

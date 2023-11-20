@@ -165,15 +165,15 @@ export default function create() {
 
   return (
     <div className="overflow-hidden">
-      <div className="flex">
-        <Command />
+      <div className="flex gap-3 font-semibold">
+        <Command className="text-blueLight" />
         <h1>Data Consolidation</h1>
       </div>
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mt-10 grid gap-3 lg:grid-cols-2">
-            <div className="grid h-max gap-2 rounded-sm pb-[4rem] dark:bg-graySecondary/50">
+            <div className="grid h-max gap-2 rounded-sm border-2 border-graySecondary/70 pb-[4rem] dark:border-none dark:bg-graySecondary/50">
               <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                 <Command className="text-white" />
                 <h1> Data JOC</h1>
@@ -260,7 +260,7 @@ export default function create() {
               </div>
             </div>
 
-            <div className="grid h-max gap-2 rounded-sm pb-[4rem] dark:bg-graySecondary/50">
+            <div className="grid h-max gap-2 rounded-sm border-2 border-graySecondary/70 pb-[4rem] dark:border-none dark:bg-graySecondary/50">
               <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                 <Command className="text-white" />
                 <h1> Data Consolidation</h1>

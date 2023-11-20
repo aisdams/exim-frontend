@@ -84,7 +84,7 @@ export default function Sidebar() {
 
     let firstItem = list[0];
     const isClicked = localStorage.getItem('isClicked');
-
+    //
     if (!isClicked) {
       firstItem.classList.add('hovered');
     }
@@ -133,7 +133,7 @@ export default function Sidebar() {
               />
             )}
 
-            <div className="absolute left-2 top-[6.9rem] grid gap-[32px]">
+            <div className="absolute left-2 top-[8rem] grid gap-[32px]">
               {sidebarData.map((sidebar, idx) => (
                 <button
                   key={idx}
@@ -162,16 +162,16 @@ export default function Sidebar() {
               src={Logo}
               alt=""
               width={150}
-              className="ml-4 dark:brightness-0 dark:invert-[1]"
+              className="ml-4 pt-10 brightness-0 invert-[1]"
             />
-            <div className="navigation lap- !z-0 mt-14 grid gap-2">
+            <div className="navigation lap- !z-0 mt-7 grid gap-2">
               {sidebarData.map((sidebar, idx) => (
                 <NavigationMenu key={idx} className="childOne">
                   <NavigationMenuList className="childTwo">
                     <NavigationMenuItem className="childThree">
                       <Link href={sidebar.link} className="childFour">
                         <NavigationMenuTrigger
-                          className={`Link h-12 w-[14rem] !justify-normal rounded-l-full !text-left text-lg text-white hover:text-[#4a5ea6] dark:text-white ${
+                          className={`Link h-12 w-[14rem] !justify-normal rounded-l-full !text-left text-lg text-white hover:text-white dark:text-white ${
                             isActive === idx
                               ? '!bg-white !text-[#4a5ea6] transition-all duration-300 ease-linear dark:!bg-[#262e4b] dark:!text-white'
                               : ''

@@ -259,7 +259,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
             <div className="grid gap-3 xl:grid-cols-2">
-              <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
+              <div className="grid gap-2 rounded-sm border-2 border-graySecondary/70 pb-4 dark:border-none dark:bg-graySecondary/50">
                 <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                   <Command className="text-white" />
                   <h1> Data Quotation</h1>
@@ -415,7 +415,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                 </div>
               </div>
               {/*  */}
-              <div className="block gap-2 rounded-sm dark:bg-graySecondary/50">
+              <div className="block gap-2 rounded-sm border-2 border-graySecondary/70 pb-4 dark:border-none dark:bg-graySecondary/50">
                 <div className="mb-5 flex h-max gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                   <Command className="text-white" />
                   <h1> Data Quotation</h1>

@@ -358,7 +358,8 @@ const QuotationPdf: React.FC<QuotationPdfProps> = ({ quo_no }) => {
               </View>
               {/* Rows */}
 
-              {Array.isArray(quotationQuery.data?.data?.cost) ? (
+              {Array.isArray(quotationQuery.data?.data?.cost) &&
+              quotationQuery.data?.data?.cost.length > 0 ? (
                 quotationQuery.data?.data?.cost.map(
                   (item: any, index: number) => (
                     <>

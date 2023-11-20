@@ -421,13 +421,13 @@ export default function Index() {
     return itemDate >= periodOf && itemDate <= periodUntil;
   });
 
+  useEffect(() => {
+    filterData(orderByTwo, searchValue);
+  }, []);
+
   const table = useReactTable({
     columns,
-    data:
-      // filteredData.length >= 0
-      searchValue
-        ? searchResults
-        : filteredData || JobOrdersQuery.data?.data || [],
+    data: searchValue ? searchResults : JobOrdersQuery.data?.data || [],
     pageCount: JobOrdersQuery.data?.pagination.total_page ?? -1,
 
     state: {

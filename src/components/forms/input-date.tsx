@@ -55,7 +55,7 @@ const InputDate: React.FC<InputDateProps> = ({
           }
           onBlur={field.onBlur}
           onChange={onChange}
-          className="disabled:bg-blue-300 [&_.mantine-Popover-dropdown]:bg-red-500"
+          className="rounded-md border-2 !border-graySecondary disabled:bg-blue-300 [&_.mantine-Popover-dropdown]:bg-red-500"
           // styles={{
           //   placeholder: {
           //     fontWeight: 'normal',

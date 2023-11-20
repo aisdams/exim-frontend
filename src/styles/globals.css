@@ -82,7 +82,7 @@ body {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px 35px 0 10px white;
+  box-shadow: 35px 35px 0 10px #fdfdfd;
   pointer-events: none;
   z-index: 0 !important;
 }
@@ -97,7 +97,7 @@ body {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px -35px 0 10px white;
+  box-shadow: 35px -35px 0 10px #fdfdfd;
   pointer-events: none;
   z-index: 0 !important;
 }

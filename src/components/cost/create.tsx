@@ -147,7 +147,7 @@ export default function CreateCost({
           setCostData(res.data);
         })
         .catch((error) => {
-          toast.error('Error fetching quotation data:', error);
+          console.log('Error fetching quotation data:', error);
         });
     }
   }, [quotationsQuery.data?.data?.quo_no]);
@@ -209,7 +209,7 @@ export default function CreateCost({
       // router.push(`/quotation/edit/${id}`);
     },
     onError: (err: any) => {
-      toast.error(`Error, ${getErrMessage(err)}`);
+      console.log(`Error, ${getErrMessage(err)}`);
     },
   });
 
@@ -341,9 +341,10 @@ export default function CreateCost({
                   </button>
                 </td>
               </tr>
-            ))
+            )
+            )
           ) : (
-            <tr>
+            <tr className="mx-auto flex w-full flex-row items-center justify-center border border-graySecondary text-center">
               <td
                 colSpan={table.getAllColumns().length + 1}
                 className="p-2 text-center"
@@ -386,7 +387,7 @@ export default function CreateCost({
             </Button>
 
             <div className="w-full">
-              <div className="flex w-full gap-3 bg-blueHeaderCard py-2 pl-5">
+              <div className="flex w-full gap-3 bg-blueHeaderCard py-2 pl-5 text-white">
                 <Command />
                 <h1>Add Data Cost</h1>
               </div>

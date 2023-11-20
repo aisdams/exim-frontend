@@ -294,14 +294,14 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mt-0 grid gap-10 lg:mt-10 lg:grid-cols-2">
               <div className="rounded-md border border-graySecondary">
-                <div className="flex w-full bg-blueHeaderCard p-2">
+                <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white">
                   <Command />
                   {''}
                   <h1>Data Order</h1>
                 </div>
                 <div className="grid grid-cols-[1fr_2fr] p-4">
                   <div className="grid gap-5">
-                    <Label>#No Jo:</Label>
+                    <Label>No Jo:</Label>
                     <Label>JO Date:</Label>
                     <Label>Type:</Label>
                     <Label>Customer:</Label>
@@ -309,7 +309,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
 
                   <div className="grid gap-2">
                     <Input
-                      className="w-full border-none !bg-black px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted"
+                      className="w-full border border-secondDarkBlue/80 px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted dark:border-none dark:!bg-black"
                       disabled
                       placeholder="~AUTO~"
                     />
@@ -332,7 +332,7 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                 </div>
               </div>
               <div className="rounded-md border border-graySecondary">
-                <div className="flex w-full bg-blueHeaderCard p-2">
+                <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white">
                   <Command />
                   <h1>Data Quotation</h1>
                 </div>

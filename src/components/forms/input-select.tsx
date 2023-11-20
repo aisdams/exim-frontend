@@ -82,7 +82,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
           {label || startCase(name)}
           {mandatory && <span className="text-[#f00]">*</span>}
         </label> */}
-        <div className="relative">
+        <div className="relative !w-[300px]">
           {mounted && (
             <Select
               {...register(name)}
@@ -113,8 +113,8 @@ const InputSelect: React.FC<InputSelectProps> = ({
                 ...theme,
                 colors: {
                   ...theme.colors,
-                  primary: 'hsl(var(--primary))',
-                  primary25: 'hsl(var(--primary))',
+                  primary: '#294979',
+                  primary25: '#5a75d7',
                   neutral0: 'transparent',
                   neutral20: '#525255',
                   neutral80: 'white',
@@ -122,7 +122,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
               })}
               menuPortalTarget={noPortal ? undefined : document.body}
               styles={{
-                menuPortal: (base) => ({ ...base, zIndex: menuZIndex || 10 }),
+                menuPortal: (base) => ({ ...base, zIndex: 40 || 10 }),
                 control: (baseStyles, state) => ({
                   ...baseStyles,
                   height: '36px',
@@ -168,7 +168,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
                       ? 'white'
                       : `${isDark ? '#FAFAFA' : 'black'}`,
                   '&:hover': {
-                    backgroundColor: 'hsl(var(--primary))',
+                    backgroundColor: '#5a75d7',
                     color: 'white',
                   },
                 }),
@@ -209,7 +209,7 @@ const InputSelect: React.FC<InputSelectProps> = ({
           {!noClear && field.value && !disabled && (
             <button
               type="button"
-              className="absolute right-[12rem] top-[50%] grid h-[20px] w-[20px] translate-y-[-50%] cursor-pointer place-items-center rounded-full bg-slate-400 text-sm transition-all hover:bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600"
+              className="absolute right-[3rem] top-[50%] grid h-[20px] w-[20px] translate-y-[-50%] cursor-pointer place-items-center rounded-full bg-slate-400 text-sm transition-all hover:bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600"
               onClick={() => {
                 setValue(name, '', {
                   shouldValidate: true,

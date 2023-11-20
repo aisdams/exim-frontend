@@ -182,7 +182,7 @@ export default function CreateJO({
     queryFn: fetchData,
     keepPreviousData: true,
     onError: (err) => {
-      toast.error(`Error, ${getErrMessage(err)}`);
+      console.log(`Error, ${getErrMessage(err)}`);
     },
   });
 
@@ -193,7 +193,7 @@ export default function CreateJO({
           setJOData(res.data);
         })
         .catch((error) => {
-          toast.error('Error fetching JO data:', error);
+          console.log('Error fetching JO data:', error);
         });
     }
   }, [jocQuery.data?.data?.joc_no]);
@@ -294,7 +294,7 @@ export default function CreateJO({
       router.reload();
     },
     onError: (err) => {
-      toast.error(`Error, ${getErrMessage(err)}`);
+      console.log(`Error, ${getErrMessage(err)}`);
     },
   });
 
@@ -321,7 +321,7 @@ export default function CreateJO({
       // router.push(`/joc/edit/${id}`);
     },
     onError: (err) => {
-      toast.error(`Error, ${getErrMessage(err)}`);
+      console.log(`Error, ${getErrMessage(err)}`);
     },
   });
 

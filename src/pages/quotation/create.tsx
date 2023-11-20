@@ -212,7 +212,7 @@ export default function QuotationAdd() {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
           <div className="grid gap-3 lg:grid-cols-2">
-            <div className="grid gap-2 rounded-sm pb-4 dark:bg-graySecondary/50">
+            <div className="grid gap-2 rounded-sm border-2 border-graySecondary/70 pb-4 dark:border-none dark:bg-graySecondary/50">
               <div className="mb-5 flex gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                 <Command className="text-white" />
                 <h1> Data Quotation</h1>
@@ -266,7 +266,6 @@ export default function QuotationAdd() {
                       className="w-[300px] border border-black bg-transparent px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-black disabled:select-none disabled:bg-muted dark:border-none dark:!bg-black dark:placeholder:text-muted-foreground"
                       disabled
                       placeholder="~AUTO~"
-                      // value="2023-10-05T03:17:44.892Z"
                     />
                     <InputTextNoLabel name="sales" mandatory />
                     <InputTextNoLabel name="subject" mandatory />
@@ -361,7 +360,7 @@ export default function QuotationAdd() {
               </div>
             </div>
 
-            <div className="block gap-2 rounded-sm dark:bg-graySecondary/50">
+            <div className="block gap-2 rounded-sm border-2 border-graySecondary/70 dark:border-none dark:bg-graySecondary/50">
               <div className="mb-5 flex h-max gap-3 bg-blueHeaderCard p-2 text-white dark:bg-secondDarkBlue">
                 <Command className="text-white" />
                 <h1> Data Quotation</h1>
