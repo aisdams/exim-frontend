@@ -242,7 +242,7 @@ export default function CreateCost({
         tableInstance={table}
         isLoading={quotationsQuery.isFetching} 
       /> */}
-      {/*  */}
+
       <div className="mx-auto w-full">
         <table className="w-full">
           <thead>
