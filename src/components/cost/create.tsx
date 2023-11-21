@@ -243,132 +243,113 @@ export default function CreateCost({
         isLoading={quotationsQuery.isFetching} 
       /> */}
 
-      <table className="w-full">
-        <thead>
-          <tr className="border-y-2 border-graySecondary/50 transition-colors">
-            {/* <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-              Option
-            </th> */}
-            <th className="border-l-2 border-graySecondary/70 p-2 dark:border-white/30">
-              No
-            </th>
-            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-              ITEM COST
-            </th>
-            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-              ITEM NAME
-            </th>
-            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-              QYT
-            </th>
-            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-              UNIT
-            </th>
-            <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-              OPTION
-            </th>
-          </tr>
-        </thead>
-        <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
-          {Array.isArray(quotationsQuery.data?.data?.cost) &&
-          quotationsQuery.data?.data?.cost.length > 0 ? (
-            quotationsQuery.data?.data?.cost.map((item: any, index: number) => (
-              <tr
-                key={index}
-                className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30"
-              >
-                <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                  {index + 1}
-                </td>
-                <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                  {item.item_cost}
-                </td>
-                <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                  {item.item_name}
-                </td>
-                <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                  {item.qty}
-                </td>
-                <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                  {item.unit}
-                </td>
-                <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                    }}
-                    className="p-0"
+      <div className="mx-auto w-full">
+        <table className="w-full">
+          <thead>
+            <tr className="border-y-2 border-graySecondary/50 transition-colors">
+              <th className=" border-l-2 border-graySecondary/70 p-2 dark:border-white/30">
+                No
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                ITEM COST
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                ITEM NAME
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                QYT
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                UNIT
+              </th>
+              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                OPTION
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.isArray(quotationsQuery.data?.data?.cost) &&
+            quotationsQuery.data?.data?.cost.length > 0 ? (
+              quotationsQuery.data?.data?.cost.map(
+                (item: any, index: number) => (
+                  <tr
+                    className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30"
+                    key={index}
                   >
-                    <AlertDialog open={open} onOpenChange={setOpen}>
-                      <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
-                        <div className="flex items-center rounded-md bg-red-600 px-2 py-2 hover:bg-transparent">
-                          <Trash className="h-4 w-4" />
-                        </div>
-                      </AlertDialogTrigger>
+                    <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                      {index + 1}
+                    </td>
+                    <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                      {item.item_cost}
+                    </td>
+                    <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                      {item.item_name}
+                    </td>
+                    <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                      {item.qty}
+                    </td>
+                    <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                      {item.unit}
+                    </td>
+                    <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                        }}
+                        className="p-0"
+                      >
+                        <AlertDialog open={open} onOpenChange={setOpen}>
+                          <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
+                            <div className="flex items-center rounded-md bg-red-600 px-2 py-2 hover:bg-transparent">
+                              <Trash className="h-4 w-4" />
+                            </div>
+                          </AlertDialogTrigger>
 
-                      <AlertDialogContent className="font-sans">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you sure absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete your data from our servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel className="font-sans">
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={(e) => {
-                              e.preventDefault();
+                          <AlertDialogContent className="font-sans">
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Are you sure absolutely sure?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will
+                                permanently delete your data from our servers.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="font-sans">
+                                Cancel
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={(e) => {
+                                  e.preventDefault();
 
-                              deleteCostMutation?.mutate(item.item_cost, {
-                                onSuccess: () => {
-                                  setOpen(false);
-                                },
-                              });
-                            }}
-                          >
-                            {deleteCostMutation?.isLoading
-                              ? 'Loading...'
-                              : 'Continue'}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </button>
-                </td>
+                                  deleteCostMutation?.mutate(item.item_cost, {
+                                    onSuccess: () => {
+                                      setOpen(false);
+                                    },
+                                  });
+                                }}
+                              >
+                                {deleteCostMutation?.isLoading
+                                  ? 'Loading...'
+                                  : 'Continue'}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </button>
+                    </td>
+                  </tr>
+                )
+              )
+            ) : (
+              <tr className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                <td className="">No data found.</td>
               </tr>
-            )
-            )
-          ) : (
-            <tr className="mx-auto flex w-full flex-row items-center justify-center border border-graySecondary text-center">
-              <td
-                colSpan={table.getAllColumns().length + 1}
-                className="p-2 text-center"
-              >
-                No data found.
-              </td>
-            </tr>
-          )}
-          {/* {setCost} */}
-
-          {/* No data info */}
-          {/* {quotationsQuery.data?.data.quo_no.length < 1 && ( */}
-          {table.getAllColumns().length < 1 && (
-            <tr className="">
-              <td
-                colSpan={table.getAllColumns().length + 1}
-                className="p-2 text-center"
-              >
-                No data found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {isCostModalOpen && (
         <div
