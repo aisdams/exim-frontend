@@ -639,7 +639,7 @@ export default function Index() {
         </Button>
       </Link>
       <div className="grid">
-        <div className="table table-auto overflow-x-scroll">
+        <div className="!overflow-hidden">
           <ReactTable
             tableInstance={table}
             isLoading={quotationsQuery.isFetching}
