@@ -10,7 +10,6 @@ import {
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-import { format } from 'date-fns';
 import {
   CheckIcon,
   Command,
@@ -23,7 +22,6 @@ import {
   Trash,
 } from 'lucide-react';
 import { DateTime } from 'luxon';
-import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 
 import { cn, getErrMessage } from '@/lib/utils';
@@ -51,6 +49,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -639,7 +638,7 @@ export default function Index() {
         </Button>
       </Link>
       <div className="grid">
-        <div className="table table-auto overflow-x-scroll">
+        <div className="!overflow-hidden">
           <ReactTable
             tableInstance={table}
             isLoading={quotationsQuery.isFetching}

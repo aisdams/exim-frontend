@@ -454,7 +454,6 @@ export default function Index() {
               router.pathname === '/jo' ? 'bg-blueHeaderCard' : 'bg-green-500'
             }`}
           >
-            {/* */}
             <Link href="/jo">Data JO</Link>
           </button>
           <button

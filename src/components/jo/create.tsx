@@ -362,132 +362,119 @@ export default function CreateJO({
         </Button>
 
         {/* <ReactTable tableInstance={table} isLoading={jocQuery.isFetching} /> */}
-        <table className="w-full">
-          <thead>
-            <tr className="border-y-2 border-graySecondary/50 transition-colors">
-              {/* <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-              Option
-            </th> */}
-              <th className="border-l-2 border-graySecondary/70 p-2 dark:border-white/30">
-                No
-              </th>
-              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                JO NO
-              </th>
-              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                AGENT
-              </th>
-              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                CONSIGNEE
-              </th>
-              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                QTY
-              </th>
-              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                NO MBL
-              </th>
-              <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                OPTION
-              </th>
-            </tr>
-          </thead>
-          <tbody className="relative border-l-2 border-graySecondary/70 font-normal dark:border-white/30">
-            {Array.isArray(jocQuery.data?.data?.joborder) &&
-            jocQuery.data?.data?.joborder.length > 0 ? (
-              jocQuery.data?.data?.joborder.map((item: any, index: number) => (
-                <tr
-                  key={index}
-                  className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30"
-                >
-                  <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                    {index + 1}
-                  </td>
-                  <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                    {item.jo_no}
-                  </td>
-                  <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                    {item.shipper}
-                  </td>
-                  <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                    {item.consignee}
-                  </td>
-                  <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                    {item.qty}
-                  </td>
-                  <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                    {item.mbl}
-                  </td>
-                  <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                      }}
-                      className="p-0"
+        <div className="mx-auto w-full">
+          <table className="w-full">
+            <thead>
+              <tr className="border-y-2 border-graySecondary/50 transition-colors">
+                <th className="border-l-2 border-graySecondary/70 p-2 dark:border-white/30">
+                  No
+                </th>
+                <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  JO NO
+                </th>
+                <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  AGENT
+                </th>
+                <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  CONSIGNEE
+                </th>
+                <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  QTY
+                </th>
+                <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  NO MBL
+                </th>
+                <th className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  OPTION
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(jocQuery.data?.data?.joborder) &&
+              jocQuery.data?.data?.joborder.length > 0 ? (
+                jocQuery.data?.data?.joborder.map(
+                  (item: any, index: number) => (
+                    <tr
+                      key={index}
+                      className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30"
                     >
-                      <AlertDialog open={open} onOpenChange={setOpen}>
-                        <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
-                          <div className="flex items-center rounded-md bg-red-600 px-2 py-2 hover:bg-transparent">
-                            <Trash className="h-4 w-4" />
-                          </div>
-                        </AlertDialogTrigger>
+                      <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                        {index + 1}
+                      </td>
+                      <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                        {item.jo_no}
+                      </td>
+                      <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                        {item.shipper}
+                      </td>
+                      <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                        {item.consignee}
+                      </td>
+                      <td className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                        {item.qty}
+                      </td>
+                      <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                        {item.mbl}
+                      </td>
+                      <td className="border-x-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                          }}
+                          className="p-0"
+                        >
+                          <AlertDialog open={open} onOpenChange={setOpen}>
+                            <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
+                              <div className="flex items-center rounded-md bg-red-600 px-2 py-2 hover:bg-transparent">
+                                <Trash className="h-4 w-4" />
+                              </div>
+                            </AlertDialogTrigger>
 
-                        <AlertDialogContent className="font-sans">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Are you sure absolutely sure?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will
-                              permanently delete your data from our servers.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="font-sans">
-                              Cancel
-                            </AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={(e) => {
-                                e.preventDefault();
+                            <AlertDialogContent className="font-sans">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Are you sure absolutely sure?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. This will
+                                  permanently delete your data from our servers.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel className="font-sans">
+                                  Cancel
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={(e) => {
+                                    e.preventDefault();
 
-                                deleteJOMutation?.mutate(item.jo_no, {
-                                  onSuccess: () => {
-                                    setOpen(false);
-                                  },
-                                });
-                              }}
-                            >
-                              {deleteJOMutation?.isLoading
-                                ? 'Loading...'
-                                : 'Continue'}
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </button>
-                  </td>
+                                    deleteJOMutation?.mutate(item.jo_no, {
+                                      onSuccess: () => {
+                                        setOpen(false);
+                                      },
+                                    });
+                                  }}
+                                >
+                                  {deleteJOMutation?.isLoading
+                                    ? 'Loading...'
+                                    : 'Continue'}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                )
+              ) : (
+                <tr className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
+                  <td className="">No data found.</td>
                 </tr>
-              ))
-            ) : (
-              <tr className="mx-0 grid items-center justify-center border-b-2">
-                <td className=" text-center">No JO data available</td>
-              </tr>
-            )}
-            {/* {setCost} */}
-
-            {/* No data info */}
-            {/* {quotationsQuery.data?.data.quo_no.length < 1 && ( */}
-            {table.getAllColumns().length < 1 && (
-              <tr className="">
-                <td
-                  colSpan={table.getAllColumns().length + 1}
-                  className="p-2 text-center"
-                >
-                  No data found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {isJOModalOpen && (

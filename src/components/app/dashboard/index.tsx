@@ -202,6 +202,7 @@ export default function Content() {
       zoom: {
         enabled: true,
       },
+      foreColor: '#5a75d7',
     },
   };
 
@@ -212,6 +213,7 @@ export default function Content() {
       zoom: {
         enabled: true,
       },
+      foreColor: '#5a75d7',
     },
   };
 

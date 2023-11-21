@@ -263,7 +263,7 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                   <Text style={styles.tableCell}>NO MBL</Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
-                  <Text style={styles.tableCell}>DISCHARGE</Text>
+                  <Text style={styles.tableCell}>CONSIGNEE</Text>
                 </View>
                 <View style={[styles.tableCol, { width: '15%' }]}>
                   <Text style={styles.tableCell}>GW</Text>
@@ -295,7 +295,7 @@ const JOPdf: React.FC<JOCPdfProps> = ({ joc_no }) => {
                           <Text style={styles.tableCell}>{item.mbl}</Text>
                         </View>
                         <View style={[styles.tableCol, { width: '15%' }]}>
-                          <Text style={styles.tableCell}>{item.discharge}</Text>
+                          <Text style={styles.tableCell}>{item.consignee}</Text>
                         </View>
                         <View style={[styles.tableCol, { width: '15%' }]}>
                           <Text style={styles.tableCell}>0</Text>

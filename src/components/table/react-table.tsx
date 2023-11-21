@@ -91,7 +91,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
                 table.getState().pagination.pageIndex === 0
                   ? table.getState().pagination.pageIndex
                   : table.getState().pagination.pageIndex *
-                    table.getState().pagination.pageSize; // 0
+                    table.getState().pagination.pageSize;
 
               return (
                 <tr

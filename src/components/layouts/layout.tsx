@@ -30,7 +30,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       return;
     }
 
-    //! onBelowMediumScreen logic
     if (autoWidthMode) {
       setAutoWidthMode(false);
     }
