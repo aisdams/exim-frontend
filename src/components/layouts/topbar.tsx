@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
   Bell,
+  Check,
   Maximize,
   Moon,
   Search,
@@ -15,6 +16,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import Avatar from 'public/img/avatar.png';
 
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -36,8 +38,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 export default function Topbar() {
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState('');
   const { setTheme } = useTheme();
   const router = useRouter();
 
@@ -72,17 +81,77 @@ export default function Topbar() {
       router.push('/auth/login');
     });
 
+  const listNs = [
+    {
+      value: 'dashboard',
+      label: 'Dashboard',
+      link: '/',
+    },
+    {
+      value: 'quotation',
+      label: 'Quotation',
+      link: '/quotation',
+    },
+    {
+      value: 'quotation/create',
+      label: 'Quotation/Create',
+      link: '/quotation/create',
+    },
+    {
+      value: 'jo',
+      label: 'Job Order',
+      link: '/jo',
+    },
+    {
+      value: 'jo/create',
+      label: 'Job Order/Create',
+      link: '/jo/create',
+    },
+    {
+      value: 'joc',
+      label: 'JOC',
+      link: '/joc',
+    },
+  ];
+
   return (
     <div className="flex items-center justify-between p-4 shadow-2xl">
       <div className="relative flex items-center">
-        <Input
-          type="search"
-          placeholder="Search....."
-          className="mr-4 w-full rounded-full border border-gray-400 px-10 py-2 dark:bg-secondDarkBlue"
-        />
-        <div className="absolute right-8 text-gray-600 dark:text-white">
-          <Search className="h-5 w-5" />
-        </div>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              role="combobox"
+              aria-expanded={open}
+              className="h-[40px] w-[250px] justify-between rounded-full border-2 border-gray-400 bg-transparent pl-4"
+            >
+              {value
+                ? listNs.find((listN) => listN.value === value)?.label
+                : 'search...'}
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent className="mt-2 w-[200px] p-0">
+            <Command className="!bg-white ">
+              <CommandInput placeholder="Search........" />
+
+              <CommandEmpty>No found.</CommandEmpty>
+              <CommandGroup>
+                {listNs.map((listN) => (
+                  <CommandItem
+                    key={listN.value}
+                    value={listN.value}
+                    onSelect={(currentValue) => {
+                      setValue(currentValue === value ? '' : currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    <a href={listN.link}> {listN.label}</a>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
 
       <div className="flex items-center gap-4 text-graySecondary dark:text-white">

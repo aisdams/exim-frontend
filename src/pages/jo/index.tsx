@@ -471,11 +471,11 @@ export default function Index() {
           </div>
 
           {/* NEW CHANGED */}
-          <div className="flex gap-20">
+          <div className="relative flex gap-14">
             <div className="grid gap-1">
               <Label className="mt-4">Date TO</Label>
               <Label>Status</Label>
-              <Label>FIlter By</Label>
+              <Label className="absolute top-32">FIlter By</Label>
             </div>
 
             <div className="grid gap-6">
@@ -496,9 +496,9 @@ export default function Index() {
               </div>
 
               <div className="grid gap-1">
-                <div className="flex gap-1">
+                <div className="relative flex gap-2">
                   <Select value={orderByTwo} onValueChange={handleSelectChange}>
-                    <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
+                    <SelectTrigger className="h-9 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>
                     <SelectContent align="end" className="dark:text-black">
@@ -520,47 +520,6 @@ export default function Index() {
                     value={searchValue}
                     onChange={handleInputChange}
                   />
-                </div>
-
-                <div className="relative flex">
-                  <div className="flex gap-1">
-                    <Select
-                      value={orderByThree}
-                      onValueChange={setOrderByThree}
-                    >
-                      <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
-                        <SelectValue placeholder="Order by" className="" />
-                      </SelectTrigger>
-                      <SelectContent align="end" className="dark:text-black">
-                        <SelectGroup>
-                          <SelectItem value="Quo No">JO No</SelectItem>
-                          <SelectItem value="Customer">Customer</SelectItem>
-                          <SelectItem value="Tipe">Tipe</SelectItem>
-                          <SelectItem value="Delivery">Delivery</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-
-                    <Input
-                      type="text"
-                      name=""
-                      id=""
-                      placeholder="Search...."
-                      className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
-                      value={searchValue}
-                      onChange={(e) => {
-                        setSearchValue(e.target.value);
-                        const filteredData = JobOrdersQuery.data?.data.filter(
-                          (item) =>
-                            item.jo_no
-                              .toLowerCase()
-                              .includes(e.target.value.toLowerCase())
-                        );
-                        setSearchResults(filteredData || []);
-                      }}
-                    />
-                  </div>
-
                   <button className="absolute -right-10 rounded-md bg-[#3c8dbc] px-2 py-1">
                     <Search className="w-4 text-white" />
                   </button>

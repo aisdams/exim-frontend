@@ -20,6 +20,7 @@ import {
   Printer,
   Search,
   Trash,
+  X,
 } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { toast } from 'react-toastify';
@@ -226,6 +227,7 @@ const columnsDef = [
       const deleteQuotationMutation = info.table.options.meta?.deleteMutation;
       const [open, setOpen] = useState(false);
       const [openTwo, setOpenTwo] = useState(false);
+      const [openThree, setOpenThree] = useState(false);
       const [newStatus, setNewStatus] = useState('InProgress');
       const quotationQuery = useQuery({
         queryKey: ['quotation', quo_no],
@@ -252,6 +254,21 @@ const columnsDef = [
         }
       };
 
+      const changeStatusTwo = async (quo_no: string) => {
+        try {
+          const data = { status: 'Cancel' };
+
+          const response = await QuotationService.updateStatusById({
+            quo_no,
+            data,
+          });
+
+          toast.success('Status successfully changed');
+          router.reload();
+        } finally {
+        }
+      };
+
       const status = quotationQuery.data?.data.status;
 
       return (
@@ -266,16 +283,18 @@ const columnsDef = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="font-normal">
-            <DropdownMenuItem className="p-0">
-              <Link
-                href={`/quotation/edit/${quo_no}`}
-                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
-              >
-                <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
-                Edit
-              </Link>
-            </DropdownMenuItem>
-            {status !== 'Executed' && (
+            {status !== 'Cancel' && (
+              <DropdownMenuItem className="p-0">
+                <Link
+                  href={`/quotation/edit/${quo_no}`}
+                  className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+                >
+                  <Edit2 className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                  Edit
+                </Link>
+              </DropdownMenuItem>
+            )}
+            {status !== 'Executed' && status !== 'Cancel' && (
               <DropdownMenuItem
                 className="p-0"
                 onClick={(e) => {
@@ -305,6 +324,47 @@ const columnsDef = [
                           const quo_no = quotationQuery.data?.data.quo_no;
                           if (quo_no) {
                             changeStatus(quo_no);
+                          }
+                        }}
+                        className="!bg-green-500"
+                      >
+                        continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuItem>
+            )}
+            {status !== 'Executed' && status !== 'Cancel' && (
+              <DropdownMenuItem
+                className="p-0"
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <AlertDialog open={openThree} onOpenChange={setOpenThree}>
+                  <AlertDialogTrigger className="flex w-full select-none items-center px-2 py-1.5 font-sans hover:cursor-default">
+                    <X className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                    Cancel
+                  </AlertDialogTrigger>
+
+                  <AlertDialogContent className="font-sans">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure ?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        updated your data from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="font-sans">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => {
+                          const quo_no = quotationQuery.data?.data.quo_no;
+                          if (quo_no) {
+                            changeStatusTwo(quo_no);
                           }
                         }}
                         className="!bg-green-500"
@@ -417,7 +477,7 @@ export default function Index() {
   const defaultData = useMemo(() => [], []);
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 15,
+    pageSize: 10,
   });
 
   const fetchDataOptions = {
@@ -512,11 +572,11 @@ export default function Index() {
           <h1>Quotation</h1>
         </div>
         <div className="mt-5 w-full rounded-xl border-2 border-graySecondary/50 px-3 py-3 dark:bg-secondDarkBlue">
-          <div className="flex gap-20">
+          <div className="relative flex gap-14">
             <div className="grid gap-1">
               <Label className="mt-4">Date TO</Label>
               <Label>Status</Label>
-              <Label>FIlter By</Label>
+              <Label className="absolute top-32">FIlter By</Label>
             </div>
 
             <div className="grid gap-6">
@@ -552,9 +612,9 @@ export default function Index() {
               </Select>
 
               <div className="grid gap-1">
-                <div className="flex gap-1">
+                <div className="relative flex gap-2">
                   <Select value={orderByTwo} onValueChange={handleSelectChange}>
-                    <SelectTrigger className="h-7 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
+                    <SelectTrigger className="h-9 w-1/2 bg-lightWhite dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
                       <SelectValue placeholder="Order by" className="" />
                     </SelectTrigger>
                     <SelectContent align="end" className="dark:text-black">
@@ -576,45 +636,6 @@ export default function Index() {
                     value={searchValue}
                     onChange={handleInputChange}
                   />
-                </div>
-
-                <div className="relative flex">
-                  <div className="flex gap-1">
-                    <Select
-                      value={orderByThree}
-                      onValueChange={setOrderByThree}
-                    >
-                      <SelectTrigger className="h-7 w-1/2 !bg-transparent dark:border-white dark:bg-secondDarkBlue [&>span]:text-xs">
-                        <SelectValue placeholder="Order by" className="" />
-                      </SelectTrigger>
-                      <SelectContent align="end" className="dark:text-black">
-                        <SelectGroup>
-                          <SelectItem value="Quo No">Quo No</SelectItem>
-                          <SelectItem value="Customer">Customer</SelectItem>
-                          <SelectItem value="Tipe">Tipe</SelectItem>
-                          <SelectItem value="Delivery">Delivery</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      type="text"
-                      name=""
-                      id=""
-                      placeholder="Search...."
-                      className="rounded-md border border-graySecondary !bg-transparent dark:border-white"
-                      value={searchValue}
-                      onChange={(e) => {
-                        setSearchValue(e.target.value);
-                        const filteredData = quotationsQuery.data?.data.filter(
-                          (item) =>
-                            item.quo_no
-                              .toLowerCase()
-                              .includes(e.target.value.toLowerCase())
-                        );
-                        setSearchResults(filteredData || []);
-                      }}
-                    />
-                  </div>
 
                   <button
                     className="absolute -right-10 rounded-md bg-[#3c8dbc] px-2 py-1"
@@ -638,7 +659,7 @@ export default function Index() {
         </Button>
       </Link>
       <div className="grid">
-        <div className="!overflow-hidden">
+        <div className="!overflow-hidden lg:!overflow-scroll">
           <ReactTable
             tableInstance={table}
             isLoading={quotationsQuery.isFetching}

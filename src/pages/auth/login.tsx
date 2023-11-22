@@ -82,7 +82,7 @@ const Login: NextPageCustomLayout = () => {
         }
         router.replace('/');
         if (res?.ok) {
-          toast.success('Successfully Login');
+          console.log('ok');
         }
       })
       .finally(() => setIsLoading(false));
