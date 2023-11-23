@@ -1,18 +1,21 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Cost } from '@/types';
+import { Cost, JobOrder } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
   ColumnDef,
   ColumnFiltersState,
+  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  PaginationState,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -21,16 +24,35 @@ import ApexCharts, { ApexOptions } from 'apexcharts';
 import {
   ArrowUpDown,
   ChevronDown,
+  Edit2,
+  Eye,
   Home,
   Menu,
   MoreHorizontal,
   Plane,
+  Printer,
+  Trash,
   Truck,
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 import * as CostService from '@/apis/cost.api';
+import * as customerService from '@/apis/customer.api';
+import * as JobOrderService from '@/apis/jo.api';
+import * as quotationService from '@/apis/quotation.api';
 import { getErrMessage } from '@/lib/utils';
+import ReactTable from '@/components/table/react-table';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -51,118 +73,197 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-const data: Payment[] = [
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    status: 'success',
-    email: 'ken99@yahoo.com',
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    status: 'success',
-    email: 'Abe45@gmail.com',
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    status: 'processing',
-    email: 'Monserrat44@gmail.com',
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    status: 'success',
-    email: 'Silas22@gmail.com',
-  },
-  {
-    id: 'bhqecj4p',
-    amount: 721,
-    status: 'failed',
-    email: 'carmella@hotmail.com',
-  },
-];
+const ReactApexChart = dynamic(() => import('react-apexcharts'), {
+  ssr: false,
+});
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
-  email: string;
-};
+const columnHelper = createColumnHelper<JobOrder>();
 
-export const columns: ColumnDef<Payment>[] = [
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('status')}</div>
+const columnsDef = [
+  columnHelper.accessor('jo_no', {
+    enableSorting: false,
+    header: () => (
+      <div>
+        <div>#JO NO</div>
+        <div>DATE</div>
+      </div>
     ),
-  },
-  {
-    accessorKey: 'email',
-    header: ({ column }) => {
+    cell: (info) => {
+      const date = new Date(info.row.original.createdAt);
+      const formattedDate = `${date.getDate()}/${
+        date.getMonth() + 1
+      }/${date.getFullYear()}`;
+
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div>
+          <div>{info.row.original.jo_no}</div>
+          <div>{formattedDate}</div>
+        </div>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
-  },
-  {
-    accessorKey: 'amount',
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'));
+  }),
+  // columnHelper.accessor('quo_no', {
+  columnHelper.display({
+    id: 'sales',
+    enableSorting: false,
+    header: () => (
+      <div>
+        <div>QUO NO</div>
+        <div>SALES</div>
+      </div>
+    ),
+    cell: (info) => {
+      const [sales, setSales] = useState('');
 
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount);
+      useEffect(() => {
+        const quoNo = info.row.original.quo_no.toString();
 
-      return <div className="text-right font-medium">{formatted}</div>;
+        quotationService.getById(quoNo).then((quotation) => {
+          if (quotation && quotation.data && quotation.data.sales) {
+            setSales(quotation.data.sales);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{info.row.original.quo_no}</div>
+          <div>{sales}</div>
+        </div>
+      );
     },
-  },
-  {
+  }),
+  columnHelper.display({
+    header: 'TYPE',
+    cell: (info) => {
+      const [type, setType] = useState('');
+
+      useEffect(() => {
+        const quoNo = info.row.original.quo_no.toString();
+
+        quotationService.getById(quoNo).then((quotation) => {
+          if (quotation && quotation.data && quotation.data.type) {
+            setType(quotation.data.type);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{type}</div>
+        </div>
+      );
+    },
+  }),
+  columnHelper.accessor('customer_code', {
+    header: 'CUSTOMER',
+    cell: (info) => {
+      const [partner_name, setPartnerName] = useState('');
+
+      useEffect(() => {
+        const customer_code = info.row.original.customer_code.toString();
+
+        customerService.getById(customer_code).then((customer) => {
+          if (customer && customer.data && customer.data.partner_name) {
+            setPartnerName(customer.data.partner_name);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{partner_name}</div>
+        </div>
+      );
+    },
+  }),
+  columnHelper.display({
+    id: 'hbl',
+    header: () => (
+      <div>
+        <div>HBL/HAWB</div>
+        <div>MBL/MAWB</div>
+      </div>
+    ),
+    cell: (info) => (
+      <div>
+        <div>{info.row.original.hbl}</div>
+        <div>{info.row.original.mbl}</div>
+      </div>
+    ),
+  }),
+  columnHelper.accessor('quo_no', {
+    enableSorting: false,
+    header: () => (
+      <div>
+        <div>LOADING</div>
+        <div>DISCHARGE</div>
+      </div>
+    ),
+    cell: (info) => {
+      const [loading, setLoading] = useState('');
+      const [discharge, setDischarge] = useState('');
+
+      useEffect(() => {
+        const quoNo = info.row.original.quo_no.toString();
+
+        quotationService.getById(quoNo).then((quotation) => {
+          if (quotation && quotation.data && quotation.data.loading) {
+            setLoading(quotation.data.loading);
+          }
+        });
+
+        quotationService.getById(quoNo).then((quotation) => {
+          if (quotation && quotation.data && quotation.data.discharge) {
+            setDischarge(quotation.data.discharge);
+          }
+        });
+      }, []);
+
+      return (
+        <div>
+          <div>{loading}</div>
+          <div>{discharge}</div>
+        </div>
+      );
+    },
+  }),
+  columnHelper.display({
     id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
+    header: 'ACTIONS',
+    cell: (info) => {
+      const { jo_no } = info.row.original;
+      const deleteJobOrderMutation = info.table.options.meta?.deleteMutation;
+      const [open, setOpen] = useState(false);
+      const router = useRouter();
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button
+              variant="ghost"
+              className="mx-auto grid h-8 w-8 items-center justify-center p-0 data-[state=open]:bg-muted"
+            >
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
+          <DropdownMenuContent align="end" className="font-normal">
+            <DropdownMenuItem className="p-0">
+              <Link
+                href={`/jo/${jo_no}`}
+                className="flex w-full select-none items-center px-2 py-1.5 hover:cursor-default"
+              >
+                <Eye className="mr-2 h-3.5 w-3.5 text-darkBlue hover:text-white" />
+                See Detail
+              </Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
-  },
+  }),
 ];
-
-const ReactApexChart = dynamic(() => import('react-apexcharts'), {
-  ssr: false,
-});
 
 export default function Content() {
   const router = useRouter();
@@ -172,26 +273,29 @@ export default function Content() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const columns = useMemo(() => columnsDef, []);
+  const defaultData = useMemo(() => [], []);
+
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 15,
+  });
+
+  const fetchDataOptions = {
+    page: pageIndex + 1,
+    limit: pageSize,
+  };
+
+  const JobOrdersQuery = useQuery({
+    queryKey: ['JobOrders', fetchDataOptions],
+    queryFn: () => JobOrderService.getAll(fetchDataOptions),
+    keepPreviousData: true,
+    onError: (err) => {
+      toast.error(`Error, ${getErrMessage(err)}`);
     },
   });
 
@@ -205,6 +309,14 @@ export default function Content() {
       foreColor: '#5a75d7',
     },
   };
+
+  const pagination = useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
+  );
 
   const optionsTwo: ApexOptions = {
     chart: {
@@ -238,6 +350,20 @@ export default function Content() {
       data: [11, 32, 45, 32, 34, 52, 41],
     },
   ];
+
+  const table = useReactTable({
+    columns,
+    data: JobOrdersQuery.data?.data || [],
+    pageCount: JobOrdersQuery.data?.pagination.total_page ?? -1,
+
+    state: {
+      pagination,
+    },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    meta: {},
+  });
 
   useEffect(() => {
     const dataCost = () => {
@@ -313,55 +439,13 @@ export default function Content() {
         </div>
 
         {/* list jo dan joc */}
-        <div className="rounded-md border border-graySecondary/50">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+        <div className="relative">
+          <h1 className="absolute left-5 top-5 font-bold">Job Order</h1>
+
+          <ReactTable
+            tableInstance={table}
+            isLoading={JobOrdersQuery.isFetching}
+          />
         </div>
       </div>
     </div>
