@@ -92,7 +92,6 @@ export default function create() {
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data.data);
         setPortData(data.data);
       })
       .catch((error) => {
@@ -224,7 +223,8 @@ export default function create() {
                     <InputTextNoLabel name="no_mbl" />
                     <InputTextNoLabel name="vessel" />
                     <div className="flex gap-2">
-                      <InputTextNoErr
+                      <InputDisable
+                        className="!w-[300px]"
                         name="agent"
                         value={
                           selectedCustomer ? selectedCustomer.partner_name : ''
@@ -241,7 +241,8 @@ export default function create() {
                       </button>
                     </div>
                     <div className="flex gap-2">
-                      <InputTextNoErr
+                      <InputDisable
+                        className="!w-[300px]"
                         name="loading"
                         value={selectedPort ? selectedPort.port_name : ''}
                       />
@@ -286,7 +287,8 @@ export default function create() {
                   </div>
                   <div className="grid gap-2">
                     <div className="flex gap-2">
-                      <InputTextNoErr
+                      <InputDisable
+                        className="!w-[300px]"
                         name="discharge"
                         value={selectedPortTwo ? selectedPortTwo.port_name : ''}
                       />

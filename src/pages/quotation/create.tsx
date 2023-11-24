@@ -21,6 +21,7 @@ import { getNextPageParam } from '@/lib/react-query';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import InputDate from '@/components/forms/input-date';
+import InputDisable from '@/components/forms/input-disable';
 import InputHidden from '@/components/forms/input-hidden';
 import InputTextNoLabel from '@/components/forms/input-nolabel';
 import InputNumber from '@/components/forms/input-number';
@@ -128,7 +129,6 @@ export default function QuotationAdd() {
     fetch('http://localhost:8089/api/customer')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Customer:', data.data);
         setCustomerData(data.data);
       })
       .catch((error) => {
@@ -150,7 +150,6 @@ export default function QuotationAdd() {
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data.data);
         setPortData(data.data);
       })
       .catch((error) => {
@@ -164,7 +163,6 @@ export default function QuotationAdd() {
     fetch('http://localhost:8089/api/port')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Port:', data.data);
         setPortData(data.data);
       })
       .catch((error) => {
@@ -267,12 +265,12 @@ export default function QuotationAdd() {
                       disabled
                       placeholder="~AUTO~"
                     />
-                    <InputTextNoLabel name="sales" mandatory />
-                    <InputTextNoLabel name="subject" mandatory />
+                    <InputTextNoLabel name="sales" />
+                    <InputTextNoLabel name="subject" />
                     <div className="flex gap-2">
-                      <InputTextNoErr
+                      <InputDisable
+                        className="!w-[300px]"
                         name="customer"
-                        mandatory
                         value={
                           selectedCustomer ? selectedCustomer.partner_name : ''
                         }
@@ -290,7 +288,7 @@ export default function QuotationAdd() {
                     <div>
                       <InputHidden name="customer_code" value={customerCode} />
                     </div>
-                    <InputTextNoLabel name="attn" mandatory />
+                    <InputTextNoLabel name="attn" />
                     <InputSelect
                       name="type"
                       options={[
@@ -322,10 +320,10 @@ export default function QuotationAdd() {
                       ]}
                     />
                     <div className="flex gap-2">
-                      <InputTextNoErr
+                      <InputDisable
                         name="loading"
-                        mandatory
                         value={selectedPort ? selectedPort.port_name : ''}
+                        className="!w-[300px]"
                       />
                       <button
                         type="button"
@@ -339,9 +337,9 @@ export default function QuotationAdd() {
                     </div>
 
                     <div className="flex gap-2">
-                      <InputTextNoErr
+                      <InputDisable
                         name="discharge"
-                        mandatory
+                        className="!w-[300px]"
                         value={selectedPortTwo ? selectedPortTwo.port_name : ''}
                       />
                       <button

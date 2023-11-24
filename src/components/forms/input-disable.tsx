@@ -17,6 +17,7 @@ type InputDisableProps = {
   labelCN?: string;
   inputWrapperCN?: string;
   inputCN?: string;
+  className?: string;
   noErrorMessage?: boolean;
   onTouched?: () => void;
 };
@@ -35,6 +36,7 @@ const InputDisable: React.FC<InputDisableProps> = ({
   inputWrapperCN,
   inputCN,
   noErrorMessage,
+  className,
   onTouched,
   ...props
 }) => {
@@ -60,7 +62,8 @@ const InputDisable: React.FC<InputDisableProps> = ({
         id={id || name}
         className={cn(
           'h-9 w-full cursor-not-allowed rounded-md border border-secondDarkBlue/30 px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted dark:border-none dark:bg-[#111522]',
-          inputCN
+          inputCN,
+          className
         )}
         placeholder={
           !disabled

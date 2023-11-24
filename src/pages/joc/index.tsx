@@ -535,6 +535,7 @@ export default function Index() {
     state: {
       pagination,
     },
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     meta: {

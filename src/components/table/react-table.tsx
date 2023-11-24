@@ -33,7 +33,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
     <div className="rounded-lg border-2 border-graySecondary/50 p-3 dark:bg-secondDarkBlue">
       <div className="mb-5 grid place-content-end">
         <Select
-          defaultValue="15"
+          defaultValue="10"
           onValueChange={(newValue) => {
             table.setPageSize(Number(newValue));
           }}
@@ -43,7 +43,7 @@ const ReactTable: React.FC<ReactTableProps> = ({
           </SelectTrigger>
           <SelectContent>
             <SelectGroup className="dark:text-black">
-              {[15, 25, 50, 100, 200].map((pageSize) => (
+              {[10, 20, 30, 40, 50].map((pageSize) => (
                 <SelectItem
                   key={pageSize}
                   value={String(pageSize)}

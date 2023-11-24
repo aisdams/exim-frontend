@@ -22,6 +22,7 @@ import * as quotationService from '@/apis/quotation.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import CreateCost from '@/components/cost/create';
+import InputDisable from '@/components/forms/input-disable';
 import InputHidden from '@/components/forms/input-hidden';
 import InputMultiText from '@/components/forms/input-multiText';
 import InputTextNoLabel from '@/components/forms/input-nolabel';
@@ -321,12 +322,12 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         disabled
                         placeholder="~AUTO~"
                       />
-                      <InputTextNoLabel name="sales" mandatory />
-                      <InputTextNoLabel name="subject" mandatory />
+                      <InputTextNoLabel name="sales" />
+                      <InputTextNoLabel name="subject" />
                       <div className="flex gap-2">
-                        <InputTextNoLabel
+                        <InputDisable
+                          className="!w-[300px]"
                           name="customer"
-                          mandatory
                           value={
                             selectedCustomer
                               ? selectedCustomer.partner_name
@@ -375,9 +376,9 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                         ]}
                       />
                       <div className="flex gap-2">
-                        <InputTextNoLabel
+                        <InputDisable
+                          className="!w-[300px]"
                           name="loading"
-                          mandatory
                           value={selectedPort ? selectedPort.port_name : ''}
                         />
                         <button
@@ -392,9 +393,9 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
                       </div>
 
                       <div className="flex gap-2">
-                        <InputTextNoErr
+                        <InputDisable
+                          className="!w-[300px]"
                           name="discharge"
-                          mandatory
                           value={
                             selectedPortTwo ? selectedPortTwo.port_name : ''
                           }

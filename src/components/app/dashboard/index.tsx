@@ -379,9 +379,6 @@ export default function Content() {
           );
 
           setTotalPrice(total);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 

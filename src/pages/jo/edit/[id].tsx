@@ -149,7 +149,6 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
     fetch('http://localhost:8089/api/customer')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Data Customer:', data.data);
         setCustomerData(data.data);
       })
       .catch((error) => {
@@ -382,14 +381,14 @@ const JoEdit: React.FC<JoEditProps> = ({ id }) => {
                       selectedCustomer ? selectedCustomer.partner_name : ''
                     }
                   />
-                  <button
+                  <Button
                     className="
           mt-1 h-6 w-6 rounded-md bg-graySecondary px-1 text-base
           text-white dark:bg-blueLight"
                     onClick={openCustomerModal}
                   >
                     <Search className="w-4" />
-                  </button>
+                  </Button>
                 </div>
                 <div className="flex gap-2">
                   <InputTextNoErr

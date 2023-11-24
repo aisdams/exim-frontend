@@ -206,15 +206,25 @@ const columnsDef = [
     header: 'Print',
     cell: (info) => {
       const { quo_no } = info.row.original;
+      const quotationQuery = useQuery({
+        queryKey: ['quotation', quo_no],
+        queryFn: () => QuotationService.getById(quo_no),
+        onError: (err) => {
+          toast.error(`Error, ${getErrMessage(err)}`);
+        },
+      });
+      const status = quotationQuery.data?.data.status;
 
       return (
         <Link href={`/quotation/print/${quo_no}`} target="_blank">
-          <Button>
-            <Printer
-              size={15}
-              className="mx-auto grid items-center justify-center dark:text-white"
-            />
-          </Button>
+          {status !== 'Cancel' && (
+            <Button>
+              <Printer
+                size={15}
+                className="mx-auto grid items-center justify-center dark:text-white"
+              />
+            </Button>
+          )}
         </Link>
       );
     },
@@ -556,6 +566,7 @@ export default function Index() {
     state: {
       pagination,
     },
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     meta: {

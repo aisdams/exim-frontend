@@ -23,6 +23,7 @@ import * as JOService from '@/apis/jo.api';
 import * as JOCService from '@/apis/joc.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
+import InputDisable from '@/components/forms/input-disable';
 import InputMultiSelect from '@/components/forms/input-multiText';
 import InputMultiText from '@/components/forms/input-multiText';
 import InputTextNoLabel from '@/components/forms/input-nolabel';
@@ -341,9 +342,9 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                       </div>
                       <div className="grid gap-2">
                         <div className="flex gap-2">
-                          <InputTextNoErr
+                          <InputDisable
+                            className="!w-[300px]"
                             name="loading"
-                            mandatory
                             value={selectedPort ? selectedPort.port_name : ''}
                           />
                           <button
@@ -358,9 +359,9 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                         </div>
 
                         <div className="flex gap-2">
-                          <InputTextNoErr
+                          <InputDisable
+                            className="!w-[300px]"
                             name="discharge"
-                            mandatory
                             value={
                               selectedPortTwo ? selectedPortTwo.port_name : ''
                             }
