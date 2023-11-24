@@ -1,18 +1,27 @@
-import React from 'react';
+import { ReactElement } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { NextPageCustomLayout } from '@/types/_app.type';
 import { Button } from '@/components/ui/button';
 
-export default function CustomError() {
+const CustomError: NextPageCustomLayout = () => {
   const router = useRouter();
-
   return (
-    <div className="mt-20 grid items-center justify-center">
-      <h1 className="mb-20 text-center text-5xl">404 Error</h1>
-
-      <div>
-        Sorry, Please <Button onClick={() => router.back()}>Back </Button>
-      </div>
+    <div className=" grid h-screen w-screen place-items-center">
+      <h1 className="text-center text-5xl">
+        404 Error
+        <br />
+        <span className="text-lg">
+          Sorry, Please <Button onClick={() => router.back()}>Back </Button>
+        </span>
+      </h1>
     </div>
   );
-}
+};
+
+CustomError.getLayout = function getLayout(page: ReactElement) {
+  return page;
+};
+
+export default CustomError;
