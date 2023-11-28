@@ -87,7 +87,7 @@ export default function InputText({
           value={field.value ?? ''}
           id={id || name}
           className={cn(
-            'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
+            'h-9 w-full bg-background px-2 border border-black font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
             inputCN,
             className
           )}
