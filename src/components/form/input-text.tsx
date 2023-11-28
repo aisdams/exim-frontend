@@ -17,8 +17,8 @@ type InputTextProps = {
   labelCN?: string;
   inputWrapperCN?: string;
   inputCN?: string;
-  noErrorMessage?: boolean;
   className?: string;
+  noErrorMessage?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
@@ -36,8 +36,8 @@ export default function InputText({
   labelCN,
   inputWrapperCN,
   inputCN,
-  noErrorMessage,
   className,
+  noErrorMessage,
   onChange: customOnChange,
   onKeyDown,
   ...props
@@ -68,7 +68,7 @@ export default function InputText({
       {withLabel && (
         <label
           htmlFor={id || name}
-          className={cn('mb-1 inline-block text-black', labelCN)}
+          className={cn('mb-1 inline-block', labelCN)}
         >
           {label || startCase(name)}
           {mandatory && <span className="text-[#f00]">*</span>}
@@ -77,7 +77,7 @@ export default function InputText({
 
       <div
         className={cn(
-          'relative flex items-center overflow-hidden rounded-xl focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
+          'relative flex items-center overflow-hidden rounded-md border border-input focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >
@@ -87,7 +87,7 @@ export default function InputText({
           value={field.value ?? ''}
           id={id || name}
           className={cn(
-            'h-9 w-full bg-background px-2 border border-black font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
+            'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
             inputCN,
             className
           )}
