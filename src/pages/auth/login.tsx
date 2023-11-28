@@ -15,8 +15,8 @@ import { InferType } from 'yup';
 import { NextPageCustomLayout } from '@/types/_app.type';
 import * as userService from '@/apis/user.api';
 import yup from '@/lib/yup';
-import InputPassword from '@/components/inputs/rhf/input-password';
-import InputText from '@/components/inputs/rhf/input-text';
+import InputPassword from '@/components/form/input-password';
+import InputText from '@/components/form/input-text';
 import { Button } from '@/components/ui/button';
 
 const defaultValues = {

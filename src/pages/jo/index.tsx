@@ -29,7 +29,7 @@ import { toast } from 'react-toastify';
 import * as customerService from '@/apis/customer.api';
 import * as quotationService from '@/apis/quotation.api';
 import { cn, getErrMessage } from '@/lib/utils';
-import { DateRangePicker } from '@/components/forms/data-range-picker';
+import { DateRangePicker } from '@/components/form/data-range-picker';
 import ReactTable from '@/components/table/react-table';
 import {
   AlertDialog,
@@ -467,7 +467,7 @@ export default function Index() {
         <div className="mt-5 w-full rounded-xl border-2 border-graySecondary/50 px-3 py-3 dark:bg-secondDarkBlue">
           <div className="mb-5 flex items-center gap-3">
             <Search className="h-4 w-4" />
-            <h3> Filter Data JO</h3>
+            <h3>Filter Data JO</h3>
           </div>
 
           {/* NEW CHANGED */}

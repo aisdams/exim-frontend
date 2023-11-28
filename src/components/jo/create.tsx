@@ -19,6 +19,10 @@ import { InferType } from 'yup';
 
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
+import InputHidden from '@/components/form/input-hidden';
+import InputNumber from '@/components/form/input-number';
+import InputText from '@/components/form/input-text';
+import InputTextNoErrLable from '@/components/form/input-text-noerrlabel';
 import ReactTable from '@/components/table/react-table';
 import {
   AlertDialog,
@@ -44,10 +48,6 @@ import {
 } from '@/components/ui/table';
 import * as JOService from '../../apis/jo.api';
 import * as JOCService from '../../apis/joc.api';
-import InputHidden from '../forms/input-hidden';
-import InputNumber from '../forms/input-number';
-import InputText from '../forms/input-text';
-import InputTextNoErrLable from '../forms/input-text-noerrlabel';
 import { Input } from '../ui/input';
 
 const defaultValues = {
@@ -539,7 +539,11 @@ export default function CreateJO({
                       </button>
                     </div>
                     <InputNumber name="qty" mandatory />
-                    <InputText name="vessel" mandatory />
+                    <InputText
+                      name="vessel"
+                      mandatory
+                      className="!w-[300px] !border-none"
+                    />
                     <InputNumber name="gross_weight" mandatory />
                     <InputNumber name="volume" mandatory />
                   </div>

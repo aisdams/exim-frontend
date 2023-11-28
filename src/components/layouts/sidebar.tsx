@@ -83,7 +83,7 @@ export default function Sidebar() {
     );
 
     let firstItem = list[0];
-    const isClicked = localStorage.getItem('firstItem');
+    const isClicked = localStorage.getItem('isClicked');
 
     if (!isClicked) {
       firstItem.classList.add('hovered');

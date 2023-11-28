@@ -29,8 +29,8 @@ import { InferType } from 'yup';
 import * as quotationService from '@/apis/quotation.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
-import { DateRangePicker } from '@/components/forms/data-range-picker';
-import InputText from '@/components/forms/input-text';
+import { DateRangePicker } from '@/components/form/data-range-picker';
+import InputText from '@/components/form/input-text';
 import ReactTable from '@/components/table/react-table';
 import { Button } from '@/components/ui/button';
 import {

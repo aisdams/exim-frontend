@@ -26,7 +26,7 @@ import { DateTime } from 'luxon';
 import { toast } from 'react-toastify';
 
 import { cn, getErrMessage } from '@/lib/utils';
-import { DateRangePicker } from '@/components/forms/data-range-picker';
+import { DateRangePicker } from '@/components/form/data-range-picker';
 import ReactTable from '@/components/table/react-table';
 import {
   AlertDialog,

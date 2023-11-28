@@ -10,7 +10,7 @@ type InputTextProps = {
   placeholder?: string;
   disabled?: boolean;
   mandatory?: boolean;
-  defaultCase?: boolean;
+  uppercase?: boolean;
   value?: string | number;
   withLabel?: boolean;
   containerCN?: string;
@@ -18,26 +18,30 @@ type InputTextProps = {
   inputWrapperCN?: string;
   inputCN?: string;
   noErrorMessage?: boolean;
-  onTouched?: () => void;
+  className?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
-const InputText: React.FC<InputTextProps> = ({
+export default function InputText({
   label,
   name,
   id,
   placeholder,
   disabled,
   mandatory,
-  defaultCase,
+  uppercase = true,
   withLabel = true,
   containerCN,
   labelCN,
   inputWrapperCN,
   inputCN,
   noErrorMessage,
-  onTouched,
+  className,
+  onChange: customOnChange,
+  onKeyDown,
   ...props
-}) => {
+}: InputTextProps) {
   const { register } = useFormContext();
   const {
     field,
@@ -45,7 +49,8 @@ const InputText: React.FC<InputTextProps> = ({
   } = useController({ name });
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (defaultCase) {
+    customOnChange?.(e);
+    if (!uppercase) {
       field.onChange(e.target.value);
       return;
     }
@@ -58,11 +63,6 @@ const InputText: React.FC<InputTextProps> = ({
     field.onChange(e.target.value);
   };
 
-  const handleBlur = () => {
-    if (onTouched) {
-      onTouched();
-    }
-  };
   return (
     <div className={cn('relative', containerCN)}>
       {withLabel && (
@@ -77,7 +77,7 @@ const InputText: React.FC<InputTextProps> = ({
 
       <div
         className={cn(
-          'relative flex w-[300px] items-center overflow-hidden rounded-md border border-graySecondary/70 focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
+          'relative flex items-center overflow-hidden rounded-xl focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >
@@ -88,7 +88,8 @@ const InputText: React.FC<InputTextProps> = ({
           id={id || name}
           className={cn(
             'h-9 w-full bg-background px-2 font-normal outline-none placeholder:text-sm placeholder:font-normal placeholder:text-muted-foreground disabled:select-none disabled:bg-muted',
-            inputCN
+            inputCN,
+            className
           )}
           placeholder={
             !disabled
@@ -99,18 +100,14 @@ const InputText: React.FC<InputTextProps> = ({
               : undefined
           }
           disabled={disabled}
-          onBlur={handleBlur}
           onChange={onChange}
+          onKeyDown={onKeyDown}
           {...props}
         />
       </div>
       {!noErrorMessage && error?.message && (
-        <p className="text-xs tracking-wide text-red-600 dark:text-[#e8af46]">
-          {error.message} !
-        </p>
+        <p className="text-xs text-red-600">{error.message}</p>
       )}
     </div>
   );
-};
-
-export default InputText;
+}

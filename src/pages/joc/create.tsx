@@ -13,12 +13,12 @@ import { InferType } from 'yup';
 import * as JOCService from '@/apis/joc.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
-import InputDate from '@/components/forms/input-date';
-import InputDisable from '@/components/forms/input-disable';
-import InputTextNoLabel from '@/components/forms/input-nolabel';
-import InputSelect from '@/components/forms/input-select';
-import InputText from '@/components/forms/input-text';
-import InputTextNoErr from '@/components/forms/input-text-noerr';
+import InputDate from '@/components/form/input-date';
+import InputDisable from '@/components/form/input-disable';
+import InputTextNoLabel from '@/components/form/input-nolabel';
+import InputSelect from '@/components/form/input-select';
+import InputText from '@/components/form/input-text';
+import InputTextNoErr from '@/components/form/input-text-noerr';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {

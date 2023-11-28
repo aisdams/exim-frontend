@@ -21,6 +21,8 @@ import { InferType, string } from 'yup';
 import { axios } from '@/lib/axios';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
+import InputNumber from '@/components/form/input-number';
+import InputText from '@/components/form/input-text';
 import ReactTable from '@/components/table/react-table';
 import {
   AlertDialog,
@@ -37,8 +39,6 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import * as CostService from '../../apis/cost.api';
 import * as QuotationService from '../../apis/quotation.api';
-import InputNumber from '../forms/input-number';
-import InputText from '../forms/input-text';
 
 const defaultValues = {
   item_name: '',

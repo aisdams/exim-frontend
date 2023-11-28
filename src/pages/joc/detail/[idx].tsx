@@ -11,7 +11,7 @@ import { Command } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 import { cn, getErrMessage } from '@/lib/utils';
-import InputText from '@/components/forms/input-text';
+import InputText from '@/components/form/input-text';
 import ReactTable from '@/components/table/react-table';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';

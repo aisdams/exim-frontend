@@ -33,7 +33,7 @@ import { toast } from 'react-toastify';
 
 import * as quotationService from '@/apis/quotation.api';
 import { cn, getErrMessage } from '@/lib/utils';
-import { DateRangePicker } from '@/components/forms/data-range-picker';
+import { DateRangePicker } from '@/components/form/data-range-picker';
 import ReactTable from '@/components/table/react-table';
 import {
   AlertDialog,

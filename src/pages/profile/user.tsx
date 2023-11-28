@@ -5,8 +5,8 @@ import { User2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Avatar from 'public/img/avatar.png';
 
-import InputPassword from '@/components/inputs/rhf/input-password';
-import InputText from '@/components/inputs/rhf/input-text';
+import InputPassword from '@/components/form/input-password';
+import InputText from '@/components/form/input-text';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
