@@ -154,7 +154,7 @@ export default function Sidebar() {
           </div>
 
           <div
-            className={`rounded-r-[2rem] bg-blueNav text-white transition-all duration-500 ease-in-out dark:bg-[#] ${
+            className={`hidden rounded-r-[2rem] text-white transition-all duration-500 ease-in-out lg:block ${
               sidebarVisible ? '' : 'hidden'
             }`}
           >
