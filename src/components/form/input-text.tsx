@@ -68,7 +68,7 @@ export default function InputText({
       {withLabel && (
         <label
           htmlFor={id || name}
-          className={cn('mb-1 inline-block', labelCN)}
+          className={cn('mb-1 inline-block text-black', labelCN)}
         >
           {label || startCase(name)}
           {mandatory && <span className="text-[#f00]">*</span>}
@@ -77,7 +77,7 @@ export default function InputText({
 
       <div
         className={cn(
-          'relative flex items-center overflow-hidden rounded-md border border-input focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
+          'relative flex items-center overflow-hidden rounded-md focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary',
           inputWrapperCN
         )}
       >

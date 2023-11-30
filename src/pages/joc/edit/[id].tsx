@@ -24,8 +24,6 @@ import * as JOCService from '@/apis/joc.api';
 import { cn, getErrMessage } from '@/lib/utils';
 import yup from '@/lib/yup';
 import InputDisable from '@/components/form/input-disable';
-import InputMultiSelect from '@/components/form/input-multiText';
-import InputMultiText from '@/components/form/input-multiText';
 import InputTextNoLabel from '@/components/form/input-nolabel';
 import InputSelect from '@/components/form/input-select';
 import InputText from '@/components/form/input-text';
@@ -378,11 +376,6 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
                         </div>
 
                         <InputTextNoLabel name="no_container" />
-                        {/* <InputText
-                          name="jo_no"
-                          mandatory
-                          placeholder="Enter JO_NO from table"
-                        /> */}
                       </div>
                     </div>
                   </div>

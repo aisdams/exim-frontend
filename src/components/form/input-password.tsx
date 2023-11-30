@@ -50,7 +50,7 @@ const InputPassword: React.FC<InputPasswordProps> = ({
       {withLabel && (
         <label
           htmlFor={id || name}
-          className={cn('mb-1 inline-block', labelCN)}
+          className={cn('mb-1 inline-block text-black', labelCN)}
         >
           {label || startCase(name)}
           {mandatory && <span className="text-[#f00]">*</span>}

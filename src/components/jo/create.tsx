@@ -118,6 +118,7 @@ export default function CreateJO({
 }) {
   const qc = useQueryClient();
   const router = useRouter();
+  const [uniqueDischarge, setUniqueDischarge] = useState<string>('');
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState<JOC[]>([]);
@@ -139,7 +140,6 @@ export default function CreateJO({
     null
   );
   const [selectedPort, setSelectedPort] = useState<Port | null>(null);
-
   const methods = useForm<JOSchema>({
     mode: 'all',
     defaultValues,
@@ -153,7 +153,16 @@ export default function CreateJO({
     pageIndex: 0,
     pageSize: 15,
   });
+  const displayedDischarges = useState('any');
 
+  const filteredQuotationData = QuotationData.filter((quotation) => {
+    if (displayedDischarges.includes(quotation.discharge)) {
+      return false;
+    } else {
+      displayedDischarges.push(quotation.discharge);
+      return true;
+    }
+  });
   const { handleSubmit, setValue, watch } = methods;
   const fetchDataOptions = {
     page: pageIndex + 1,
@@ -542,17 +551,14 @@ export default function CreateJO({
                     <InputText
                       name="vessel"
                       mandatory
-                      className="!w-[300px] !border-none"
+                      className="!w-[300px] border !border-none"
                     />
                     <InputNumber name="gross_weight" mandatory />
                     <InputNumber name="volume" mandatory />
                   </div>
                   {/* Buttons */}
                   <div className="mt-5 flex items-center gap-2">
-                    <Button
-                      className="bg-graySecondary"
-                      onClick={() => router.back()}
-                    >
+                    <Button className="bg-graySecondary" onClick={closeJOModal}>
                       Back
                     </Button>
                     <Button
@@ -691,8 +697,8 @@ export default function CreateJO({
             isQuotationModalOpen ? 'open' : 'closed'
           }`}
         >
-          <div className="absolute inset-0 bg-black opacity-75"></div>
-          <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg">
+          <div className="absolute inset-0 bg-black/20 opacity-75"></div>
+          <div className="relative z-10 w-1/3 rounded-lg bg-white p-4 shadow-lg ">
             <Button
               className="absolute -top-9 right-0 !bg-transparent text-white"
               onClick={closeQuotationModal}
@@ -708,7 +714,7 @@ export default function CreateJO({
                 </TableRow>
               </TableHeader>
               <TableBody className="text-black">
-                {QuotationData.map((quotation) => (
+                {filteredQuotationData.map((quotation) => (
                   <TableRow key={quotation.type}>
                     <TableCell className="font-medium">
                       {quotation.type}
