@@ -202,7 +202,7 @@ export default function CreateJO({
           setJOData(res.data);
         })
         .catch((error) => {
-          console.log('Error fetching JO data:', error);
+          // console.log('Error fetching JO data:', error);
         });
     }
   }, [jocQuery.data?.data?.joc_no]);
@@ -216,7 +216,7 @@ export default function CreateJO({
         setCustomerData(data.data);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        // console.error('Error:', error);
       });
   };
 
@@ -241,7 +241,7 @@ export default function CreateJO({
         setPortData(data.data);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        // console.error('Error:', error);
       });
   };
   useEffect(() => {
@@ -264,7 +264,7 @@ export default function CreateJO({
         setQuotationData(data.data);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        // console.error('Error:', error);
       });
   }
 
@@ -303,7 +303,7 @@ export default function CreateJO({
       router.reload();
     },
     onError: (err) => {
-      console.log(`Error, ${getErrMessage(err)}`);
+      // console.log(`Error, ${getErrMessage(err)}`);
     },
   });
 
@@ -330,7 +330,7 @@ export default function CreateJO({
       // router.push(`/joc/edit/${id}`);
     },
     onError: (err) => {
-      console.log(`Error, ${getErrMessage(err)}`);
+      // console.log(`Error, ${getErrMessage(err)}`);
     },
   });
 
@@ -400,7 +400,6 @@ export default function CreateJO({
             </thead>
             <tbody>
               {Array.isArray(jocQuery.data?.data?.joborder) &&
-              jocQuery.data?.data?.joborder.length > 0 ? (
                 jocQuery.data?.data?.joborder.map(
                   (item: any, index: number) => (
                     <tr
@@ -475,12 +474,7 @@ export default function CreateJO({
                       </td>
                     </tr>
                   )
-                )
-              ) : (
-                <tr className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                  <td className="">No data found.</td>
-                </tr>
-              )}
+                )}
             </tbody>
           </table>
         </div>

@@ -13,11 +13,11 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import Topbar from './topbar';
 
 export default function Sidebar() {
   const [isActive, setIsActive] = useState(0);
   // const [isActive, setIsActive] = useState(-1);
+
   const [sidebarVisible, setSidebarVisible] = useState(
     localStorage.getItem('sidebarVisible') === 'true'
   );
@@ -54,6 +54,25 @@ export default function Sidebar() {
       router.events.off('routeChangeComplete', handleRouteChange);
     };
   }, [router.pathname, sidebarData]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isXLScreen = window.innerWidth < 1200;
+      if (isXLScreen) {
+        setSidebarVisible(false);
+        setMenuIcon('Menu');
+      } else if (!isXLScreen) {
+        setSidebarVisible(true);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleToggleSidebar = () => {
     const newSidebarVisible = !sidebarVisible;
@@ -105,9 +124,9 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <div className="!z-[5]">
+    <div>
       <div
-        className={`h-screen w-auto bg-blueNav ${
+        className={`!z-20" h-screen w-auto bg-blueNav ${
           sidebarVisible ? 'rounded-r-[2rem] bg-blueNav ' : ''
         }`}
       >
@@ -154,7 +173,7 @@ export default function Sidebar() {
           </div>
 
           <div
-            className={`hidden rounded-r-[2rem] text-white transition-all duration-500 ease-in-out lg:block ${
+            className={`rounded-r-[2rem] bg-blueNav  text-white transition-all duration-500 ease-in-out ${
               sidebarVisible ? '' : 'hidden'
             }`}
           >
