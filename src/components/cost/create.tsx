@@ -343,8 +343,13 @@ export default function CreateCost({
                 )
               )
             ) : (
-              <tr className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                <td className="">No data found.</td>
+              <tr>
+                <td
+                  className="!col-span-6 border-2 border-graySecondary/70 p-2 text-center text-sm font-medium tracking-wide dark:border-white/30"
+                  style={{ width: '100%' }}
+                >
+                  No data
+                </td>
               </tr>
             )}
           </tbody>
