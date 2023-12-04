@@ -78,7 +78,7 @@ export default function Sidebar() {
     const newSidebarVisible = !sidebarVisible;
     setSidebarVisible(newSidebarVisible);
     localStorage.setItem('sidebarVisible', JSON.stringify(newSidebarVisible));
-    setMenuIcon(newSidebarVisible ? 'X' : 'Menu');
+    setMenuIcon(newSidebarVisible ? 'Menu' : 'X');
   };
 
   useEffect(() => {
