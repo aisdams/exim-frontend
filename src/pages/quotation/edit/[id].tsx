@@ -236,13 +236,7 @@ const QuotationEdit: React.FC<QuotationEditProps> = ({ id }) => {
   });
 
   const onSubmit: SubmitHandler<QuotationSchema> = (data) => {
-    if (IS_DEV) {
-      console.log('data =>', data);
-    }
-
     updatedQuotationMutation.mutate({ id, data });
-    // const itemCostValue = data.cost;
-    // console.log('cost value submitted:', data.cost);
   };
 
   return (

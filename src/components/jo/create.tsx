@@ -361,7 +361,7 @@ export default function CreateJO({
         </Button> */}
       </Link>
 
-      <div className="">
+      <div>
         <Button
           className="mb-5 w-max gap-2 bg-green-600 px-2 py-4 text-white"
           onClick={openJOModal}
@@ -398,8 +398,10 @@ export default function CreateJO({
                 </th>
               </tr>
             </thead>
+
             <tbody>
               {Array.isArray(jocQuery.data?.data?.joborder) &&
+              jocQuery.data?.data?.joborder.length > 0 ? (
                 jocQuery.data?.data?.joborder.map(
                   (item: any, index: number) => (
                     <tr
@@ -474,7 +476,18 @@ export default function CreateJO({
                       </td>
                     </tr>
                   )
-                )}
+                )
+              ) : (
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="border-2 border-graySecondary/70 p-2 text-center text-sm font-medium tracking-wide dark:border-white/30"
+                    style={{ width: '100%' }}
+                  >
+                    No data
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

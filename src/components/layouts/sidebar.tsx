@@ -22,7 +22,7 @@ export default function Sidebar() {
     localStorage.getItem('sidebarVisible') === 'true'
   );
   const [menuIcon, setMenuIcon] = useState(
-    localStorage.getItem('sidebarVisible') === 'true' ? 'X' : 'Menu'
+    localStorage.getItem('sidebarVisible') === 'true' ? 'Menu' : 'X'
   );
 
   const router = useRouter();
@@ -122,6 +122,33 @@ export default function Sidebar() {
       list.forEach((item) => item.removeEventListener('click', activeLink));
     };
   }, []);
+
+  // useEffect(() => {
+  //   const list = document.querySelectorAll(
+  //     '.childOne .childTwo .childThree .childFour'
+  //   );
+
+  //   let firstItem = list[0];
+  //   const isClicked = localStorage.getItem('isClicked');
+
+  //   if (!isClicked) {
+  //     firstItem.classList.add('hovered');
+  //   }
+
+  //   function activeLink(this: HTMLElement) {
+  //     list.forEach((item) => {
+  //       item.classList.remove('hovered');
+  //     });
+  //     this.classList.add('hovered');
+  //     localStorage.setItem('isClicked', 'true');
+  //   }
+
+  //   list.forEach((item) => item.addEventListener('click', activeLink));
+
+  //   return () => {
+  //     list.forEach((item) => item.removeEventListener('click', activeLink));
+  //   };
+  // }, []);
 
   return (
     <div>

@@ -66,15 +66,12 @@ const Login: NextPageCustomLayout = () => {
 
   const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
     setIsLoading(true);
-    if (IS_DEV) console.log('data =>', data);
-
     signIn('credentials', {
       email: data.email,
       password: data.password,
       redirect: false,
     })
       .then(async (res) => {
-        console.log(res);
         if (res?.error) {
           setIsLoading(false);
           setErrMsgQS("Email or Password that you've entered are incorrect!");

@@ -254,10 +254,6 @@ const JOCEdit: React.FC<JOCEditProps> = ({ id }) => {
   });
 
   const onSubmit: SubmitHandler<JOCSchema> = (data) => {
-    if (IS_DEV) {
-      console.log('data =>', data);
-    }
-
     updatedJOCMutation.mutate({ id, data });
   };
 

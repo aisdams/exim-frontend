@@ -195,10 +195,6 @@ export default function QuotationAdd() {
   });
 
   const onSubmit: SubmitHandler<QuotationSchema> = (data) => {
-    if (IS_DEV) {
-      console.log('data =>', data);
-    }
-
     addQuotationMutation.mutate(data);
   };
 

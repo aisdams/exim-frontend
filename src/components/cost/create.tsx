@@ -214,9 +214,6 @@ export default function CreateCost({
   });
 
   const onSubmit: SubmitHandler<CostSchema> = (data) => {
-    // if (IS_DEV) {
-    //   console.log('data =>', data);
-    // }
     const { id } = router.query;
     const parsedQuoNo = Array.isArray(id) ? id[0] : id;
 
@@ -269,7 +266,7 @@ export default function CreateCost({
           </thead>
           <tbody>
             {Array.isArray(quotationsQuery.data?.data?.cost) &&
-            quotationsQuery.data?.data?.cost ? (
+            quotationsQuery.data?.data?.cost.length > 0 ? (
               quotationsQuery.data?.data?.cost.map(
                 (item: any, index: number) => (
                   <tr
@@ -343,8 +340,14 @@ export default function CreateCost({
                 )
               )
             ) : (
-              <tr className="border-2 border-graySecondary/70 p-2 text-start text-sm font-medium tracking-wide dark:border-white/30">
-                <td className="">No data found.</td>
+              <tr>
+                <td
+                  colSpan={7}
+                  className="border-2 border-graySecondary/70 p-2 text-center text-sm font-medium tracking-wide dark:border-white/30"
+                  style={{ width: '100%' }}
+                >
+                  No data
+                </td>
               </tr>
             )}
           </tbody>

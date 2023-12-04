@@ -120,10 +120,6 @@ const JoCreate: React.FC<JoCreateProps> = ({ id }) => {
     },
   });
   const onSubmit: SubmitHandler<JoSchema> = (data) => {
-    if (IS_DEV) {
-      console.log('data =>', data);
-    }
-
     addJOMutation.mutate(data);
   };
 
