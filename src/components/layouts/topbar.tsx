@@ -122,7 +122,7 @@ export default function Topbar() {
             <Button
               role="combobox"
               aria-expanded={open}
-              className="h-[40px] w-[250px] justify-between rounded-full border-2 border-gray-400 bg-transparent pl-4"
+              className="h-[40px] w-[250px] justify-between rounded-full border-2 border-gray-400 bg-transparent pl-4 !text-black dark:!text-white"
             >
               {value
                 ? listNs.find((listN) => listN.value === value)?.label

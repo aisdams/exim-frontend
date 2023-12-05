@@ -13,7 +13,8 @@ import useSidebarStore from '@/zustand/use-sidebar';
 // import Progress from '@/components/progress/progress';
 import { ThemeSwitcher } from '@/components/shared/theme-switcher';
 import { Toaster } from '@/components/ui/toaster';
-import SessionLoader from './session-loader';
+
+// import SessionLoader from './session-loader';
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -81,40 +82,40 @@ export default function AppProvider({
       }}
       forceColorScheme={(forcedTheme as any) || (mode as any)}
     >
-      <SessionLoader>
-        {/* <Progress isAnimating={isAnimating} /> */}
+      {/* <SessionLoader> */}
+      {/* <Progress isAnimating={isAnimating} /> */}
 
-        {/* THE COMPONENT */}
-        <NProgress isAnimating={isLoading}>
-          {({ isFinished }) => (
-            <div
-              className={`fixed left-0 top-0 z-[999] h-[6px] w-full rounded-full bg-purple-500 transition-opacity ${
-                isFinished ? 'opacity-0' : 'opacity-100'
-              }`}
-            />
-          )}
-        </NProgress>
-
-        {children}
-
-        {isMounted && (
-          <ToastContainer
-            position="top-right"
-            autoClose={4000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme={(forcedTheme as any) || (mode as any)}
+      {/* THE COMPONENT */}
+      <NProgress isAnimating={isLoading}>
+        {({ isFinished }) => (
+          <div
+            className={`fixed left-0 top-0 z-[999] h-[6px] w-full rounded-full bg-purple-500 transition-opacity ${
+              isFinished ? 'opacity-0' : 'opacity-100'
+            }`}
           />
         )}
+      </NProgress>
 
-        {/* shadcn/ui TOASTER */}
-        <Toaster />
-      </SessionLoader>
+      {children}
+
+      {isMounted && (
+        <ToastContainer
+          position="top-right"
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme={(forcedTheme as any) || (mode as any)}
+        />
+      )}
+
+      {/* shadcn/ui TOASTER */}
+      <Toaster />
+      {/* </SessionLoader> */}
 
       <ThemeSwitcher />
     </MantineProvider>

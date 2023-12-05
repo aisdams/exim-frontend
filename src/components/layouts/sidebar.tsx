@@ -15,26 +15,35 @@ import {
 } from '@/components/ui/navigation-menu';
 
 export default function Sidebar() {
-  const [isActive, setIsActive] = useState(0);
-  // const [isActive, setIsActive] = useState(-1);
-
-  const [sidebarVisible, setSidebarVisible] = useState(
-    localStorage.getItem('sidebarVisible') === 'true'
-  );
-  const [menuIcon, setMenuIcon] = useState(
-    localStorage.getItem('sidebarVisible') === 'true' ? 'Menu' : 'X'
-  );
-
-  const router = useRouter();
+  const [isActive, setIsActive] = useState<number | null>(null);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [menuIcon, setMenuIcon] = useState('Menu');
 
   useEffect(() => {
-    const storedActiveIndex = localStorage.getItem('activeIndex');
-    if (storedActiveIndex) {
-      setIsActive(parseInt(storedActiveIndex));
-    } else {
-      setIsActive(0);
+    if (typeof window !== 'undefined') {
+      const storedSidebarVisible = localStorage.getItem('sidebarVisible');
+      setSidebarVisible(storedSidebarVisible === 'true');
+      setMenuIcon(storedSidebarVisible === 'true' ? 'Menu' : 'X');
+
+      const storedActiveIndex = localStorage.getItem('activeIndex');
+      if (storedActiveIndex) {
+        setIsActive(parseInt(storedActiveIndex));
+      } else {
+        setIsActive(0);
+      }
     }
   }, []);
+
+  const handleToggleSidebar = () => {
+    const newSidebarVisible = !sidebarVisible;
+    setSidebarVisible(newSidebarVisible);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sidebarVisible', JSON.stringify(newSidebarVisible));
+      setMenuIcon(newSidebarVisible ? 'Menu' : 'X');
+    }
+  };
+
+  const router = useRouter();
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -73,82 +82,46 @@ export default function Sidebar() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  const handleToggleSidebar = () => {
-    const newSidebarVisible = !sidebarVisible;
-    setSidebarVisible(newSidebarVisible);
-    localStorage.setItem('sidebarVisible', JSON.stringify(newSidebarVisible));
-    setMenuIcon(newSidebarVisible ? 'Menu' : 'X');
-  };
-
   useEffect(() => {
     if (!sidebarVisible) {
       setMenuIcon('X');
     }
   }, [sidebarVisible]);
 
-  const handleSidebarItemClick = (idx: any) => {
+  const handleSidebarItemClick = (idx: number) => {
     setIsActive(idx);
     localStorage.setItem('activeIndex', String(idx));
+    const list = document.querySelectorAll(
+      '.childOne .childTwo .childThree .childFour'
+    );
+    list.forEach((item, index) => {
+      if (index === idx) {
+        item.classList.add('hovered');
+      } else {
+        item.classList.remove('hovered');
+      }
+    });
   };
-
-  useEffect(() => {
-    const defaultActiveItem = sidebarData[isActive];
-  }, localStorage[isActive]);
 
   useEffect(() => {
     const list = document.querySelectorAll(
       '.childOne .childTwo .childThree .childFour'
     );
+    const activeIndex = localStorage.getItem('activeIndex');
 
-    let firstItem = list[0];
-    const isClicked = localStorage.getItem('isClicked');
-
-    if (!isClicked) {
-      firstItem.classList.add('hovered');
-    }
-
-    function activeLink(this: HTMLElement) {
-      list.forEach((item) => {
-        item.classList.remove('hovered');
-      });
-      this.classList.add('hovered');
-      localStorage.setItem('isClicked', 'true');
-    }
-
-    list.forEach((item) => item.addEventListener('click', activeLink));
+    list.forEach((item, idx) => {
+      if (idx === Number(activeIndex)) {
+        item.classList.add('hovered');
+      }
+      item.addEventListener('click', () => handleSidebarItemClick(idx));
+    });
 
     return () => {
-      list.forEach((item) => item.removeEventListener('click', activeLink));
+      list.forEach((item, idx) => {
+        item.removeEventListener('click', () => handleSidebarItemClick(idx));
+      });
     };
   }, []);
-
-  // useEffect(() => {
-  //   const list = document.querySelectorAll(
-  //     '.childOne .childTwo .childThree .childFour'
-  //   );
-
-  //   let firstItem = list[0];
-  //   const isClicked = localStorage.getItem('isClicked');
-
-  //   if (!isClicked) {
-  //     firstItem.classList.add('hovered');
-  //   }
-
-  //   function activeLink(this: HTMLElement) {
-  //     list.forEach((item) => {
-  //       item.classList.remove('hovered');
-  //     });
-  //     this.classList.add('hovered');
-  //     localStorage.setItem('isClicked', 'true');
-  //   }
-
-  //   list.forEach((item) => item.addEventListener('click', activeLink));
-
-  //   return () => {
-  //     list.forEach((item) => item.removeEventListener('click', activeLink));
-  //   };
-  // }, []);
 
   return (
     <div>
@@ -238,5 +211,3 @@ export default function Sidebar() {
     </div>
   );
 }
-
-//
