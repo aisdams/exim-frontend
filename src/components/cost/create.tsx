@@ -266,7 +266,9 @@ export default function CreateCost({
           </thead>
           <tbody>
             {Array.isArray(quotationsQuery.data?.data?.cost) &&
+            quotationsQuery.data?.data?.cost?.length &&
             quotationsQuery.data?.data?.cost.length > 0 ? (
+              // quotationsQuery.data?.data?.cost.length > 0 ? (
               quotationsQuery.data?.data?.cost.map(
                 (item: any, index: number) => (
                   <tr

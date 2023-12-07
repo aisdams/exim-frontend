@@ -401,6 +401,8 @@ export default function CreateJO({
 
             <tbody>
               {Array.isArray(jocQuery.data?.data?.joborder) &&
+              // jocQuery.data?.data?.joborder.length > 0 ? (
+              jocQuery.data?.data?.joborder?.length &&
               jocQuery.data?.data?.joborder.length > 0 ? (
                 jocQuery.data?.data?.joborder.map(
                   (item: any, index: number) => (
@@ -757,3 +759,18 @@ export default function CreateJO({
     </div>
   );
 }
+
+// {Array.isArray(jocQuery?.data?.data?.joborder) &&
+//   jocQuery.data?.data?.joborder?.length && jocQuery.data?.data?.joborder.length > 0 ? (
+//     jocQuery.data?.data?.joborder.map((item: any, index: number) => (
+//       <tr key={index}>
+//         {/* Render table row content */}
+//       </tr>
+//     ))
+//   ) : (
+//     /* Render a message or alternative content when joborder is undefined, null, or empty */
+//     <tr>
+//       <td colSpan={/* number of columns */}>No data available</td>
+//     </tr>
+//   )
+// }

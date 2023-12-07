@@ -4,12 +4,14 @@ import '@mantine/dates/styles.css';
 
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { NovuProvider } from '@novu/notification-center';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
 
 import { NextPageCustomLayout } from '@/types/_app.type';
+import useUserUuid from '@/hooks/use-user-uuid';
 import Layout from '@/components/layouts/layout';
 import AppProvider from '@/components/providers/app-provider';
 
@@ -29,7 +31,8 @@ const App = ({
   Component: NextPageCustomLayout;
 }) => {
   const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
-
+  const userUuid = useUserUuid();
+  const novuAppId = process.env.NEXT_PUBLIC_NOVU_APP_ID || '';
   return (
     <>
       <Head>
@@ -51,7 +54,14 @@ const App = ({
             disableTransitionOnChange
           >
             <AppProvider initialLoading={false}>
-              {getLayout(<Component {...pageProps} />)}
+              <NovuProvider
+                subscriberId={userUuid}
+                applicationIdentifier={novuAppId}
+                backendUrl={process.env.NEXT_PUBLIC_API_URL}
+                socketUrl={process.env.NEXT_PUBLIC_WS_URL}
+              >
+                {getLayout(<Component {...pageProps} />)}
+              </NovuProvider>
             </AppProvider>
           </ThemeProvider>
         </SessionProvider>

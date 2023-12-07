@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import Footer from '@/components/layouts/footer';
 import Sidebar from '@/components/layouts/sidebar';
 import Topbar from '@/components/layouts/topbar';
+import Notifications from '@/components/notification';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -45,7 +46,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Topbar />
         </div>
         <div className="!z-30 flex-1 overflow-y-auto">
-          <div className="mx-6 mb-20 mt-8 overflow-y-auto">{children}</div>
+          <div className="mx-6 mb-20 mt-8 overflow-y-auto">
+            {children} <Notifications className="md:hidden" />
+          </div>
         </div>
         <Footer />
       </div>

@@ -475,7 +475,7 @@ export default function Index() {
             <div className="grid gap-1">
               <Label className="mt-4">Date TO</Label>
               <Label>Status</Label>
-              <Label className="absolute top-32">FIlter By</Label>
+              {/* <Label className="absolute top-32">FIlter By</Label> */}
             </div>
 
             <div className="grid gap-6">
